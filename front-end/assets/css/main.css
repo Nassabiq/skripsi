@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.auth-template {
+	@apply flex flex-col justify-center min-h-screen py-12 bg-green-100;
+}
+
+.margin-auth {
+	@apply m-2;
+}
+.card {
+	@apply p-6 m-2 bg-white border-2 rounded-md shadow-lg border-slate-100;
+}
+
+.label {
+	@apply block text-xs font-medium text-gray-700;
+}
+
+.form-input {
+	@apply block w-full p-1 mt-1 text-xs border border-gray-300 rounded shadow;
+}
+.form-input:focus {
+	@apply border-green-200 outline-none ring-2 ring-green-300;
+}
+
+.nuxt-link-exact-active {
+	@apply block my-1 text-sm font-semibold text-green-800 bg-transparent bg-green-200 rounded-lg pointer-events-none;
+}
+
+@screen lg {
+	.auth-template {
+		@apply px-6;
+	}
+}
+@screen md {
+	.auth-template {
+		@apply max-h-screen;
+	}
+}
+@screen sm {
+	.auth-template {
+		@apply px-6;
+	}
+	.label {
+		@apply text-sm;
+	}
+
+	.margin-auth {
+		@apply m-4;
+	}
+}

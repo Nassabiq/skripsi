@@ -1,0 +1,157 @@
+<template>
+  <!-- sidebar -->
+    <div>
+        <a href="#" class="flex items-center px-4 space-x-2 text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            <span class="text-2xl font-extrabold">App</span>
+        </a>
+        <nav class="pt-4">
+            <ul>
+                <NuxtLink to="/">
+                    <li>
+                        <a href="#"
+                            class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            <span class="font-font-light">Dashboard</span>
+                        </a>
+                    </li>
+                </NuxtLink>
+                <li>
+                    <span class="px-4 py-1 mt-2 text-xs font-medium text-white">Menu</span>
+                </li>
+                <NuxtLink to="/produk">
+                    <li>
+                        <a href="#"
+                            class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                            </svg>
+                            <span class="font-font-light">Kelola Data Produk</span>
+                        </a>
+                    </li>
+                </NuxtLink>
+                <li>
+                    <div class="relative">
+                        <DropdownMenu title="Persediaan">
+                            <template #icon>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+                                </svg>
+                            </template>
+                            <template #list>
+                                <li class="dropdown-item" href="#">Laporan Persediaan</li>
+                                <li class="dropdown-item" href="#">Kelola Persediaan</li>
+                                <li class="dropdown-item" href="#">Pengadaan Persediaan</li>
+                            </template>
+                        </DropdownMenu>
+                    </div>
+                </li>
+                <li>
+                    <DropdownMenu title="Penjualan">
+                        <template #icon>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                        </template>
+                        <template #list>
+                            <li class="dropdown-item" href="#">Laporan Penjualan</li>
+                            <li class="dropdown-item" href="#">Analisis HPP</li>
+                            <li class="dropdown-item" href="#">Kelola Harga Jual</li>
+                        </template>
+                    </DropdownMenu>
+                </li>
+                <li>
+                    <DropdownMenu title="Pemesanan">
+                        <template #icon>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        </template>
+                        <template #list>
+                            <NuxtLink to="/pemesanan/pencatatan-transaksi" >
+                                <li class="dropdown-item">
+                                    Pencatatan Transaksi
+                                </li>
+                            </NuxtLink>
+                            <li class="dropdown-item" href="#">Kelola Pemesanan</li>
+                        </template>
+                    </DropdownMenu>
+                </li>
+                <NuxtLink to="/manage-user">
+                    <li>
+                        <a href="#"
+                            class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            <span class="font-font-light">Kelola User</span>
+                        </a>
+                    </li>
+                </NuxtLink>
+                <li>
+                    <a href="#"
+                        class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-blue-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        About
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</template>
+
+<script>
+import DropdownMenu from "./SidebarDropdown.vue";
+export default {
+    components: { DropdownMenu },
+    data() {
+        return {
+            // path: this.$nuxt.$route.path,
+        };
+    },
+    computed: {
+        isSertifikasi() {
+            return (
+                this.$route.name === "sertifikasi" ||
+                this.$route.name === "sertifikasi-pendaftaran"
+            );
+        },
+    },
+};
+</script>
+
+<style scoped>
+    .icon-size{
+        @apply pr-3 w-9 h-9;
+    }
+    .dropdown-item {
+        @apply block px-4 py-2 mt-2 text-sm font-semibold text-green-800 bg-transparent rounded-lg;
+    }
+    .dropdown-item:hover {
+        @apply text-gray-900 bg-green-200;
+    }
+    .dropdown-item:focus {
+        @apply text-gray-900 bg-green-200 outline-none ring;
+    }
+
+    .active {
+        @apply text-sm text-left rounded-md bg-green-300 text-black;
+    }
+    @screen md {
+        .dropdown-item {
+            @apply mt-0;
+        }
+    }
+</style>
