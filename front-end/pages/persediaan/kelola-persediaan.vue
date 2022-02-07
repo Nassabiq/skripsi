@@ -18,7 +18,7 @@
 							<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
 							</svg>
-							Tambah Produk
+							Tambah Bahan Baku
 						</button>
 					</div>
 				</div>
@@ -28,18 +28,14 @@
 				<table class="table table-auto table-produk">
 					<thead class="bg-gray-100">
 						<tr class="text-left text-gray-800 font-title">
-							<th class="p-3"></th>
-							<th class="p-3">Nama Produk</th>
-							<th class="p-3">Kategori</th>
-							<th class="p-3">Harga</th>
+							<th class="p-3">Nama Bahan Baku</th>
+							<th class="p-3">Satuan</th>
+							<th class="p-3">Stok</th>
 							<th class="p-1"></th>
 						</tr>
 					</thead>
 					<tbody class="divide-y-2 divide-gray-100 divide-dotted">
 						<tr class="text-sm">
-							<td class="w-32 p-3">
-								<img src="https://picsum.photos/200" alt="" class="border-2 rounded-md w-28 border-slate-200" srcset="" />
-							</td>
 							<td class="p-3">Malcolm Lockyer</td>
 							<td class="p-3">1961</td>
 							<td class="p-3">1961</td>
@@ -62,7 +58,7 @@
 						<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
 						</svg>
-						Tambah Kategori Produk
+						Data Barang Masuk
 					</button>
 				</div>
 				<div class="my-4 overflow-x-auto overflow-y-auto bg-white rounded-lg shadow">
@@ -116,7 +112,7 @@
 
 <script>
 export default {
-	name: "IndexPage",
+	name: "KelolaPersediaan",
 	layout: "auth",
 	auth: false,
 	data() {

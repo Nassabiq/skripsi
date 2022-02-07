@@ -25,8 +25,103 @@
 }
 
 .nuxt-link-exact-active {
-	@apply block my-1 text-sm font-semibold text-green-800 bg-transparent bg-green-200 rounded-lg pointer-events-none;
+	@apply block my-1 text-sm font-medium tracking-wider text-green-800 bg-transparent bg-green-200 rounded-lg pointer-events-none;
 }
+
+.table {
+	@apply min-w-full divide-y divide-gray-200 rounded;
+}
+
+/* Button General */
+.btn-with-icon {
+	@apply flex items-center justify-center gap-2;
+}
+.btn {
+	@apply px-2 py-2 text-xs rounded-md shadow-md;
+}
+.btn:focus {
+	@apply outline-none ring-2 ring-offset-2;
+}
+
+/* Button With Blue Color */
+.btn-blue {
+	@apply text-white bg-blue-500;
+}
+
+.btn-blue:hover {
+	@apply bg-blue-700;
+}
+
+.btn-blue:focus {
+	@apply ring-blue-300;
+}
+
+/* Button With Green Color */
+.btn-green {
+	@apply text-white bg-green-500;
+}
+
+.btn-green:hover {
+	@apply bg-green-700;
+}
+
+.btn-green:focus {
+	@apply ring-green-300;
+}
+
+/* Button With Red Color */
+.btn-red {
+	@apply text-white bg-red-500;
+}
+
+.btn-red:hover {
+	@apply bg-red-700;
+}
+
+.btn-red:focus {
+	@apply ring-red-300;
+}
+
+/* Button With Indigo Color */
+.btn-indigo {
+	@apply text-white bg-indigo-500;
+}
+
+.btn-indigo:hover {
+	@apply bg-indigo-700;
+}
+
+.btn-indigo:focus {
+	@apply ring-indigo-300;
+}
+
+/* Button With Yellow Color */
+.btn-yellow {
+	@apply text-gray-800 bg-amber-400;
+}
+
+.btn-yellow:hover {
+	@apply bg-amber-600;
+}
+
+.btn-yellow:focus {
+	@apply ring-amber-300;
+}
+
+/* Button With Teal Color */
+.btn-teal {
+	@apply text-white bg-teal-500;
+}
+
+.btn-teal:hover {
+	@apply bg-teal-700;
+}
+
+.btn-teal:focus {
+	@apply ring-teal-300;
+}
+
+/* Responsive */
 
 @screen lg {
 	.auth-template {
