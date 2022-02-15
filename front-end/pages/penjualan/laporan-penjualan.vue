@@ -148,7 +148,7 @@ export default {
 	auth: false,
 	data() {
 		return {
-			content: true,
+			content: false,
 			// user : this.$auth.user
 		};
 	},

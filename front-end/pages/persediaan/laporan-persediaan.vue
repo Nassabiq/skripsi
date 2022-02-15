@@ -74,16 +74,26 @@
 													<dt class="text-xs font-semibold">Nama Bahan Baku</dt>
 													<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">Jagung</dd>
 												</div>
+											</dl>
+										</div>
+									</div>
+									<div class="col-span-2 md:col-span-1">
+										<div class="border-t border-gray-200">
+											<dl>
 												<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
 													<dt class="text-xs font-semibold">QTY</dt>
 													<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">2 Pcs</dd>
 												</div>
-												<div class="px-5 py-6 bg-sky-100 sm:grid sm:grid-cols-3 sm:gap-4">
-													<dt class="text-sm font-semibold">Subtotal</dt>
-													<dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">Rp. 500.000</dd>
+												<div class="px-3 py-4 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4">
+													<dt class="text-xs font-semibold">Harga</dt>
+													<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">25.000</dd>
 												</div>
 											</dl>
 										</div>
+									</div>
+									<div class="px-5 py-6 bg-sky-100 col-span-2 flex md:flex-row flex-col justify-between">
+										<dt class="text-sm font-semibold">Subtotal</dt>
+										<dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">Rp. 500.000</dd>
 									</div>
 								</div>
 							</td>

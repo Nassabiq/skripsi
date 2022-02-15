@@ -4,27 +4,27 @@
 
 		<div class="grid grid-cols-12 gap-4 md:grid-flow-col md:grid-rows-2">
 			<div class="col-span-12 md:col-span-7">
-				<div class="grid grid-cols-12 gap-2 card">
+				<div class="grid grid-cols-12 gap-4 card">
 					<div class="col-span-12 sm:col-span-6">
-						<label class="text-xs font-semibold text-gray-700">Id Transaksi</label>
-						<input type="text" class="form-input" />
+						<label class="label">Id Transaksi</label>
+						<input type="text" class="form-input form-input-sm" />
 					</div>
 					<div class="col-span-12 sm:col-span-6">
-						<label class="text-xs font-semibold text-gray-700">Nama Pemesan</label>
-						<input type="text" class="form-input" />
+						<label class="label">Nama Pemesan</label>
+						<input type="text" class="form-input form-input-sm" />
 					</div>
 					<div class="col-span-12 sm:col-span-6">
-						<label class="text-xs font-semibold text-gray-700">No. Telp</label>
-						<input type="text" class="form-input" />
+						<label class="label">No. Telp</label>
+						<input type="text" class="form-input form-input-sm" />
 					</div>
 					<div class="col-span-12 sm:col-span-6">
-						<label class="text-xs font-semibold text-gray-700">Tgl Transaksi</label>
-						<input type="text" class="form-input" />
+						<label class="label">Tgl Transaksi</label>
+						<input type="text" class="form-input form-input-sm" />
 					</div>
 					<div class="col-span-12 sm:col-span-12">
-						<label for="about" class="text-xs font-semibold text-gray-700"> Alamat </label>
+						<label for="about" class="label"> Alamat </label>
 						<div class="mt-1">
-							<textarea id="about" name="about" rows="3" class="form-input" placeholder="you@example.com"></textarea>
+							<textarea id="about" name="about" rows="3" class="form-input form-input-sm" placeholder="you@example.com"></textarea>
 						</div>
 					</div>
 				</div>
@@ -33,39 +33,39 @@
 			<div class="col-span-12 md:col-span-7">
 				<div class="grid grid-cols-12 gap-2 card">
 					<div class="col-span-12 md:col-span-8">
-						<label class="text-xs font-semibold text-gray-700">Produk</label>
-						<select class="form-input">
+						<label class="label">Produk</label>
+						<select class="form-input form-input-sm">
 							<option>United States</option>
 							<option>Canada</option>
 							<option>Mexico</option>
 						</select>
 					</div>
 					<div class="col-span-12 sm:col-span-4">
-						<label class="text-xs font-semibold text-gray-700">Qty</label>
-						<input type="text" class="form-input" />
+						<label class="label">Qty</label>
+						<input type="text" class="form-input form-input-sm" />
 					</div>
 					<div class="col-span-12 md:col-span-6">
-						<label class="text-xs font-semibold text-gray-700">Ukuran</label>
-						<input type="text" class="form-input" />
+						<label class="label">Ukuran</label>
+						<input type="text" class="form-input form-input-sm" />
 					</div>
 					<div class="col-span-12 md:col-span-6">
-						<label class="text-xs font-semibold text-gray-700">Jenis Bahan</label>
-						<select class="form-input">
+						<label class="label">Jenis Bahan</label>
+						<select class="form-input form-input-sm">
 							<option>United States</option>
 							<option>Canada</option>
 							<option>Mexico</option>
 						</select>
 					</div>
 					<div class="col-span-12 md:col-span-6">
-						<label class="text-xs font-semibold text-gray-700">Finishing</label>
-						<input type="text" class="form-input" />
+						<label class="label">Finishing</label>
+						<input type="text" class="form-input form-input-sm" />
 					</div>
 					<div class="col-span-12 md:col-span-6">
-						<label class="text-xs font-semibold text-gray-700">Laminasi</label>
-						<input type="text" class="form-input" />
+						<label class="label">Laminasi</label>
+						<input type="text" class="form-input form-input-sm" />
 					</div>
 					<div class="col-span-12 place-self-end">
-						<button class="btn btn-with-icon btn-blue">
+						<button class="btn btn-with-icon btn-blue btn-sm">
 							<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
 							</svg>
@@ -114,8 +114,8 @@
 
 				<div class="absolute inset-x-0 bottom-0 mx-4">
 					<div class="">
-						<label class="flex justify-end text-xs font-semibold text-gray-700">Jumlah Bayar</label>
-						<input type="text" class="form-input" />
+						<label class="flex justify-end label">Jumlah Bayar</label>
+						<input type="text" class="form-input form-input-lg" placeholder="Jumlah Bayar..." />
 					</div>
 					<div class="p-2 my-2 border-2 border-green-400 rounded-md shadow-md bg-green-50">
 						<div class="flex items-center justify-between">
@@ -130,7 +130,7 @@
 					</div>
 
 					<div class="flex justify-end p-2">
-						<button class="btn btn-green">
+						<button class="btn btn-green btn-sm">
 							<p class="text-xs">Proses Pesanan</p>
 						</button>
 					</div>

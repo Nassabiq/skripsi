@@ -14,11 +14,18 @@
 }
 
 .label {
-	@apply block text-xs font-medium text-gray-700;
+	@apply text-xs font-semibold text-gray-700;
 }
 
 .form-input {
-	@apply block w-full p-1 mt-1 text-xs border border-gray-300 rounded shadow;
+	@apply block w-full mt-1 text-xs border border-gray-300 rounded shadow;
+}
+.form-input-sm {
+	@apply py-1 px-2;
+}
+
+.form-input-lg {
+	@apply px-3 py-2;
 }
 .form-input:focus {
 	@apply border-green-200 outline-none ring-2 ring-green-300;
@@ -37,7 +44,13 @@
 	@apply flex items-center justify-center gap-2;
 }
 .btn {
-	@apply px-2 py-2 text-xs rounded-md shadow-md;
+	@apply rounded-md shadow-md;
+}
+.btn-sm {
+	@apply px-2 py-2 text-xs;
+}
+.btn-lg {
+	@apply px-4 py-2 text-sm;
 }
 .btn:focus {
 	@apply outline-none ring-2 ring-offset-2;
@@ -136,9 +149,6 @@
 @screen sm {
 	.auth-template {
 		@apply px-6;
-	}
-	.label {
-		@apply text-sm;
 	}
 
 	.margin-auth {

@@ -5,10 +5,10 @@ export default {
 		htmlAttrs: {
 			lang: "en",
 		},
-		meta: [{ charset: "utf-8" }, { name: "viewport", content: "width=device-width, initial-scale=1" }, { hid: "description", name: "description", content: "" }, { name: "format-detection", content: "telephone=no" }],
+		meta: [{charset: "utf-8"}, {name: "viewport", content: "width=device-width, initial-scale=1"}, {hid: "description", name: "description", content: ""}, {name: "format-detection", content: "telephone=no"}],
 		link: [
-			{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
-			{ rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Nunito&family=Poppins&display=swap" },
+			{rel: "icon", type: "image/x-icon", href: "/favicon.ico"},
+			{rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Nunito&family=Poppins&display=swap"},
 		],
 	},
 
@@ -41,16 +41,16 @@ export default {
 		middleware: ["auth"],
 	},
 	axios: {
-		proxy: true,
+		// proxy: true,
 		baseUrl: "http://127.0.0.1:8000",
-		credentials: true,
+		// credentials: true,
 	},
-	proxy: {
-		"/api": {
-			target: "https://localhost:8000",
-			pathRewrite: { "^/api": "/" },
-		},
-	},
+	// proxy: {
+	// 	"/api": {
+	// 		target: "https://localhost:8000",
+	// 		pathRewrite: {"^/api": "/"},
+	// 	},
+	// },
 	auth: {
 		strategies: {
 			laravelSanctum: {
