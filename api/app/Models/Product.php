@@ -14,6 +14,8 @@ class Product extends Model
     protected $keyType = 'string';
     public $timestamps = false;
 
+    protected $fillable = ['id_produk', 'id_kategori_produk', 'nama_produk', 'slug', 'description', 'image'];
+
     public function categories()
     {
         return $this->hasOne(ProductCategory::class, 'id_kategori_produk', 'id_kategori_produk');

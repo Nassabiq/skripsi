@@ -22,7 +22,7 @@ class CreateProductsTable extends Migration
 
             $table->string('nama_produk');
             $table->string('slug');
-            $table->text('image');
+            $table->json('image');
             $table->longText('description');
         });
     }
