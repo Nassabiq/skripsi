@@ -114,7 +114,7 @@ export default {
 						nama_produk: this.product.nama_produk,
 						description: this.product.description,
 					})
-					.then((response) => {
+					.then(() => {
 						this.modal = false;
 						this.getData();
 					})
