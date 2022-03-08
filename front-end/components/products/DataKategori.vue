@@ -51,7 +51,7 @@
 					<label class="label">Satuan</label>
 					<select class="form-input form-input-lg" v-model="kategori.id_satuan">
 						<option :value="{}" v-if="!updateMode">Pilih Kategori</option>
-						<option :value="kategori.id_satuan" v-else>Pilih Kategori</option>
+						<!-- <option :value="kategori.id_satuan" v-else>{{ kategori }}</option> -->
 						<option :value="unit.id_satuan" :key="unit.id_satuan" v-for="unit in units">{{ unit.nama_satuan }}</option>
 					</select>
 					<p class="mt-2 text-xs text-red-500" v-if="validation.id_satuan">{{ validation.id_satuan[0] }}</p>
@@ -72,6 +72,7 @@
 <script>
 import Modal from "../ModalComponent.vue";
 import Spinner from "../SpinnerLoading.vue";
+import Swal from "sweetalert2";
 
 export default {
 	name: "DataKategori",
@@ -118,6 +119,16 @@ export default {
 						this.closeModal();
 						this.$emit("get-data", response.data);
 					})
+					.then(() => {
+						this.$swal.fire({
+							icon: "success",
+							title: "Success...",
+							text: "Data Berhasil ditambah!",
+							showConfirmButton: false,
+							timer: 3000,
+							timerProgressBar: true,
+						});
+					})
 					.catch((error) => {
 						console.log(error.response.data);
 						this.validation = error.response.data;
@@ -148,6 +159,16 @@ export default {
 						this.closeModal();
 						this.$emit("get-data", response.data);
 					})
+					.then(() => {
+						this.$swal.fire({
+							icon: "success",
+							title: "Success...",
+							text: "Data Berhasil diubah!",
+							showConfirmButton: false,
+							timer: 3000,
+							timerProgressBar: true,
+						});
+					})
 					.catch((error) => {
 						console.log(error.response.data);
 						this.validation = error.response.data;
@@ -165,6 +186,16 @@ export default {
 					.post("api/deleteKategori/" + category.id_kategori_produk)
 					.then(() => {
 						this.categories.splice(index, 1);
+					})
+					.then(() => {
+						this.$swal.fire({
+							icon: "success",
+							title: "Success...",
+							text: "Data Berhasil dihapus!",
+							showConfirmButton: false,
+							timer: 3000,
+							timerProgressBar: true,
+						});
 					})
 					.catch((error) => {
 						console.log(error);

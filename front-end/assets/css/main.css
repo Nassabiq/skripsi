@@ -21,7 +21,7 @@
 	@apply block w-full mt-1 text-xs border border-gray-300 rounded shadow;
 }
 .form-input-sm {
-	@apply py-1 px-2;
+	@apply px-2 py-1;
 }
 
 .form-input-lg {
@@ -29,10 +29,6 @@
 }
 .form-input:focus {
 	@apply border-green-200 outline-none ring-2 ring-green-300;
-}
-
-.nuxt-link-exact-active {
-	@apply block my-1 text-sm font-medium tracking-wider text-green-800 bg-transparent bg-green-200 rounded-lg pointer-events-none;
 }
 
 .table {
@@ -152,6 +148,6 @@
 	}
 
 	.margin-auth {
-		@apply m-4;
+		@apply mx-4 my-1;
 	}
 }

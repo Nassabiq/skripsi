@@ -16,7 +16,7 @@ export default {
 	css: ["@/assets/css/main.css"],
 
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-	plugins: [],
+	plugins: ["@/plugins/modal.js"],
 
 	// Auto import components: https://go.nuxtjs.dev/config-components
 	components: true,
@@ -25,7 +25,7 @@ export default {
 	buildModules: ["@nuxt/postcss8"],
 
 	// Modules: https://go.nuxtjs.dev/config-modules
-	modules: ["@nuxtjs/axios", "@nuxtjs/auth-next"],
+	modules: ["@nuxtjs/axios", "@nuxtjs/auth-next", "vue-sweetalert2/nuxt"],
 
 	// Build Configuration: https://go.nuxtjs.dev/config-build
 	build: {
@@ -38,7 +38,7 @@ export default {
 	},
 
 	router: {
-		middleware: ["auth"],
+		// middleware: ["auth"],
 	},
 	axios: {
 		// proxy: true,

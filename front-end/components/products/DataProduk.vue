@@ -2,7 +2,7 @@
 	<div>
 		<div class="grid grid-cols-12 gap-4">
 			<div class="relative col-span-12 my-4 md:col-span-6">
-				<input type="search" class="w-full py-2 pl-8 pr-4 text-sm font-medium text-gray-800 border border-gray-200 rounded-lg shadow md:w-3/5 focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" placeholder="Search..." />
+				<input type="search" class="w-full py-2 pl-8 pr-4 text-sm font-medium text-gray-800 border border-gray-200 rounded-lg shadow md:w-3/5 focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" placeholder="Cari Produk..." v-model="search" />
 				<div class="absolute top-0 left-0 inline-flex items-center p-2">
 					<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
 						<rect x="0" y="0" width="24" height="24" stroke="none"></rect>
@@ -35,9 +35,9 @@
 					</tr>
 				</thead>
 				<tbody class="divide-y-2 divide-gray-100 divide-dotted">
-					<tr class="text-sm" v-for="product in products" :key="product.id">
+					<tr class="text-sm" v-for="product in searchProduk" :key="product.id">
 						<td class="w-32 p-3">
-							<img :src="'http://localhost:8000/storage/image_produk/' + product.slug + '/' + JSON.parse(product.image)[0]" alt="" class="object-cover border-2 rounded-md w-28 h-28 border-slate-200" />
+							<img :src="'http://localhost:8000/storage/image_produk/' + product.slug + '/' + JSON.parse(product.image)[0].filename" alt="" class="object-cover border-2 rounded-md w-28 h-28 border-slate-200" />
 						</td>
 						<td class="p-3">{{ product.nama_produk }}</td>
 						<td class="p-3">{{ product.categories.nama_kategori }}</td>
@@ -67,6 +67,7 @@
 				<div class="col-span-12 sm:col-span-3">
 					<label class="label">Kategori Produk</label>
 					<select class="form-input form-input-lg" v-model="produk.id_kategori_produk">
+						<option value="">Pilih Kategori</option>
 						<option :value="category.id_kategori_produk" v-for="category in categories">
 							{{ category.nama_kategori }}
 						</option>
@@ -141,7 +142,23 @@ export default {
 			modal: false,
 			isloading: false,
 			validation: [],
+
+			search: "",
 		};
+	},
+
+	computed: {
+		searchProduk() {
+			let data = this.products;
+
+			if (this.search != "" && this.search) {
+				data = data.filter((item) => {
+					return item.nama_produk.toUpperCase().includes(this.search.toUpperCase());
+				});
+			}
+
+			return data;
+		},
 	},
 
 	methods: {

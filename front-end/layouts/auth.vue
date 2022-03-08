@@ -16,6 +16,7 @@
 					</svg>
 				</button>
 			</Navbar>
+			<BreadCrumb></BreadCrumb>
 			<Nuxt />
 		</div>
 	</div>
@@ -24,11 +25,13 @@
 <script>
 import Sidebar from "../components/layouts/Sidebar.vue";
 import Navbar from "../components/layouts/Navbar.vue";
+import BreadCrumb from "../components/Breadcrumbs.vue";
 
 export default {
 	components: {
 		Sidebar,
 		Navbar,
+		BreadCrumb,
 	},
 	data() {
 		return {

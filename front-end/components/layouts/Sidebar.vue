@@ -61,7 +61,7 @@
 										Kelola Persediaan
 									</li>
 								</NuxtLink>
-								<NuxtLink to="/persediaan/pengadaan-barang">
+								<NuxtLink to="/persediaan/pengadaan">
 									<li class="dropdown-item">
 										Pengadaan Barang
 									</li>
@@ -161,7 +161,9 @@ export default {
 .dropdown-item:focus {
 	@apply text-gray-900 bg-green-200 outline-none ring;
 }
-
+.nuxt-link-exact-active {
+	@apply block my-1 text-sm font-medium tracking-wider text-green-800 bg-transparent bg-green-200 rounded-lg pointer-events-none;
+}
 .active {
 	@apply text-sm text-left rounded-md bg-green-300 text-black;
 }

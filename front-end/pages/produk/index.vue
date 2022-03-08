@@ -46,7 +46,7 @@ export default {
 	},
 	methods: {
 		async getAllData() {
-			await this.$axios
+			this.$axios
 				.get("/api/product")
 				.then((response) => {
 					this.products = response.data.products;

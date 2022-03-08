@@ -8,6 +8,7 @@ use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
@@ -17,6 +18,8 @@ class ProductController extends Controller
         $product =  Product::with('categories.satuan')->get();
         $category = ProductCategory::with('satuan')->get();
         $satuan = Unit::get();
+
+        // var_dump($product);
 
         return response()->json(
             [
@@ -53,11 +56,14 @@ class ProductController extends Controller
         if ($request->hasFile('image')) {
             foreach ($request->file('image') as $key => $image) {
                 $filename = "image-" . Str::slug($request->nama_produk) . "-" . $i++ . "." . $image->getClientOriginalExtension();
-                $image->storeAs('image_produk/' . Str::slug($request->nama_produk), $filename);
-                $files[] = $filename;
+                $img = $image->storeAs('image_produk/' . Str::slug($request->nama_produk), $filename);
+
+                // $dir = DIRECTORY_SEPARATOR;
+                $fileUrl = "image_produk/" . Str::slug($request->nama_produk) . "/" . $filename;
+                $files[] = compact('filename', 'fileUrl');
             }
         } else {
-            return response()->json(['Invalid'], 400);
+            return response()->json('Invalid', 400);
         }
 
 
@@ -90,6 +96,45 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->save();
 
+        return response()->json($product, 200);
+    }
+
+    public function updateImage($id, Request $request)
+    {
+        var_dump($request->all());
+        $product = Product::findOrFail($id);
+        $image = json_decode($product->image);
+
+
+        $path = public_path('storage/');
+
+        foreach ($image as $key => $img) {
+            foreach ($request->deletedImage as $imgDeleted) {
+                $deletedImage = json_decode($imgDeleted);
+                if ($img->filename == $deletedImage->filename) {
+                    $filename = $path . $img->fileUrl;
+                    unlink($filename);
+                }
+            }
+        }
+        $i = 1;
+        if ($request->hasFile('image')) {
+            foreach ($request->file('image') as $key => $image) {
+                $filename = "image-" . Str::slug($request->nama_produk) . "-" . $i++ . "." . $image->getClientOriginalExtension();
+                $img = $image->storeAs('image_produk/' . Str::slug($request->nama_produk), $filename);
+
+                // $dir = DIRECTORY_SEPARATOR;
+                $fileUrl = "image_produk/" . Str::slug($request->nama_produk) . "/" . $filename;
+                $files[] = compact('filename', 'fileUrl');
+            }
+        }
+    }
+
+    public function deleteProduk($id)
+    {
+        $product = Product::findOrFail($id);
+        Storage::deleteDirectory('image_produk/' . $product->slug);
+        $product->delete();
         return response()->json($product, 200);
     }
 
