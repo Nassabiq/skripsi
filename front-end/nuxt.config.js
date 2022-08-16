@@ -10,19 +10,28 @@ export default {
 			{rel: "icon", type: "image/x-icon", href: "/favicon.ico"},
 			{rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Nunito&family=Poppins&display=swap"},
 		],
+		script: [
+			{
+				src: "https://unpkg.com/flowbite@1.4.7/dist/datepicker.js",
+			},
+		],
 	},
 
 	// Global CSS: https://go.nuxtjs.dev/config-css
 	css: ["@/assets/css/main.css"],
 
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-	plugins: ["@/plugins/modal.js"],
+	plugins: [{src: "@/plugins/modal.js"}, {src: "@/plugins/vue-html2pdf", mode: "client"}, {src: "~/plugins/vue-datepicker", ssr: false}],
 
 	// Auto import components: https://go.nuxtjs.dev/config-components
 	components: true,
 
 	// Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-	buildModules: ["@nuxt/postcss8"],
+	buildModules: ["@nuxt/postcss8", "@nuxtjs/moment"],
+	moment: {
+		/* module options */
+		locales: ["id"],
+	},
 
 	// Modules: https://go.nuxtjs.dev/config-modules
 	modules: ["@nuxtjs/axios", "@nuxtjs/auth-next", "vue-sweetalert2/nuxt"],

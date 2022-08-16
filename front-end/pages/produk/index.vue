@@ -1,7 +1,7 @@
 <template>
 	<div class="gap-4 space-y-4 margin-auth">
 		<div class="card">
-			<DataProduk :products="products" :categories="categories" @get-data="getData"></DataProduk>
+			<DataProduk :products="products" :categories="categories" @get-data="getData" @load-data="loadData" @load-page="loadPage" @search-data="searchData"></DataProduk>
 		</div>
 		<div class="grid grid-cols-2 gap-4">
 			<div class="col-span-2 md:col-span-1">
@@ -37,29 +37,72 @@ export default {
 			products: [],
 			categories: [],
 			units: [],
+
+			productSize: 5,
+			productSearch: "",
+			productPage: 1,
 		};
 	},
 	computed: {},
 
 	mounted() {
-		this.getAllData();
+		this.getProducts();
+		this.getCategories();
+		this.getSatuan();
 	},
 	methods: {
-		async getAllData() {
+		async getProducts() {
 			this.$axios
-				.get("/api/product")
+				.get("/api/product?page=" + this.productPage + "&show=" + parseInt(this.productSize) + "&search=" + this.productSearch)
 				.then((response) => {
-					this.products = response.data.products;
-					this.categories = response.data.category;
-					this.units = response.data.satuan;
+					console.log(response.data);
+					this.products = response.data;
 				})
 				.catch((error) => {
 					console.log(error);
 				});
 		},
+		async getCategories() {
+			this.$axios
+				.get("/api/category")
+				.then((response) => {
+					this.categories = response.data;
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		},
+		async getSatuan() {
+			this.$axios
+				.get("/api/satuan")
+				.then((response) => {
+					this.units = response.data;
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		},
+		loadData(data) {
+			if (data) {
+				this.productSize = data;
+			}
+			this.getProducts();
+		},
+
+		loadPage(data) {
+			this.productPage = data;
+			this.getProducts();
+		},
+
+		searchData(data) {
+			this.productSearch = data;
+			this.getProducts();
+		},
 
 		getData() {
-			this.getAllData();
+			this.getProducts();
+			this.getCategories();
+			this.getSatuan();
 		},
 	},
 };

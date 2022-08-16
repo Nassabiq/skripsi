@@ -2,33 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HargaJualProduk;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Unit;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    public function index()
+    // READ DATABASE
+    public function index(Request $request)
     {
-        $product =  Product::with('categories.satuan')->get();
-        $category = ProductCategory::with('satuan')->get();
-        $satuan = Unit::get();
-
-        // var_dump($product);
-
-        return response()->json(
-            [
-                'products' => $product,
-                'category' => $category,
-                'satuan' => $satuan
-            ],
-            200
-        );
+        $search = '%' . $request->search . '%';
+        if ($request->show == null) {
+            $product =  Product::with('categories.satuan', 'harga')->get();
+        } else {
+            $product =  Product::with('categories.satuan', 'harga')->where('nama_produk', 'like', $search)->paginate($request->show);
+        }
+        return response()->json($product, 200);
     }
 
     public function details($slug)
@@ -36,6 +33,20 @@ class ProductController extends Controller
         $product =  Product::with('categories.satuan')->where('slug', $slug)->first();
         return response()->json($product, 200);
     }
+
+    public function kategori()
+    {
+        $category = ProductCategory::with('satuan')->get();
+        return response()->json($category, 200);
+    }
+
+    public function satuan()
+    {
+        $satuan = Unit::get();
+        return response()->json($satuan, 200);
+    }
+
+    // CREATE RECORD INTO DATABASE
     public function addProduk(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -80,64 +91,6 @@ class ProductController extends Controller
         return response()->json($product, 200);
     }
 
-    public function updateProduk(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'nama_produk'   => 'required',
-            'description'   => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-
-        $product = Product::findOrFail($id);
-        $product->nama_produk =  $request->nama_produk;
-        $product->description = $request->description;
-        $product->save();
-
-        return response()->json($product, 200);
-    }
-
-    public function updateImage($id, Request $request)
-    {
-        var_dump($request->all());
-        $product = Product::findOrFail($id);
-        $image = json_decode($product->image);
-
-
-        $path = public_path('storage/');
-
-        foreach ($image as $key => $img) {
-            foreach ($request->deletedImage as $imgDeleted) {
-                $deletedImage = json_decode($imgDeleted);
-                if ($img->filename == $deletedImage->filename) {
-                    $filename = $path . $img->fileUrl;
-                    unlink($filename);
-                }
-            }
-        }
-        $i = 1;
-        if ($request->hasFile('image')) {
-            foreach ($request->file('image') as $key => $image) {
-                $filename = "image-" . Str::slug($request->nama_produk) . "-" . $i++ . "." . $image->getClientOriginalExtension();
-                $img = $image->storeAs('image_produk/' . Str::slug($request->nama_produk), $filename);
-
-                // $dir = DIRECTORY_SEPARATOR;
-                $fileUrl = "image_produk/" . Str::slug($request->nama_produk) . "/" . $filename;
-                $files[] = compact('filename', 'fileUrl');
-            }
-        }
-    }
-
-    public function deleteProduk($id)
-    {
-        $product = Product::findOrFail($id);
-        Storage::deleteDirectory('image_produk/' . $product->slug);
-        $product->delete();
-        return response()->json($product, 200);
-    }
-
     public function addKategori(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -157,32 +110,6 @@ class ProductController extends Controller
             'nama_kategori' => $request->nama_kategori,
         ]);
 
-        return response()->json($category, 200);
-    }
-
-    public function updateKategori(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'nama_kategori'   => 'required',
-            'id_satuan'   => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-        $category = ProductCategory::where('id_kategori_produk', $id)->first();
-
-        $category->nama_kategori = $request->nama_kategori;
-        $category->id_satuan = $request->id_satuan;
-        $category->save();
-
-        return response()->json($category, 200);
-    }
-
-    public function deleteKategori($id)
-    {
-        $category = ProductCategory::where('id_kategori_produk', $id)->first();
-        $category->delete();
         return response()->json($category, 200);
     }
 
@@ -206,9 +133,85 @@ class ProductController extends Controller
         return response()->json($unit, 200);
     }
 
+    // UPDATE DATA INTO DATABASE
+    public function updateProduk(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'nama_produk'   => 'required',
+            'description'   => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $product = Product::findOrFail($id);
+        $product->nama_produk =  $request->nama_produk;
+        $product->description = $request->description;
+        $product->save();
+
+        return response()->json($product, 200);
+    }
+
+    public function updateImage($id, Request $request)
+    {
+        $product = Product::findOrFail($id);
+        $image = json_decode($product->image);
+
+
+        $path = public_path('storage/');
+
+        foreach ($image as $key => $img) {
+            foreach ($request->deletedImage as $imgDeleted) {
+                $deletedImage = json_decode($imgDeleted);
+                if ($img->filename == $deletedImage->filename) {
+                    $filename = $path . $img->fileUrl;
+                    unlink($filename);
+                    unset($image[$key]);
+                }
+            }
+        }
+        $i = count($image) + 1;
+        if ($request->hasFile('image')) {
+            foreach ($request->file('image') as $img) {
+                $filename = "image-" . Str::slug($product->nama_produk) . "-" . $i++ . "." . $img->getClientOriginalExtension();
+                $img = $img->storeAs('image_produk/' . Str::slug($product->nama_produk), $filename);
+
+                // $dir = DIRECTORY_SEPARATOR;
+                $fileUrl = "image_produk/" . Str::slug($product->nama_produk) . "/" . $filename;
+                $files = compact('filename', 'fileUrl');
+
+                $image[] = $files;
+            }
+        }
+
+        $product->image = json_encode($image);
+        $product->save();
+
+        return response()->json($product, 200);
+    }
+
+    public function updateKategori(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'nama_kategori'   => 'required',
+            'id_satuan'   => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $category = ProductCategory::where('id_kategori_produk', $id)->first();
+
+        $category->nama_kategori = $request->nama_kategori;
+        $category->id_satuan = $request->id_satuan;
+        $category->save();
+
+        return response()->json($category, 200);
+    }
+
     public function updateSatuan(Request $request, $id)
     {
-        // var_dump($id);
         $validator = Validator::make($request->all(), [
             'nama_satuan'   => 'required',
         ]);
@@ -223,6 +226,51 @@ class ProductController extends Controller
 
         return response()->json($id, 200);
     }
+
+    public function updateHarga(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id_produk'   => 'required',
+            'harga'   => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $date = date('dmY');
+
+        $id = IdGenerator::generate([
+            'table' => 'harga_jual_produk',
+            'field' => 'id_harga_jual',
+            'length' => 27,
+            'prefix' => 'PPrc-' . $request->id_produk . '-' . $date,
+        ]);
+
+        $data = HargaJualProduk::create([
+            'id_harga_jual' => $id,
+            'id_produk' => $request->id_produk,
+            'harga' => $request->harga,
+            'tgl_diubah' => Carbon::now()
+        ]);
+        return response()->json($data, 200);
+    }
+
+    // DELETE DATA FROM DATABASE
+    public function deleteProduk($id)
+    {
+        $product = Product::findOrFail($id);
+        Storage::deleteDirectory('image_produk/' . $product->slug);
+        $product->delete();
+        return response()->json($product, 200);
+    }
+
+    public function deleteKategori($id)
+    {
+        $category = ProductCategory::where('id_kategori_produk', $id)->first();
+        $category->delete();
+        return response()->json($category, 200);
+    }
+
     public function deleteSatuan($id)
     {
         $unit = Unit::where('id_satuan', $id)->first();

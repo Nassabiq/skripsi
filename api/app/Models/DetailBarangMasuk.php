@@ -24,6 +24,6 @@ class DetailBarangMasuk extends Model
     }
     public function bahanBaku()
     {
-        return $this->hasOne(Material::class, 'id_material', 'id_bahan_baku');
+        return $this->belongsTo(Material::class, 'id_bahan_baku');
     }
 }

@@ -12,6 +12,21 @@ use Illuminate\Support\Facades\Validator;
 
 class BarangMasukController extends Controller
 {
+    public function index(Request $request)
+    {
+        $search = '%' . $request->search . '%';
+        $barang_masuk = BarangMasuk::with('detailBarang.bahanBaku')->where('id_barang_masuk', 'like', $search)->paginate($request->show);
+        return response()->json($barang_masuk, 200);
+    }
+
+    public function laporanBarangMasuk(Request $request)
+    {
+        $from = Carbon::parse($request->from);
+        $to = Carbon::parse($request->to);
+
+        $data = BarangMasuk::with('detailBarang.bahanBaku')->orderBy('tgl_barang_masuk', 'asc')->whereBetween('tgl_barang_masuk', [$from, $to])->get();
+        return response()->json($data, 200);
+    }
     public function addStok(Request $request)
     {
         // var_dump($request->all());
@@ -29,7 +44,7 @@ class BarangMasukController extends Controller
             return response()->json($validator->messages(), 400);
         }
 
-        $id_barang_masuk = IdGenerator::generate(['table' => 'barang_masuk', 'field' => 'id_barang_masuk', 'length' => 10, 'prefix' => 'STOK-']);
+        $id_barang_masuk = IdGenerator::generate(['table' => 'barang_masuk', 'field' => 'id_barang_masuk', 'length' => 17, 'prefix' => 'STOK-' . date('dmY')]);
 
         $barang_masuk = BarangMasuk::create([
             'id_barang_masuk' => $id_barang_masuk,

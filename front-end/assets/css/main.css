@@ -34,6 +34,9 @@
 .table {
 	@apply min-w-full divide-y divide-gray-200 rounded;
 }
+.border-table {
+	@apply border border-slate-300;
+}
 
 /* Button General */
 .btn-with-icon {

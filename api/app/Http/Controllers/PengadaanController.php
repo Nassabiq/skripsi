@@ -12,11 +12,19 @@ use Illuminate\Support\Facades\Validator;
 
 class PengadaanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $bahan_baku = Material::get();
-        $pengadaan = PengadaanBarang::with('detailPengadaan.bahanBaku')->get();
-        return response()->json(['pengadaan' => $pengadaan, 'bahan_baku' => $bahan_baku], 200);
+        $search = '%' . $request->search . '%';
+        $status = '%' . $request->status . '%';
+        if ($request->show == null) {
+            $pengadaan = PengadaanBarang::with('detailPengadaan.bahanBaku')->get();
+        } else {
+            $pengadaan = PengadaanBarang::with('detailPengadaan.bahanBaku')
+                ->where('nama_pengadaan', 'like', $search)
+                ->where('status_pengadaan', 'like', $status)
+                ->paginate($request->show);
+        }
+        return response()->json($pengadaan, 200);
     }
 
     public function details($id)
@@ -40,7 +48,7 @@ class PengadaanController extends Controller
             return response()->json($validator->messages(), 400);
         }
 
-        $id_pengadaan = IdGenerator::generate(['table' => 'pengadaan_barang', 'field' => 'id_pengadaan', 'length' => 10, 'prefix' => 'PBrg-']);
+        $id_pengadaan = IdGenerator::generate(['table' => 'pengadaan_barang', 'field' => 'id_pengadaan', 'length' => 17, 'prefix' => 'PBrg-' . date('dmY')]);
 
         $pengadaan = PengadaanBarang::create([
             'id_pengadaan' => $id_pengadaan,
@@ -95,6 +103,7 @@ class PengadaanController extends Controller
     {
         $pengadaan = PengadaanBarang::where('id_pengadaan', $id)->first();
         $pengadaan->status_pengadaan = 1;
+        $pengadaan->tgl_disetujui = Carbon::now()->locale('id');
         $pengadaan->save();
 
         return response()->json($pengadaan, 200);

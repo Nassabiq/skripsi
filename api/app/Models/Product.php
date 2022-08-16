@@ -20,4 +20,14 @@ class Product extends Model
     {
         return $this->hasOne(ProductCategory::class, 'id_kategori_produk', 'id_kategori_produk');
     }
+
+    public function material()
+    {
+        return $this->belongsToMany(Material::class, 'products_has_materials', 'id_produk', 'id_material');
+    }
+
+    public function harga()
+    {
+        return $this->hasMany(HargaJualProduk::class, 'id_produk',);
+    }
 }

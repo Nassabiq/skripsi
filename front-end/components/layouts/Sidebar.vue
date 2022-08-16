@@ -1,10 +1,11 @@
 <template>
 	<div>
 		<a href="#" class="flex items-center px-4 space-x-2 text-white">
-			<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+			<!-- <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-			</svg>
-			<span class="text-2xl font-extrabold">App</span>
+			</svg> -->
+			<img src="~/assets/img/logo.png" class="w-24 h-24" alt="" srcset="" />
+			<span class="text-2xl font-extrabold">UQI Media</span>
 		</a>
 		<nav class="pt-4">
 			<ul>
@@ -96,22 +97,16 @@
 						</template>
 					</DropdownMenu>
 				</li>
-				<li>
-					<DropdownMenu title="Pemesanan" class="cursor-pointer">
-						<template #icon>
+				<NuxtLink to="/pemesanan">
+					<li>
+						<a href="#" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
 							<svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
 							</svg>
-						</template>
-						<template #list>
-							<NuxtLink to="/pemesanan/kelola-pemesanan">
-								<li class="dropdown-item">
-									Kelola Pemesanan
-								</li>
-							</NuxtLink>
-						</template>
-					</DropdownMenu>
-				</li>
+							<span class="font-font-light">Kelola Pemesanan</span>
+						</a>
+					</li>
+				</NuxtLink>
 				<NuxtLink to="/manage-user">
 					<li>
 						<a href="#" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">

@@ -1,18 +1,25 @@
 <template>
 	<div>
-		<div class="grid grid-cols-12 gap-4">
-			<div class="relative col-span-12 my-4 md:col-span-6">
-				<input type="search" class="w-full py-2 pl-8 pr-4 text-sm font-medium text-gray-800 border border-gray-200 rounded-lg shadow md:w-3/5 focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" placeholder="Cari Produk..." v-model="search" />
-				<div class="absolute top-0 left-0 inline-flex items-center p-2">
-					<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-						<rect x="0" y="0" width="24" height="24" stroke="none"></rect>
-						<circle cx="10" cy="10" r="7" />
-						<line x1="21" y1="21" x2="15" y2="15" />
-					</svg>
-				</div>
+		<div class="grid grid-cols-12 gap-4 mt-6 mb-2">
+			<div class="flex flex-col col-span-12 col lg:col-span-8 sm:col-span-6">
+				<span class="mb-2 text-xs font-semibold">
+					Search :
+				</span>
+				<input class="block w-2/5 mt-1 text-xs border border-gray-300 rounded shadow form-input-lg focus:border-green-200 focus:outline-none focus:ring-2 focus:ring-green-300" placeholder="Cari Produk..." v-model="search" @keyup="searchData" />
 			</div>
-			<div class="flex items-center justify-between col-span-12 mb-2 space-x-2 md:justify-end md:mb-0 md:col-span-6">
-				<div class="">
+			<div class="grid grid-cols-12 col-span-12 space-x-4 align-middle sm:col-span-6 lg:col-span-4">
+				<div class="flex flex-col col-span-6">
+					<span class="mb-2 text-xs font-semibold md:text-right">
+						Items Per Page :
+					</span>
+					<select @change="onChangeRecordsPerPage" v-model="recordsPerPage" class="px-2 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300">
+						<option :value="5">5</option>
+						<option :value="10">10</option>
+						<option :value="25">25</option>
+						<option :value="50">50</option>
+					</select>
+				</div>
+				<div class="flex flex-col items-center col-span-6">
 					<button class="btn-with-icon btn btn-sm btn-blue" @click="modal = !modal">
 						<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -24,7 +31,7 @@
 		</div>
 
 		<div class="relative overflow-x-auto overflow-y-auto bg-white rounded-lg shadow">
-			<table class="table table-auto table-produk">
+			<table class="table table-auto table-produk border-table">
 				<thead class="bg-gray-100">
 					<tr class="text-left text-gray-800 font-title">
 						<th class="p-3"></th>
@@ -34,26 +41,45 @@
 						<th class="p-1"></th>
 					</tr>
 				</thead>
-				<tbody class="divide-y-2 divide-gray-100 divide-dotted">
-					<tr class="text-sm" v-for="product in searchProduk" :key="product.id">
-						<td class="w-32 p-3">
-							<img :src="'http://localhost:8000/storage/image_produk/' + product.slug + '/' + JSON.parse(product.image)[0].filename" alt="" class="object-cover border-2 rounded-md w-28 h-28 border-slate-200" />
-						</td>
-						<td class="p-3">{{ product.nama_produk }}</td>
-						<td class="p-3">{{ product.categories.nama_kategori }}</td>
-						<td class="p-3">1961</td>
-						<td class="p-1">
-							<NuxtLink :to="{name: 'produk-slug', params: {slug: product.slug}}">
-								<button class="p-1 text-blue-400 border border-blue-600 rounded-full focus:bg-blue-100 hover:text-blue-800">
-									<svg xmlns="http://www.w3.org/2000/svg" :class="content ? 'rotate-90 duration-300' : 'rotate-0 duration-300'" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-									</svg>
-								</button>
-							</NuxtLink>
+				<tbody class="divide-y-2 divide-gray-100 divide-dotted" v-if="products.data && products.data.length > 0">
+					<template v-for="product in products.data">
+						<tr class="text-sm">
+							<td class="w-32 p-3">
+								<img :src="'http://localhost:8000/storage/image_produk/' + product.slug + '/' + JSON.parse(product.image)[0].filename" alt="" class="object-cover border-2 rounded-md w-28 h-28 border-slate-200" />
+							</td>
+							<td class="p-3">{{ product.nama_produk }}</td>
+							<td class="p-3">{{ product.categories.nama_kategori }}</td>
+							<td class="p-3">1961</td>
+							<td class="p-1">
+								<NuxtLink :to="{name: 'produk-slug', params: {slug: product.slug}}">
+									<button class="p-1 text-blue-400 border border-blue-600 rounded-full focus:bg-blue-100 hover:text-blue-800">
+										<svg xmlns="http://www.w3.org/2000/svg" :class="content ? 'rotate-90 duration-300' : 'rotate-0 duration-300'" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+										</svg>
+									</button>
+								</NuxtLink>
+							</td>
+						</tr>
+					</template>
+				</tbody>
+				<tbody v-else>
+					<tr>
+						<td colspan="5">
+							<div class="flex items-center justify-center gap-4 py-20 font-semibold text-center">
+								<svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+									<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+								</svg>
+								<span class="text-2xl">
+									Tidak Ada Data
+								</span>
+							</div>
 						</td>
 					</tr>
 				</tbody>
 			</table>
+			<div>
+				<Pagination v-if="products.data && products.per_page < products.total" :total-pages="products.links.length - 2" :per-page="recordsPerPage" :current-page="products.current_page" @pagechanged="onPageChange"></Pagination>
+			</div>
 		</div>
 
 		<!-- Modal Tambah Produk -->
@@ -126,10 +152,11 @@
 <script>
 import Modal from "../ModalComponent.vue";
 import Spinner from "../SpinnerLoading.vue";
+import Pagination from "../../components/Pagination.vue";
 
 export default {
 	name: "DataProduk",
-	components: {Modal, Spinner},
+	components: {Modal, Spinner, Pagination},
 	props: ["products", "categories"],
 	data() {
 		return {
@@ -142,26 +169,26 @@ export default {
 			modal: false,
 			isloading: false,
 			validation: [],
+			recordsPerPage: 5,
 
 			search: "",
 		};
 	},
 
-	computed: {
-		searchProduk() {
-			let data = this.products;
-
-			if (this.search != "" && this.search) {
-				data = data.filter((item) => {
-					return item.nama_produk.toUpperCase().includes(this.search.toUpperCase());
-				});
-			}
-
-			return data;
-		},
-	},
+	computed: {},
 
 	methods: {
+		onChangeRecordsPerPage() {
+			this.$emit("load-data", this.recordsPerPage);
+		},
+		onPageChange(page) {
+			this.products.current_page = page;
+			this.$emit("load-page", this.products.current_page);
+		},
+		searchData() {
+			this.$emit("search-data", this.search);
+		},
+
 		closeModal() {
 			this.produk.nama_produk = "";
 			this.produk.id_kategori_produk = "";
@@ -204,6 +231,16 @@ export default {
 					.then((response) => {
 						this.closeModal();
 						this.$emit("get-data", response.data);
+					})
+					.then(() => {
+						this.$swal.fire({
+							icon: "success",
+							title: "Success...",
+							text: "Data Berhasil ditambahkan!",
+							showConfirmButton: false,
+							timer: 1500,
+							timerProgressBar: true,
+						});
 					})
 					.catch((error) => {
 						console.log(error.response.data);

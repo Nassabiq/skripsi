@@ -17,21 +17,37 @@
 						<th class="p-1"></th>
 					</tr>
 				</thead>
-				<tbody class="divide-y-2 divide-gray-100 divide-dotted">
-					<tr class="text-sm" v-for="(unit, index) in units">
-						<td class="p-3">{{ index + 1 }}</td>
-						<td class="p-3">{{ unit.nama_satuan }}</td>
-						<td class="p-2">
-							<button class="btn btn-sm btn-indigo" @click="editSatuan(unit, index)">
-								<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-									<path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+				<tbody class="divide-y-2 divide-gray-100 divide-dotted" v-if="units.length > 0">
+					<template v-for="(unit, index) in units">
+						<tr class="text-sm">
+							<td class="p-3">{{ index + 1 }}</td>
+							<td class="p-3">{{ unit.nama_satuan }}</td>
+							<td class="p-2">
+								<button class="btn btn-sm btn-indigo" @click="editSatuan(unit, index)">
+									<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+										<path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+									</svg>
+								</button>
+								<button class="btn btn-sm btn-red" @click="deleteSatuan(unit, index)">
+									<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+										<path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+									</svg>
+								</button>
+							</td>
+						</tr>
+					</template>
+				</tbody>
+				<tbody v-else>
+					<tr>
+						<td colspan="3">
+							<div class="flex items-center justify-center gap-4 font-semibold text-center py-14">
+								<svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+									<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
 								</svg>
-							</button>
-							<button class="btn btn-sm btn-red" @click="deleteSatuan(unit, index)">
-								<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-									<path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-								</svg>
-							</button>
+								<span class="text-2xl">
+									Tidak Ada Data
+								</span>
+							</div>
 						</td>
 					</tr>
 				</tbody>
