@@ -16,5 +16,5 @@ class HargaJualProduk extends Model
 
     protected $table = 'harga_jual_produk';
 
-    protected $fillable = ['id_harga_jual', 'id_produk', 'harga', 'tgl_diubah'];
+    protected $fillable = ['id_harga_jual', 'id_sku', 'harga', 'tgl_diubah'];
 }

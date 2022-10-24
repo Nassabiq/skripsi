@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\KategoriProduk;
+use App\Models\Produk;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -17,5 +19,7 @@ class DatabaseSeeder extends Seeder
         // \App\Models\ProductCategory::factory(10)->create();
 
         // $this->call(UnitSeeder::class);
+        // Produk::factory(50)->create();
+        KategoriProduk::factory(10)->create();
     }
 }

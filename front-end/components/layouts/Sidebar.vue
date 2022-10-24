@@ -25,20 +25,20 @@
 				<NuxtLink to="/produk">
 					<li>
 						<a href="#" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
-							<svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-size">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
 							</svg>
-							<span class="font-font-light">Kelola Data Produk</span>
+							<span class="font-font-light">Data Produk</span>
 						</a>
 					</li>
 				</NuxtLink>
-				<NuxtLink to="/pencatatan-transaksi">
+				<NuxtLink to="/bahan-baku">
 					<li>
 						<a href="#" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
-							<svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-size">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
 							</svg>
-							<span class="font-font-light">Pencatatan Transaksi</span>
+							<span class="font-font-light">Data Bahan Baku</span>
 						</a>
 					</li>
 				</NuxtLink>
@@ -53,19 +53,13 @@
 							</template>
 							<template #list>
 								<NuxtLink to="/persediaan/laporan-persediaan">
-									<li class="dropdown-item">
-										Laporan Persediaan
-									</li>
+									<li class="dropdown-item">Laporan Persediaan</li>
 								</NuxtLink>
 								<NuxtLink to="/persediaan/kelola-persediaan">
-									<li class="dropdown-item">
-										Kelola Persediaan
-									</li>
+									<li class="dropdown-item">Kelola Persediaan</li>
 								</NuxtLink>
 								<NuxtLink to="/persediaan/pengadaan">
-									<li class="dropdown-item">
-										Pengadaan Barang
-									</li>
+									<li class="dropdown-item">Pengadaan Barang</li>
 								</NuxtLink>
 							</template>
 						</DropdownMenu>
@@ -80,19 +74,13 @@
 						</template>
 						<template #list>
 							<NuxtLink to="/penjualan/laporan-penjualan">
-								<li class="dropdown-item">
-									Laporan Penjualan
-								</li>
+								<li class="dropdown-item">Laporan Penjualan</li>
 							</NuxtLink>
 							<NuxtLink to="/penjualan/analisis-hpp">
-								<li class="dropdown-item">
-									Analisis HPP
-								</li>
+								<li class="dropdown-item">Analisis HPP</li>
 							</NuxtLink>
 							<NuxtLink to="/penjualan/kelola-harga-jual">
-								<li class="dropdown-item">
-									Kelola Harga Jual
-								</li>
+								<li class="dropdown-item">Kelola Harga Jual</li>
 							</NuxtLink>
 						</template>
 					</DropdownMenu>
@@ -117,14 +105,6 @@
 						</a>
 					</li>
 				</NuxtLink>
-				<li>
-					<a href="#" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-blue-400">
-						<svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-						</svg>
-						About
-					</a>
-				</li>
 			</ul>
 		</nav>
 	</div>

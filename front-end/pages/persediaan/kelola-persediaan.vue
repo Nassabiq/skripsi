@@ -14,9 +14,7 @@
 				</div>
 				<div class="flex items-center justify-between col-span-12 mb-2 space-x-4 md:justify-end md:mb-0 md:col-span-6">
 					<div class="flex flex-col col-span-6">
-						<span class="mb-2 text-xs font-semibold md:text-right">
-							Items Per Page :
-						</span>
+						<span class="mb-2 text-xs font-semibold md:text-right"> Items Per Page : </span>
 						<select @change="onChangeRecordsPerPage" v-model="show" class="px-2 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300">
 							<option :value="5">5</option>
 							<option :value="10">10</option>
@@ -39,9 +37,7 @@
 				<table class="table table-auto table-produk">
 					<thead class="bg-gray-100">
 						<tr class="text-left text-gray-800 font-title">
-							<th class="p-3">
-								Id Barang Masuk
-							</th>
+							<th class="p-3">Id Barang Masuk</th>
 							<th class="p-3">Tgl Transaksi</th>
 							<th class="p-3">User</th>
 							<th class="p-3">Jumlah Pesanan</th>
@@ -67,9 +63,7 @@
 							</tr>
 							<tr>
 								<td class="p-3 bg-sky-100" colspan="6" v-show="content === index">
-									<div class="px-4 pb-2 font-semibold">
-										Detail Barang Masuk
-									</div>
+									<div class="px-4 pb-2 font-semibold">Detail Barang Masuk</div>
 									<div class="grid grid-cols-2" v-for="(data, index) in data.detail_barang" :key="index">
 										<div class="col-span-2 md:col-span-1">
 											<div class="border-t border-sky-200">
@@ -115,9 +109,7 @@
 									<svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
 										<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
 									</svg>
-									<span class="text-2xl">
-										Tidak Ada Data
-									</span>
+									<span class="text-2xl"> Tidak Ada Data </span>
 								</div>
 							</td>
 						</tr>
@@ -127,12 +119,6 @@
 					<Pagination v-if="barangMasuk.data && barangMasuk.per_page < barangMasuk.total" :total-pages="barangMasuk.links.length - 2" :per-page="show" :current-page="barangMasuk.current_page" @pagechanged="onPageChange"></Pagination>
 				</div>
 			</div>
-		</div>
-		<div class="grid grid-cols-4 gap-4">
-			<div class="col-span-4 md:col-span-3">
-				<BahanBaku :materials="materials" :produk="produk" :units="units" @get-data="getData"></BahanBaku>
-			</div>
-			<div class="col-span-4 md:col-span-1"></div>
 		</div>
 		<Modal size="max-w-2xl" title="Tambah Stok" @close-modal="closeModal" v-show="modalTambahStok">
 			<template #content>
@@ -158,7 +144,7 @@
 								<input type="text" class="form-input form-input-lg" v-model.number="stok[index].qty" />
 								<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.qty">{{ validation.qty[0] }}</p> -->
 							</div>
-							<button class="mt-1 btn btn-sm btn-indigo" v-if="(index == 0)" @click="addForm">
+							<button class="mt-1 btn btn-sm btn-indigo" v-if="index == 0" @click="addForm">
 								<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
 								</svg>
@@ -183,23 +169,20 @@
 				</div>
 			</template>
 			<template #submit>
-				<button class="btn btn-lg btn-green" @click.prevent="addStok">
-					Submit
-				</button>
+				<button class="btn btn-lg btn-green" @click.prevent="addStok">Submit</button>
 			</template>
 		</Modal>
 	</div>
 </template>
 
 <script>
-import BahanBaku from "../../components/persediaan/DataBahanBaku.vue";
 import {number} from "@coders-tm/vue-number-format";
 import Pagination from "../../components/Pagination.vue";
 
 export default {
 	name: "KelolaPersediaan",
 	layout: "auth",
-	components: {BahanBaku, number, Pagination},
+	components: {number, Pagination},
 	auth: false,
 	data() {
 		return {
@@ -268,7 +251,7 @@ export default {
 		},
 		async getProducts() {
 			this.$axios
-				.get("/api/product")
+				.get("/api/produk")
 				.then((response) => {
 					this.produk = response.data;
 				})

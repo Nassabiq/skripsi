@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\HargaJualProduk;
-use App\Models\Product;
-use App\Models\ProductCategory;
+use App\Models\Produk;
 use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,10 +19,10 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $search = '%' . $request->search . '%';
-        if ($request->show == null) {
-            $product =  Product::with('categories.satuan', 'harga')->get();
+        if ($request->search == null) {
+            $product =  Produk::with('kategori')->paginate(8);
         } else {
-            $product =  Product::with('categories.satuan', 'harga')->where('nama_produk', 'like', $search)->paginate($request->show);
+            $product =  Produk::with('kategori')->where('nama_produk', 'like', $search)->paginate(8);
         }
         return response()->json($product, 200);
     }
@@ -38,12 +37,6 @@ class ProductController extends Controller
     {
         $category = ProductCategory::with('satuan')->get();
         return response()->json($category, 200);
-    }
-
-    public function satuan()
-    {
-        $satuan = Unit::get();
-        return response()->json($satuan, 200);
     }
 
     // CREATE RECORD INTO DATABASE

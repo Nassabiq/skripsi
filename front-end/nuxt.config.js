@@ -18,10 +18,17 @@ export default {
 	},
 
 	// Global CSS: https://go.nuxtjs.dev/config-css
-	css: ["@/assets/css/main.css"],
+	css: [
+		"@/assets/css/main.css",
+		"quill/dist/quill.core.css",
+		// for snow theme
+		"quill/dist/quill.snow.css",
+		// for bubble theme
+		"quill/dist/quill.bubble.css",
+	],
 
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-	plugins: [{src: "@/plugins/modal.js"}, {src: "@/plugins/vue-html2pdf", mode: "client"}, {src: "~/plugins/vue-datepicker", ssr: false}],
+	plugins: [{src: "@/plugins/modal.js"}, {src: "@/plugins/vue-html2pdf", mode: "client"}, {src: "~/plugins/vue-datepicker", ssr: false}, {src: "~plugins/nuxt-quill-plugin", ssr: false}],
 
 	// Auto import components: https://go.nuxtjs.dev/config-components
 	components: true,
@@ -52,7 +59,7 @@ export default {
 	axios: {
 		// proxy: true,
 		baseUrl: "http://127.0.0.1:8000",
-		// credentials: true,
+		credentials: true,
 	},
 	// proxy: {
 	// 	"/api": {

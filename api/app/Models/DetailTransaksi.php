@@ -16,7 +16,7 @@ class DetailTransaksi extends Model
 
     protected $table = 'detail_transaksi';
 
-    protected $fillable = ['id_detail_transaksi', 'id_transaksi', 'id_produk', 'jenis_bahan', 'qty', 'subtotal', 'ukuran', 'finishing', 'laminasi'];
+    protected $fillable = ['id_detail_transaksi', 'id_transaksi', 'id_produk', 'jenis_bahan', 'qty_produk', 'subtotal', 'ukuran', 'catatan', 'jenis_finishing'];
 
     public function transaksi()
     {
@@ -24,11 +24,6 @@ class DetailTransaksi extends Model
     }
     public function produk()
     {
-        return $this->hasOne(Product::class, 'id_produk', 'id_produk');
-    }
-
-    public function pencatatan()
-    {
-        return $this->hasOne(PencatatanProduksi::class, 'id_pencatatan', 'id_pencatatan');
+        return $this->belongsTo(Produk::class, 'id_produk', 'id_produk');
     }
 }
