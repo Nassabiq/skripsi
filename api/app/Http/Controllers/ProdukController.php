@@ -16,11 +16,10 @@ class ProdukController extends Controller
     public function index(Request $request)
     {
         $search = '%' . $request->search . '%';
-        if ($request->show == null) {
-            $produk =  Produk::with('kategori')->get();
-        } else {
-            $produk =  Produk::with('kategori')->where('nama_produk', 'like', $search)->paginate($request->show);
-        }
+
+        if ($request->show == null) $produk =  Produk::with('kategori')->get();
+        else $produk =  Produk::with('kategori')->where('nama_produk', 'like', $search)->paginate($request->show);
+
         return response()->json($produk, 200);
     }
 
@@ -51,29 +50,20 @@ class ProdukController extends Controller
         if ($validator->fails()) return response()->json($validator->errors(), 400);
 
         $files = [];
+        $id = IdGenerator::generate(['table' => 'produk', 'field' => 'id_produk', 'length' => 10, 'prefix' => 'Prod-']);
 
         $i = 1;
         $path = '/temporary';
         if ($request->hasFile('image')) {
             foreach ($request->file('image') as $key => $image) {
-                // var_dump($request->file('image'));
-                $filename = "image-" . Str::slug($request->nama_produk) . "-" . $i++ . "." . $image->getClientOriginalExtension();
-
-                $imgFile = Image::make($image->getRealPath() . $image->getClientOriginalExtension());
-                $imgFile->resizeCanvas(300, 300)->save($path . '/' . $filename, 60, 'jpg');
-
-                $image->move(storage_path('image_produk/' . Str::slug($request->nama_produk) . '/' . $imgFile));
+                $filename = "image-" . $id . "-" . $i++ . "." . $image->getClientOriginalExtension();
+                $image->storeAs('image_produk/' . $id, $filename);
 
                 // $dir = DIRECTORY_SEPARATOR;
                 $fileUrl = "image_produk/" . Str::slug($request->nama_produk) . "/" . $filename;
                 $files[] = compact('filename', 'fileUrl');
             }
-        } else {
-            return response()->json('Invalid', 400);
-        }
-
-
-        $id = IdGenerator::generate(['table' => 'produk', 'field' => 'id_produk', 'length' => 10, 'prefix' => 'Prod-']);
+        } else return response()->json('Invalid', 400);
 
         $produk = Produk::create([
             'id_produk' => $id,
@@ -99,9 +89,7 @@ class ProdukController extends Controller
             'informasi_pemesanan'   => 'required',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
+        if ($validator->fails()) return response()->json($validator->errors(), 400);
 
         $produk = Produk::findOrFail($id);
         $produk->nama_produk =  $request->nama_produk;

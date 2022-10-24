@@ -4,14 +4,14 @@
 			<div class="grid grid-cols-12 gap-4">
 				<div class="col-span-5">
 					<div class="item">
-						<img v-if="product.image" :src="imageUrl + product.slug_produk + '/' + currentImage" class="object-cover w-full border-2 border-slate-200 h-80" />
+						<img v-if="product.image" :src="imageUrl + product.id_produk + '/' + currentImage" class="object-cover w-full border-2 border-slate-200 h-80" />
 						<!-- <img :src="product.image" class="object-cover w-full border-2 border-slate-200 h-80" /> -->
 						<!-- <Skeleton v-else /> -->
 						<!-- <p v-else>Delete</p> -->
 					</div>
 					<div class="grid grid-cols-4 gap-4 mt-4 thumbnails">
 						<div class="col-span-1 cursor-pointer" v-for="(img, index) in product.image" :key="index" @click.prevent="activateImage(index)">
-							<img :src="imageUrl + product.slug_produk + '/' + img.filename" alt="" :class="activeImage == index ? 'outline outline-offset-2 outline-4 outline-sky-500 ring-2 ring-red-300' : ''" class="object-cover w-full h-24 rounded-md" />
+							<img :src="imageUrl + product.id_produk + '/' + img.filename" alt="" :class="activeImage == index ? 'outline outline-offset-2 outline-4 outline-sky-500 ring-2 ring-red-300' : ''" class="object-cover w-full h-24 rounded-md" />
 						</div>
 					</div>
 

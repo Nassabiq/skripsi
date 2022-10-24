@@ -32,7 +32,7 @@
 						<a href="#" class="px-3 py-2 bg-gray-100 rounded-lg shadow-lg group shadow-gray-200" v-for="product in products.data">
 							<NuxtLink :to="{name: 'produk-id', params: {id: product.id_produk}}">
 								<div class="w-full overflow-hidden bg-gray-200 rounded-lg aspect-w-1 aspect-h-1">
-									<img :src="'http://localhost:8000/storage/image_produk/' + product.slug_produk + '/' + JSON.parse(product.image)[0].filename" alt="" class="object-cover w-full h-full border-2 rounded-md border-slate-200" />
+									<img :src="'http://localhost:8000/storage/image_produk/' + product.id_produk + '/' + JSON.parse(product.image)[0].filename" alt="" class="object-cover w-full h-full border-2 rounded-md border-slate-200" />
 									<!-- <img :src="product.image" class="object-cover object-center w-full h-full group-hover:opacity-75" /> -->
 								</div>
 								<p class="mt-4 text-gray-700">{{ product.nama_produk }}</p>
