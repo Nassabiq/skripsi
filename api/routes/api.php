@@ -42,6 +42,7 @@ Route::post('/updateHarga', [ProductController::class, 'updateHarga']);
 
 Route::get('/bahan-baku', [BahanBakuController::class, 'index']);
 Route::post('/addBahanBaku', [BahanBakuController::class, 'addBahanBaku']);
+Route::post('/editBahanBaku/{id_bahan_baku}', [BahanBakuController::class, 'editBahanBaku']);
 Route::post('/deleteBahanBaku/{id_bahan_baku}', [BahanBakuController::class, 'deleteBahanBaku']);
 
 Route::get('/barangMasuk', [BarangMasukController::class, 'index']);

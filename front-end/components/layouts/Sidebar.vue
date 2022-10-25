@@ -9,39 +9,39 @@
 		</a>
 		<nav class="pt-4">
 			<ul>
-				<NuxtLink to="/">
-					<li>
+				<li>
+					<NuxtLink to="/">
 						<a href="#" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
 							<svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
 							</svg>
 							<span class="font-font-light">Dashboard</span>
 						</a>
-					</li>
-				</NuxtLink>
+					</NuxtLink>
+				</li>
 				<li>
 					<span class="px-4 py-1 mt-2 text-xs font-medium text-white">Menu</span>
 				</li>
-				<NuxtLink to="/produk">
-					<li>
+				<li>
+					<NuxtLink to="/produk">
 						<a href="#" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-size">
 								<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
 							</svg>
 							<span class="font-font-light">Data Produk</span>
 						</a>
-					</li>
-				</NuxtLink>
-				<NuxtLink to="/bahan-baku">
-					<li>
+					</NuxtLink>
+				</li>
+				<li>
+					<NuxtLink to="/bahan-baku">
 						<a href="#" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-size">
 								<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
 							</svg>
 							<span class="font-font-light">Data Bahan Baku</span>
 						</a>
-					</li>
-				</NuxtLink>
+					</NuxtLink>
+				</li>
 				<li>
 					<div class="relative">
 						<DropdownMenu title="Persediaan" class="cursor-pointer">
@@ -59,7 +59,7 @@
 									<li class="dropdown-item">Kelola Persediaan</li>
 								</NuxtLink>
 								<NuxtLink to="/persediaan/pengadaan">
-									<li class="dropdown-item">Pengadaan Barang</li>
+									<li class="dropdown-item">Pengadaan Persediaan</li>
 								</NuxtLink>
 							</template>
 						</DropdownMenu>
@@ -85,26 +85,26 @@
 						</template>
 					</DropdownMenu>
 				</li>
-				<NuxtLink to="/pemesanan">
-					<li>
+				<li>
+					<NuxtLink to="/pemesanan">
 						<a href="#" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
 							<svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
 							</svg>
 							<span class="font-font-light">Kelola Pemesanan</span>
 						</a>
-					</li>
-				</NuxtLink>
-				<NuxtLink to="/manage-user">
-					<li>
+					</NuxtLink>
+				</li>
+				<li>
+					<NuxtLink to="/manage-user">
 						<a href="#" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
 							<svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
 							</svg>
 							<span class="font-font-light">Kelola User</span>
 						</a>
-					</li>
-				</NuxtLink>
+					</NuxtLink>
+				</li>
 			</ul>
 		</nav>
 	</div>

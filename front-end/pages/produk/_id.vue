@@ -118,7 +118,7 @@
 		</Modal>
 
 		<!-- Modal Update Image -->
-		<Modal size="max-w-2xl" title="Edit Image Produk" @close-modal="modalImage = !modalImage" v-show="modalImage">
+		<Modal size="max-w-2xl" title="Edit Image Produk" @close-modal="closeModalImage" v-show="modalImage">
 			<template #content>
 				<div class="col-span-12">
 					<ul class="px-2 py-1 mt-2 bg-green-200 border-2 border-green-500 divide-y divide-green-500 rounded-md">
@@ -288,6 +288,13 @@ export default {
 		},
 		openModalImage() {
 			this.modalImage = !this.modalImage;
+		},
+
+		closeModalImage() {
+			this.modalImage = false;
+			this.uploadedImage.addImage = [];
+			this.uploadedImage.deletedImage = [];
+			this.getData();
 		},
 
 		removeImage(key) {

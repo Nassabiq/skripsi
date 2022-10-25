@@ -37,7 +37,7 @@
 								</div>
 								<p class="mt-4 text-gray-700">{{ product.nama_produk }}</p>
 								<p class="mt-1 text-sm font-medium text-gray-900">
-									$48<span class="mt-4 text-xs text-gray-600">/ {{ product.satuan_produk }}</span>
+									Rp. 48<span class="mt-4 text-xs text-gray-600">/ {{ product.satuan_produk }}</span>
 								</p>
 							</NuxtLink>
 						</a>
@@ -97,12 +97,14 @@
 									<li v-for="(image, key) in produk.image" class="p-2 text-xs">
 										<div class="flex items-center justify-between">
 											<p>{{ image.name }}</p>
+											<p class="font-semibold">{{ formatBytes(image.size) }}</p>
 											<button class="btn btn-sm btn-red" @click="removeImage(key)">
 												<svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor">
 													<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
 												</svg>
 											</button>
 										</div>
+										<span class="text-xs text-red-500" v-if="validation[`image.` + key]">Image must not be greater than 5000 kilobytes.</span>
 									</li>
 								</ul>
 							</div>
@@ -246,7 +248,6 @@ export default {
 					.post("/api/addProduk", imageData)
 					.then((response) => {
 						this.closeModal();
-						// this.$emit("get-data", response.data);
 						this.getProducts();
 					})
 					.then(() => {
@@ -269,6 +270,18 @@ export default {
 			}, 500);
 		},
 
+		formatBytes(bytes, decimals = 2) {
+			if (!+bytes) return "0 Bytes";
+
+			const k = 1024;
+			const dm = decimals < 0 ? 0 : decimals;
+			const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+
+			const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+			return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+		},
+
 		closeModal() {
 			this.produk.nama_produk = "";
 			this.produk.id_kategori_produk = "";
@@ -288,9 +301,7 @@ export default {
 			for (let i = 0; i < selectedImage.length; i++) {
 				let isFileExists = this.produk.image.find((file) => file.type === selectedImage[i].type && file.name === selectedImage[i].name && file.size === selectedImage[i].size && file.lastModified === selectedImage[i].lastModified);
 
-				if (!isFileExists) {
-					this.produk.image.push(selectedImage[i]);
-				}
+				if (!isFileExists) this.produk.image.push(selectedImage[i]);
 			}
 		},
 		removeImage(key) {

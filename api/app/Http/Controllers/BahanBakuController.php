@@ -48,13 +48,15 @@ class BahanBakuController extends Controller
         return response()->json($material, 200);
     }
 
-    public function editDataMaterial(Request $request, $id)
+    public function editBahanBaku(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'nama_bahan_baku'   => 'required',
             'id_satuan'   => 'required',
             'id_produk'   => 'required',
         ]);
+
+        if ($validator->fails()) return response()->json($validator->errors(), 400);
 
         $material = Material::find($id);
         $material->id_satuan = $request->id_satuan;
@@ -69,6 +71,5 @@ class BahanBakuController extends Controller
         $data->delete();
         SKU::where('id_bahan_baku', $id)->delete();
         return response()->json($data, 200);
-        // return response()->json($id, 200);
     }
 }

@@ -43,7 +43,7 @@ class ProdukController extends Controller
             'satuan_produk'   => 'required',
             'description'   => 'required',
             'informasi_pemesanan'   => 'required',
-            'image'   => 'required',
+            'image'   => 'required|max:5',
             'image.*'   => 'image|mimes:jpeg,png,jpg,gif,svg|max:5000',
         ]);
 
@@ -60,7 +60,7 @@ class ProdukController extends Controller
                 $image->storeAs('image_produk/' . $id, $filename);
 
                 // $dir = DIRECTORY_SEPARATOR;
-                $fileUrl = "image_produk/" . Str::slug($request->nama_produk) . "/" . $filename;
+                $fileUrl = "image_produk/" . $id . "/" . $filename;
                 $files[] = compact('filename', 'fileUrl');
             }
         } else return response()->json('Invalid', 400);
@@ -103,11 +103,50 @@ class ProdukController extends Controller
         return response()->json($produk, 200);
     }
 
+    public function updateImage($id, Request $request)
+    {
+        $product = Produk::findOrFail($id);
+        $image = json_decode($product->image);
+
+        $path = public_path('storage/');
+
+        foreach ($image as $key => $img) {
+            if ($request->deletedImage) {
+                foreach ($request->deletedImage as $imgDeleted) {
+                    $deletedImage = json_decode($imgDeleted);
+                    if ($img->filename == $deletedImage->filename) {
+                        $filename = $path . $img->fileUrl;
+                        unlink($filename);
+                        unset($image[$key]);
+                    }
+                }
+            }
+        }
+        $i = count($image) + 1;
+        if ($request->hasFile('image')) {
+            foreach ($request->file('image') as $img) {
+                $filename = "image-" . $product->id_produk . "-" . $i++ . "." . $img->getClientOriginalExtension();
+                $img = $img->storeAs('image_produk/' . $product->id_produk, $filename);
+
+                // $dir = DIRECTORY_SEPARATOR;
+                $fileUrl = "image_produk/" . $product->id_produk . "/" . $filename;
+                $files = compact('filename', 'fileUrl');
+
+                $image[] = $files;
+            }
+        }
+
+        $product->image = json_encode($image);
+        $product->save();
+
+        return response()->json($product, 200);
+    }
+
     // DELETE DATA FROM DATABASE
     public function deleteProduk($id)
     {
         $produk = Produk::findOrFail($id);
-        Storage::deleteDirectory('image_produk/' . $produk->slug);
+        Storage::deleteDirectory('image_produk/' . $produk->id_produk);
         $produk->delete();
         return response()->json($produk, 200);
     }
