@@ -52,17 +52,23 @@ class BahanBakuController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nama_bahan_baku'   => 'required',
-            'id_satuan'   => 'required',
+            'satuan_bahan_baku'   => 'required',
             'id_produk'   => 'required',
         ]);
 
         if ($validator->fails()) return response()->json($validator->errors(), 400);
 
-        $material = Material::find($id);
-        $material->id_satuan = $request->id_satuan;
+        $material = BahanBaku::find($id);
         $material->nama_bahan_baku = $request->nama_bahan_baku;
-        $material->slug = Str::slug($request->nama_bahan_baku);
+        $material->slug_bahan_baku = Str::slug($request->nama_bahan_baku);
+        $material->satuan_bahan_baku = $request->satuan_bahan_baku;
         $material->save();
+
+        $sku = SKU::where('id_bahan_baku', $id)->first();
+        $sku->id_produk = $request->id_produk;
+        $sku->save();
+
+        return response()->json(['bahan_baku' => $material, 'sku' => $sku], 200);
     }
 
     public function deleteBahanBaku($id)

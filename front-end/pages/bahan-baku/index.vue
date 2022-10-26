@@ -34,12 +34,12 @@
 								<td class="p-3" v-for="item in data.stok">{{ item.jml_stok }}</td>
 								<td class="p-3">{{ data.satuan_bahan_baku }}</td>
 								<td class="p-2">
-									<button class="btn btn-sm btn-indigo">
+									<button class="btn btn-sm btn-indigo" @click.prevent="editBahanBaku(data)">
 										<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
 											<path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
 										</svg>
 									</button>
-									<button class="btn btn-sm btn-red" @click="deleteBahanBaku(data.id_bahan_baku)">
+									<button class="btn btn-sm btn-red" @click.prevent="deleteBahanBaku(data.id_bahan_baku)">
 										<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
 											<path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
 										</svg>
@@ -63,7 +63,7 @@
 				</table>
 			</div>
 		</div>
-		<Modal size="max-w-xl" title="Tambah Bahan Baku" @close-modal="closeModal" v-show="modalBahanBaku">
+		<Modal size="max-w-xl" :title="updateMode ? 'Edit Bahan Baku' : 'Tambah Bahan Baku'" @close-modal="closeModal" v-show="modalBahanBaku">
 			<template #content>
 				<div class="col-span-12 sm:col-span-9">
 					<label class="label">Nama Bahan Baku</label>
@@ -85,7 +85,8 @@
 				</div>
 			</template>
 			<template #submit>
-				<button class="btn btn-lg btn-green" @click.prevent="addBahanBaku">Submit</button>
+				<button class="btn btn-lg btn-green" @click.prevent="addBahanBaku" v-if="!updateMode">Submit</button>
+				<button class="btn btn-lg btn-green" @click.prevent="updateBahanBaku" v-else>Update</button>
 			</template>
 		</Modal>
 		<Spinner v-show="isloading"></Spinner>
@@ -106,6 +107,7 @@ export default {
 			bahanBaku: [],
 			produk: [],
 
+			id_bahan_baku: "",
 			material: {
 				nama_bahan_baku: "",
 				satuan_bahan_baku: "",
@@ -113,6 +115,7 @@ export default {
 			},
 			validation: [],
 			isloading: false,
+			updateMode: false,
 
 			search: "",
 		};
@@ -179,7 +182,45 @@ export default {
 					});
 				})
 				.catch((error) => {
-					console.log(error.response.data);
+					this.validation = error.response.data;
+				})
+				.finally(() => {
+					this.isloading = false;
+				});
+		},
+		editBahanBaku(data) {
+			this.updateMode = true;
+			this.modalBahanBaku = true;
+
+			this.id_bahan_baku = data.id_bahan_baku;
+			this.material.nama_bahan_baku = data.nama_bahan_baku;
+			this.material.satuan_bahan_baku = data.satuan_bahan_baku;
+			this.material.id_produk = data.stok[0].id_produk;
+		},
+
+		async updateBahanBaku() {
+			this.isloading = true;
+			this.$axios
+				.post("/api/editBahanBaku/" + this.id_bahan_baku, {
+					nama_bahan_baku: this.material.nama_bahan_baku,
+					satuan_bahan_baku: this.material.satuan_bahan_baku,
+					id_produk: this.material.id_produk,
+				})
+				.then(() => {
+					this.closeModal();
+					this.getData();
+				})
+				.then(() => {
+					this.$swal.fire({
+						icon: "success",
+						title: "Success...",
+						text: "Data Berhasil ditambah!",
+						showConfirmButton: false,
+						timer: 1500,
+						timerProgressBar: true,
+					});
+				})
+				.catch((error) => {
 					this.validation = error.response.data;
 				})
 				.finally(() => {
@@ -205,7 +246,7 @@ export default {
 							this.$axios
 								.post("api/deleteBahanBaku/" + id)
 								.then(() => {
-									this.$swal.fire("Deleted!", "Your file has been deleted.", "success");
+									this.$swal.fire("Deleted!", "Data Berhasil dihapus.", "success");
 								})
 								.then(() => {
 									this.getData();
