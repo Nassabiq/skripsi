@@ -20,6 +20,6 @@ class PengadaanPersediaan extends Model
 
     public function detailPengadaan()
     {
-        return $this->hasMany(DetailPengadaanBarang::class, 'id_pengadaan');
+        return $this->hasMany(DetailPengadaan::class, 'id_pengadaan');
     }
 }

@@ -40,9 +40,7 @@ class BarangMasukController extends Controller
             'stok.*.qty.required' => "field qty harus diisi",
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->messages(), 400);
-        }
+        if ($validator->fails()) return response()->json($validator->messages(), 400);
 
         $id_barang_masuk = IdGenerator::generate(['table' => 'barang_masuk', 'field' => 'id_barang_masuk', 'length' => 17, 'prefix' => 'STOK-' . date('dmY')]);
 

@@ -40,13 +40,12 @@ class PengadaanController extends Controller
             'pengadaan.*.id_material'   => 'required',
             'pengadaan.*.jumlah_barang'   => 'required',
         ], [
-            'pengadaan.*.nama_bahan_baku.required' => "field nama bahan baku harus diisi",
-            'pengadaan.*.jumlah_barang.required' => "field jumlah barang harus diisi",
+            'required' => 'field ini harus diisi',
+            'pengadaan.*.nama_bahan_baku.required' => "field :attributes harus diisi",
+            'pengadaan.*.jumlah_barang.required' => "field :attributes harus diisi",
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->messages(), 400);
-        }
+        if ($validator->fails()) return response()->json($validator->errors(), 400);
 
         $id_pengadaan = IdGenerator::generate(['table' => 'pengadaan_barang', 'field' => 'id_pengadaan', 'length' => 17, 'prefix' => 'PBrg-' . date('dmY')]);
 

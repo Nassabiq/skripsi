@@ -5,6 +5,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\BahanBakuController;
 use App\Http\Controllers\BarangMasukController;
 use App\Http\Controllers\PengadaanController;
+use App\Http\Controllers\PengadaanPersediaanController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\TransaksiPenjualanController;
 use Illuminate\Http\Request;
@@ -34,11 +35,11 @@ Route::post('/updateProduk/{id_produk}', [ProdukController::class, 'updateProduk
 Route::post('/updateImage/{id_produk}', [ProdukController::class, 'updateImage']);
 Route::post('/deleteProduk/{id_produk}', [ProdukController::class, 'deleteProduk']);
 
-Route::post('/addKategori', [ProductController::class, 'addKategori']);
-Route::post('/updateKategori/{id_kategori_produk}', [ProductController::class, 'updateKategori']);
-Route::post('/deleteKategori/{id_kategori_produk}', [ProductController::class, 'deleteKategori']);
+// Route::post('/addKategori', [ProductController::class, 'addKategori']);
+// Route::post('/updateKategori/{id_kategori_produk}', [ProductController::class, 'updateKategori']);
+// Route::post('/deleteKategori/{id_kategori_produk}', [ProductController::class, 'deleteKategori']);
 
-Route::post('/updateHarga', [ProductController::class, 'updateHarga']);
+// Route::post('/updateHarga', [ProductController::class, 'updateHarga']);
 
 Route::get('/bahan-baku', [BahanBakuController::class, 'index']);
 Route::post('/addBahanBaku', [BahanBakuController::class, 'addBahanBaku']);
@@ -49,13 +50,13 @@ Route::get('/barangMasuk', [BarangMasukController::class, 'index']);
 Route::get('/laporanBarangMasuk', [BarangMasukController::class, 'laporanBarangMasuk']);
 Route::post('/addStok', [BarangMasukController::class, 'addStok']);
 
-Route::get('/pengadaan', [PengadaanController::class, 'index']);
-Route::get('/pengadaan/{id_pengadaan}', [PengadaanController::class, 'details']);
+Route::get('/pengadaan', [PengadaanPersediaanController::class, 'index']);
+Route::get('/pengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'details']);
 
-Route::post('/addPengadaan', [PengadaanController::class, 'addPengadaan']);
-Route::post('/updatePengadaan/{id_pengadaan}', [PengadaanController::class, 'updatePengadaan']);
-Route::post('/validasiPengadaan/{id_pengadaan}', [PengadaanController::class, 'validasiPengadaan']);
-Route::post('/deletePengadaan/{id_pengadaan}', [PengadaanController::class, 'deletePengadaan']);
+Route::post('/addPengadaan', [PengadaanPersediaanController::class, 'addPengadaan']);
+Route::post('/updatePengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'updatePengadaan']);
+Route::post('/validasiPengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'validasiPengadaan']);
+Route::post('/deletePengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'deletePengadaan']);
 
 Route::get('/transaksi', [TransaksiPenjualanController::class, 'index']);
 Route::get('/transaksi/{id_transaksi}', [TransaksiPenjualanController::class, 'detailTransaksi']);

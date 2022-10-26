@@ -52,14 +52,14 @@
 								</svg>
 							</template>
 							<template #list>
-								<NuxtLink to="/persediaan/laporan-persediaan">
-									<li class="dropdown-item">Laporan Persediaan</li>
-								</NuxtLink>
-								<NuxtLink to="/persediaan/kelola-persediaan">
-									<li class="dropdown-item">Kelola Persediaan</li>
-								</NuxtLink>
 								<NuxtLink to="/persediaan/pengadaan">
 									<li class="dropdown-item">Pengadaan Persediaan</li>
+								</NuxtLink>
+								<NuxtLink to="/persediaan/kelola-persediaan">
+									<li class="dropdown-item">Kelola Stok Masuk</li>
+								</NuxtLink>
+								<NuxtLink to="/persediaan/laporan-persediaan">
+									<li class="dropdown-item">Laporan Persediaan</li>
 								</NuxtLink>
 							</template>
 						</DropdownMenu>

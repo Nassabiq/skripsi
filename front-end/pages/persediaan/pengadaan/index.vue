@@ -47,53 +47,51 @@
 						<tr class="text-left text-gray-800 font-title">
 							<th class="p-3">No. Pengadaan</th>
 							<th class="p-3">Nama Pengadaan</th>
-							<th class="p-3">Jumlah</th>
 							<th class="p-3">Status</th>
 							<th class="p-3">Tgl Dibuat</th>
 							<th class="p-1"></th>
 							<th class="p-1"></th>
 						</tr>
 					</thead>
-					<tbody class="divide-y-2 divide-gray-100 divide-dotted" v-if="pengadaan_barang.data">
+					<tbody class="divide-y-2 divide-gray-100 divide-dotted" v-if="pengadaan_barang.data && pengadaan_barang.data.length > 0">
 						<template v-for="(data, index) in pengadaan_barang.data">
 							<tr class="text-sm">
 								<td class="p-3">{{ data.id_pengadaan }}</td>
 								<td class="p-3">{{ data.nama_pengadaan }}</td>
-								<td class="p-3">{{ data.detail_pengadaan.length }}</td>
 								<td class="p-3 text-xs">
 									<span class="px-2 py-1 text-xs text-gray-800 bg-yellow-200 border-2 border-yellow-500 rounded-full whitespace-nowrap" v-if="data.status_pengadaan == 0">Belum disetujui</span>
 									<span class="px-2 py-1 text-xs text-gray-800 bg-green-200 border-2 border-green-500 rounded-full whitespace-nowrap" v-else>Sudah disetujui</span>
 								</td>
 								<td class="p-3">{{ $moment(data.tgl_dibuat).format("DD-MMMM-YYYY") }}</td>
 								<td class="w-48 p-1 py-3">
-									<div class="flex flex-wrap gap-2">
-										<button class="btn btn-sm btn-with-icon btn-green" v-if="data.status_pengadaan == 0" @click="editPengadaan(data)">
-											<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-												<path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-												<path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
-											</svg>
-											<span>Edit</span>
-										</button>
-										<button class="btn btn-sm btn-with-icon btn-red" v-if="data.status_pengadaan == 0" @click="deletePengadaan(data.id_pengadaan, index)">
-											<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-												<path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-											</svg>
-											<span>Delete</span>
-										</button>
-										<button class="btn btn-sm btn-with-icon btn-indigo" v-if="data.status_pengadaan == 0" @click="validasiPengadaan(data.id_pengadaan)">
-											<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-												<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-											</svg>
-											<span>Validasi</span>
-										</button>
+									<div class="flex flex-wrap gap-1">
 										<NuxtLink target="_blank" :to="{name: 'persediaan-pengadaan-id', params: {id: data.id_pengadaan}}">
 											<button class="btn btn-sm btn-with-icon btn-teal">
 												<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
 													<path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
 												</svg>
-												<span>Print</span>
+												<!-- <span>Print</span> -->
 											</button>
 										</NuxtLink>
+										<button class="btn btn-sm btn-with-icon btn-indigo" v-if="data.status_pengadaan == 0" @click="validasiPengadaan(data.id_pengadaan)">
+											<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+												<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+											</svg>
+											<!-- <span>Validasi</span> -->
+										</button>
+										<button class="btn btn-sm btn-with-icon btn-green" v-if="data.status_pengadaan == 0" @click="editPengadaan(data)">
+											<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+												<path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+												<path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+											</svg>
+											<!-- <span>Edit</span> -->
+										</button>
+										<button class="btn btn-sm btn-with-icon btn-red" v-if="data.status_pengadaan == 0" @click="deletePengadaan(data.id_pengadaan, index)">
+											<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+												<path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+											</svg>
+											<!-- <span>Delete</span> -->
+										</button>
 									</div>
 								</td>
 								<td class="p-2">
@@ -107,10 +105,19 @@
 							<tr>
 								<td colspan="7" class="p-3 bg-sky-100" v-show="content === index">
 									<div class="px-4 pb-2 font-semibold">Detail Pengadaan</div>
-									<div class="grid grid-cols-2">
-										<div class="col-span-2 md:col-span-1" v-for="(data, index) in data.detail_pengadaan" :key="index">
-											<div class="border border-sky-200">
-												<dl>
+									<div class="grid grid-cols-3">
+										<div class="col-span-3 md:col-span-1" v-for="(data, index) in data.detail_pengadaan" :key="index">
+											<div class="flex justify-between p-4 bg-white rounded-md shadow-md">
+												<div>
+													<p class="text-xs">{{ data.id_detail_pengadaan }}</p>
+													<p class="font-semibold">{{ data.bahan_baku.nama_bahan_baku }}</p>
+												</div>
+												<div class="place-self-center">
+													<p class="font-semibold">
+														{{ data.jumlah_barang }} <span class="text-xs">{{ data.bahan_baku.satuan_bahan_baku }}</span>
+													</p>
+												</div>
+												<!-- <dl>
 													<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
 														<dt class="text-xs font-semibold">Id Detail Pengadaan</dt>
 														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ data.id_detail_pengadaan }}</dd>
@@ -123,7 +130,7 @@
 														<dt class="text-xs font-semibold">QTY</dt>
 														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ data.jumlah_barang }}</dd>
 													</div>
-												</dl>
+												</dl> -->
 											</div>
 										</div>
 									</div>
@@ -149,20 +156,20 @@
 				</div>
 			</div>
 		</div>
-		<Modal size="max-w-xl" :title="updateMode ? 'Edit Pengadaan Barang' : 'Buat Pengadaan Barang'" @close-modal="closeModal" v-show="modalPengadaan">
+		<Modal size="max-w-xl" :title="updateMode ? 'Edit Pengadaan Persediaan' : 'Buat Pengadaan Persediaan'" @close-modal="closeModal" v-show="modalPengadaan">
 			<template #content>
 				<div class="col-span-12 sm:col-span-8">
 					<label class="label">Nama Pengadaan</label>
 					<input type="text" class="form-input form-input-lg" placeholder="Nama Pengadaan ... " v-model="nama_pengadaan" />
+					<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.nama_pengadaan">{{ validation.nama_pengadaan[0] }}</p> -->
 				</div>
 				<div class="grid grid-cols-12 col-span-12 gap-4" v-for="(data, index) in pengadaan">
 					<div class="col-span-12 sm:col-span-8">
 						<label class="label">Nama Bahan Baku</label>
-
-						<select class="form-input form-input-lg" v-model="pengadaan[index].id_material">
+						<select class="form-input form-input-lg" v-model="pengadaan[index].id_bahan_baku">
 							<!-- <option v-if="updateMode" :value="pengadaan[index].id_material">{{ pengadaan[index].id_material }}</option> -->
-							<option v-if="!updateMode" value="">Pilih Bahan Baku</option>
-							<option :value="material.id_material" v-for="material in materials">{{ material.nama_bahan_baku }}</option>
+							<option value="">Pilih Bahan Baku</option>
+							<option :value="data.id_bahan_baku" v-for="data in bahan_baku">{{ data.nama_bahan_baku }}</option>
 						</select>
 					</div>
 					<div class="col-span-12 sm:col-span-4">
@@ -182,16 +189,15 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-span-12 px-5 py-3 bg-red-100 rounded-md shadow-md" v-if="validation">
-					<!-- <dt class="text-sm font-semibold"></dt> -->
+				<div class="col-span-12" v-if="validation">
 					<ul>
-						<li class="mt-1 text-xs font-semibold sm:mt-0 sm:col-span-2" v-for="(error, index) in validation">{{ error[0] }}</li>
+						<li class="px-4 py-3 my-2 text-xs bg-red-100 rounded-md shadow-md sm:col-span-2" v-for="(error, index) in validation">{{ error[0] }}</li>
 					</ul>
 				</div>
 			</template>
 			<template #submit>
-				<button class="btn btn-lg btn-green" @click="addPengadaan" v-if="!updateMode">Submit</button>
-				<button class="btn btn-lg btn-green" @click="updatePengadaan" v-else>Update</button>
+				<button class="btn btn-lg btn-green" @click.prevent="addPengadaan" v-if="!updateMode">Submit</button>
+				<button class="btn btn-lg btn-green" @click.prevent="updatePengadaan" v-else>Update</button>
 			</template>
 		</Modal>
 	</div>
@@ -218,14 +224,14 @@ export default {
 			content: null,
 			modalPengadaan: false,
 
-			materials: [],
+			bahan_baku: [],
 			pengadaan_barang: [],
 
 			id_pengadaan: "",
 			nama_pengadaan: "",
 			pengadaan: [
 				{
-					id_material: "",
+					id_bahan_baku: "",
 					jumlah_barang: null,
 				},
 			],
@@ -260,9 +266,9 @@ export default {
 		},
 		async getBahanBaku() {
 			this.$axios
-				.get("/api/bahanBaku")
+				.get("/api/bahan-baku")
 				.then((response) => {
-					this.materials = response.data;
+					this.bahan_baku = response.data;
 				})
 				.catch((error) => {
 					console.log(error);
@@ -299,7 +305,7 @@ export default {
 			this.nama_pengadaan = "";
 			this.pengadaan = [
 				{
-					id_material: "",
+					id_bahan_baku: "",
 					jumlah_barang: null,
 				},
 			];
@@ -323,8 +329,6 @@ export default {
 				.then((response) => {
 					this.closeModal();
 					this.getPengadaan();
-					this.getBahanBaku();
-					// this.$emit("get-data", response.data);
 				})
 				.then(() => {
 					this.$swal.fire({
@@ -337,6 +341,7 @@ export default {
 					});
 				})
 				.catch((error) => {
+					console.log(error);
 					this.validation = error.response.data;
 				});
 		},
@@ -354,7 +359,7 @@ export default {
 				const pengadaan = data.detail_pengadaan[index];
 				this.pengadaan.push({
 					id_detail_pengadaan: pengadaan.id_detail_pengadaan,
-					id_material: pengadaan.bahan_baku.id_material,
+					id_bahan_baku: pengadaan.bahan_baku.id_bahan_baku,
 					jumlah_barang: pengadaan.jumlah_barang,
 				});
 			}
