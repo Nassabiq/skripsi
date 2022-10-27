@@ -236,7 +236,7 @@ export default {
 			this.isloading = !this.isloading;
 			setTimeout(() => {
 				this.$axios
-					.post("/api/updateProduk/" + this.product.id_produk, {
+					.patch("/api/produk/" + this.product.id_produk, {
 						nama_produk: this.product.nama_produk,
 						satuan_produk: this.product.satuan_produk,
 						id_kategori_produk: this.product.id_kategori_produk,
@@ -321,7 +321,7 @@ export default {
 
 			this.isloading = !this.isloading;
 			this.$axios
-				.post("/api/updateImage/" + this.product.id_produk, imageData)
+				.post("/api/produk/image/" + this.product.id_produk, imageData)
 				.then(() => {
 					this.modalImage = !this.modalImage;
 					this.getData();
@@ -360,7 +360,7 @@ export default {
 						this.isloading = !this.isloading;
 						setTimeout(() => {
 							this.$axios
-								.post("api/deleteProduk/" + this.product.id_produk)
+								.delete("api/produk/" + this.product.id_produk)
 								.then(() => {
 									this.$router.push({name: "produk"});
 								})

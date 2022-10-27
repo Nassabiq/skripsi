@@ -117,20 +117,6 @@
 														{{ data.jumlah_barang }} <span class="text-xs">{{ data.bahan_baku.satuan_bahan_baku }}</span>
 													</p>
 												</div>
-												<!-- <dl>
-													<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Id Detail Pengadaan</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ data.id_detail_pengadaan }}</dd>
-													</div>
-													<div class="px-3 py-4 bg-slate-50 sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Nama Bahan Baku</dt>
-														<dd class="mt-1 text-xs capitalize sm:mt-0 sm:col-span-2">{{ data.bahan_baku.nama_bahan_baku }}</dd>
-													</div>
-													<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">QTY</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ data.jumlah_barang }}</dd>
-													</div>
-												</dl> -->
 											</div>
 										</div>
 									</div>
@@ -257,22 +243,14 @@ export default {
 		async getPengadaan() {
 			this.$axios
 				.get("/api/pengadaan?page=" + this.page + "&show=" + this.show + "&search=" + this.search + "&status=" + this.selectedStatus)
-				.then((response) => {
-					this.pengadaan_barang = response.data;
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+				.then((response) => (this.pengadaan_barang = response.data))
+				.catch((error) => console.log(error));
 		},
 		async getBahanBaku() {
 			this.$axios
 				.get("/api/bahan-baku")
-				.then((response) => {
-					this.bahan_baku = response.data;
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+				.then((response) => (this.bahan_baku = response.data))
+				.catch((error) => console.log(error));
 		},
 
 		searchData() {
@@ -371,7 +349,6 @@ export default {
 					pengadaan: this.pengadaan,
 				})
 				.then((response) => {
-					console.log(response.data);
 					this.closeModal();
 					this.getPengadaan();
 					this.getBahanBaku();
@@ -386,9 +363,7 @@ export default {
 						timerProgressBar: true,
 					});
 				})
-				.catch((error) => {
-					this.validation = error.response.data;
-				});
+				.catch((error) => (this.validation = error.response.data));
 		},
 		async validasiPengadaan(data) {
 			this.$swal
@@ -436,10 +411,10 @@ export default {
 						this.$axios
 							.post("api/deletePengadaan/" + data)
 							.then(() => {
-								this.pengadaan_barang.splice(index, 1);
+								this.pengadaan_barang.data.splice(index, 1);
 							})
 							.then(() => {
-								Alert.fire("Deleted!", "Data Berhasil dihapus.", "success");
+								this.$swal.fire("Deleted!", "Data Berhasil dihapus.", "success");
 							})
 							.catch((error) => {
 								console.log(error);

@@ -55,7 +55,7 @@
 								<NuxtLink to="/persediaan/pengadaan">
 									<li class="dropdown-item">Pengadaan Persediaan</li>
 								</NuxtLink>
-								<NuxtLink to="/persediaan/kelola-persediaan">
+								<NuxtLink to="/persediaan/kelola-stok-masuk">
 									<li class="dropdown-item">Kelola Stok Masuk</li>
 								</NuxtLink>
 								<NuxtLink to="/persediaan/laporan-persediaan">

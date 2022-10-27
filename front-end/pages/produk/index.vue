@@ -245,7 +245,7 @@ export default {
 			this.isloading = true;
 			setTimeout(() => {
 				this.$axios
-					.post("/api/addProduk", imageData)
+					.post("/api/produk", imageData)
 					.then((response) => {
 						this.closeModal();
 						this.getProducts();

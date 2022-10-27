@@ -34,18 +34,21 @@ class ProdukController extends Controller
         $kategori = KategoriProduk::get();
         return response()->json($kategori, 200);
     }
+
+    public $rules = [
+        'nama_produk'   => 'required',
+        'id_kategori_produk'   => 'required',
+        'satuan_produk'   => 'required',
+        'description'   => 'required',
+        'informasi_pemesanan'   => 'required',
+        // 'image'   => 'required|max:5',
+        // 'image.*'   => 'image|mimes:jpeg,png,jpg,gif,svg|max:5000',
+    ];
+    public $messages = [];
     // CREATE RECORD INTO DATABASE
     public function addProduk(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'nama_produk'   => 'required',
-            'id_kategori_produk'   => 'required',
-            'satuan_produk'   => 'required',
-            'description'   => 'required',
-            'informasi_pemesanan'   => 'required',
-            'image'   => 'required|max:5',
-            'image.*'   => 'image|mimes:jpeg,png,jpg,gif,svg|max:5000',
-        ]);
+        $validator = Validator::make($request->all(), $this->rules);
 
         if ($validator->fails()) return response()->json($validator->errors(), 400);
 
@@ -81,14 +84,7 @@ class ProdukController extends Controller
     // UPDATE DATA INTO DATABASE
     public function updateProduk(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'nama_produk'   => 'required',
-            'id_kategori_produk'   => 'required',
-            'satuan_produk'   => 'required',
-            'description'   => 'required',
-            'informasi_pemesanan'   => 'required',
-        ]);
-
+        $validator = Validator::make($request->all(), $this->rules);
         if ($validator->fails()) return response()->json($validator->errors(), 400);
 
         $produk = Produk::findOrFail($id);

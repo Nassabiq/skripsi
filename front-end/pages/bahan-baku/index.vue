@@ -162,7 +162,7 @@ export default {
 		async addBahanBaku() {
 			this.isloading = true;
 			this.$axios
-				.post("/api/addBahanBaku", {
+				.post("/api/bahan-baku", {
 					nama_bahan_baku: this.material.nama_bahan_baku,
 					satuan_bahan_baku: this.material.satuan_bahan_baku,
 					id_produk: this.material.id_produk,
@@ -201,7 +201,7 @@ export default {
 		async updateBahanBaku() {
 			this.isloading = true;
 			this.$axios
-				.post("/api/editBahanBaku/" + this.id_bahan_baku, {
+				.put("/api/bahan-baku/" + this.id_bahan_baku, {
 					nama_bahan_baku: this.material.nama_bahan_baku,
 					satuan_bahan_baku: this.material.satuan_bahan_baku,
 					id_produk: this.material.id_produk,
@@ -244,16 +244,10 @@ export default {
 						this.isloading = !this.isloading;
 						setTimeout(() => {
 							this.$axios
-								.post("api/deleteBahanBaku/" + id)
-								.then(() => {
-									this.$swal.fire("Deleted!", "Data Berhasil dihapus.", "success");
-								})
-								.then(() => {
-									this.getData();
-								})
-								.catch((error) => {
-									console.log(error);
-								})
+								.delete("api/bahan-baku/" + id)
+								.then(() => this.$swal.fire("Deleted!", "Data Berhasil dihapus.", "success"))
+								.then(() => this.getData())
+								.catch((error) => console.log(error))
 								.finally(() => {
 									this.isloading = !this.isloading;
 								});

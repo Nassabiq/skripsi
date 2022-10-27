@@ -180,7 +180,7 @@ import {number} from "@coders-tm/vue-number-format";
 import Pagination from "../../components/Pagination.vue";
 
 export default {
-	name: "KelolaPersediaan",
+	name: "KelolaStokMasuk",
 	layout: "auth",
 	components: {number, Pagination},
 	auth: false,
@@ -222,8 +222,7 @@ export default {
 	mounted() {
 		this.getBahanBaku();
 		this.getProducts();
-		this.getSatuan();
-		this.getBarangMasuk();
+		this.getStokMasuk();
 	},
 
 	computed: {
@@ -241,7 +240,7 @@ export default {
 		// GET ALL DATA
 		async getBahanBaku() {
 			this.$axios
-				.get("/api/bahanBaku")
+				.get("/api/bahan-baku")
 				.then((response) => {
 					this.materials = response.data;
 				})
@@ -259,19 +258,9 @@ export default {
 					console.log(error);
 				});
 		},
-		async getSatuan() {
+		async getStokMasuk() {
 			this.$axios
-				.get("/api/satuan")
-				.then((response) => {
-					this.units = response.data;
-				})
-				.catch((error) => {
-					console.log(error);
-				});
-		},
-		async getBarangMasuk() {
-			this.$axios
-				.get("/api/barangMasuk?page=" + this.page + "&show=" + this.show + "&search=" + this.search)
+				.get("/api/stok-masuk?page=" + this.page + "&show=" + this.show + "&search=" + this.search)
 				.then((response) => {
 					this.barangMasuk = response.data;
 				})
@@ -281,27 +270,24 @@ export default {
 		},
 
 		searchData() {
-			this.getBarangMasuk();
+			this.getStokMasuk();
 		},
 
 		onChangeRecordsPerPage() {
-			this.getBarangMasuk();
+			this.getStokMasuk();
 		},
 
 		onPageChange(page) {
 			this.page = page;
-			this.getBarangMasuk();
+			this.getStokMasuk();
 		},
 
 		showRow(index) {
-			if (this.content !== null) {
-				this.content = this.content == index ? null : index;
-			} else {
-				this.content = index;
-			}
+			if (this.content !== null) this.content = this.content == index ? null : index;
+			else this.content = index;
 		},
 		getData() {
-			this.getBahanBaku();
+			this.getStokMasuk();
 		},
 
 		addForm() {

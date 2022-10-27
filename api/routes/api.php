@@ -3,10 +3,9 @@
 use App\Http\Controllers\AnalisisHPPController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\BahanBakuController;
-use App\Http\Controllers\BarangMasukController;
-use App\Http\Controllers\PengadaanController;
 use App\Http\Controllers\PengadaanPersediaanController;
 use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\StokMasukController;
 use App\Http\Controllers\TransaksiPenjualanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,10 +29,10 @@ Route::get('/produk', [ProdukController::class, 'index']);
 Route::get('/kategori', [ProdukController::class, 'kategori']);
 Route::get('/produk/{id_produk}', [ProdukController::class, 'detail']);
 
-Route::post('/addProduk', [ProdukController::class, 'addProduk']);
-Route::post('/updateProduk/{id_produk}', [ProdukController::class, 'updateProduk']);
-Route::post('/updateImage/{id_produk}', [ProdukController::class, 'updateImage']);
-Route::post('/deleteProduk/{id_produk}', [ProdukController::class, 'deleteProduk']);
+Route::post('/produk', [ProdukController::class, 'addProduk']);
+Route::patch('/produk/{id_produk}', [ProdukController::class, 'updateProduk']);
+Route::patch('/produk/image/{id_produk}', [ProdukController::class, 'updateImage']);
+Route::delete('/produk/{id_produk}', [ProdukController::class, 'deleteProduk']);
 
 // Route::post('/addKategori', [ProductController::class, 'addKategori']);
 // Route::post('/updateKategori/{id_kategori_produk}', [ProductController::class, 'updateKategori']);
@@ -42,13 +41,13 @@ Route::post('/deleteProduk/{id_produk}', [ProdukController::class, 'deleteProduk
 // Route::post('/updateHarga', [ProductController::class, 'updateHarga']);
 
 Route::get('/bahan-baku', [BahanBakuController::class, 'index']);
-Route::post('/addBahanBaku', [BahanBakuController::class, 'addBahanBaku']);
-Route::post('/editBahanBaku/{id_bahan_baku}', [BahanBakuController::class, 'editBahanBaku']);
-Route::post('/deleteBahanBaku/{id_bahan_baku}', [BahanBakuController::class, 'deleteBahanBaku']);
+Route::post('/bahan-baku', [BahanBakuController::class, 'addBahanBaku']);
+Route::put('/bahan-baku/{id_bahan_baku}', [BahanBakuController::class, 'editBahanBaku']);
+Route::delete('/bahan-baku/{id_bahan_baku}', [BahanBakuController::class, 'deleteBahanBaku']);
 
-Route::get('/barangMasuk', [BarangMasukController::class, 'index']);
-Route::get('/laporanBarangMasuk', [BarangMasukController::class, 'laporanBarangMasuk']);
-Route::post('/addStok', [BarangMasukController::class, 'addStok']);
+Route::get('/stok-masuk', [StokMasukController::class, 'index']);
+Route::get('/laporan-stok-masuk', [StokMasukController::class, 'laporanBarangMasuk']);
+Route::post('/add-stok', [StokMasukController::class, 'addStok']);
 
 Route::get('/pengadaan', [PengadaanPersediaanController::class, 'index']);
 Route::get('/pengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'details']);
