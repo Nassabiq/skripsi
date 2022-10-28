@@ -16,9 +16,9 @@ class ProdukController extends Controller
     public function index(Request $request)
     {
         $search = '%' . $request->search . '%';
-
-        if ($request->show == null) $produk =  Produk::with('kategori')->get();
-        else $produk =  Produk::with('kategori')->where('nama_produk', 'like', $search)->paginate($request->show);
+        $produk = $request->show == null
+            ? Produk::with('kategori')->get()
+            : Produk::with('kategori')->where('nama_produk', 'like', $search)->paginate($request->show);
 
         return response()->json($produk, 200);
     }

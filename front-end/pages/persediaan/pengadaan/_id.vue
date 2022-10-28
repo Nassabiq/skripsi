@@ -1,6 +1,4 @@
 <template>
-	<!-- <div class="py-10 bg-lime-500"> -->
-	<!-- <div class="block p-5 mx-auto bg-white print:block drop-shadow-lg paper"> -->
 	<div>
 		<client-only>
 			<button class="fixed bottom-0 right-0 m-5 btn btn-lg btn-with-icon btn-indigo" @click.prevent="generateReport">
@@ -61,8 +59,6 @@
 			</vue-html2pdf>
 		</client-only>
 	</div>
-	<!-- </div> -->
-	<!-- </div> -->
 </template>
 
 <script>
@@ -78,15 +74,8 @@ export default {
 	},
 	methods: {
 		async getData() {
-			this.$axios
-				.get("/api/pengadaan/" + this.$route.params.id)
-				.then((response) => {
-					console.log(response);
-					this.pengadaan = response.data;
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+			const pengadaan = await this.$axios.$get("/api/pengadaan/" + this.$route.params.id);
+			this.pengadaan = pengadaan;
 		},
 		generateReport() {
 			this.$refs.html2Pdf.generatePdf();

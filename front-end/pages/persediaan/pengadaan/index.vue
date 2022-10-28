@@ -105,12 +105,12 @@
 							<tr>
 								<td colspan="7" class="p-3 bg-sky-100" v-show="content === index">
 									<div class="px-4 pb-2 font-semibold">Detail Pengadaan</div>
-									<div class="grid grid-cols-3">
+									<div class="grid grid-cols-3 gap-4">
 										<div class="col-span-3 md:col-span-1" v-for="(data, index) in data.detail_pengadaan" :key="index">
 											<div class="flex justify-between p-4 bg-white rounded-md shadow-md">
 												<div>
 													<p class="text-xs">{{ data.id_detail_pengadaan }}</p>
-													<p class="font-semibold">{{ data.bahan_baku.nama_bahan_baku }}</p>
+													<p class="text-lg font-semibold tracking-wider">{{ data.bahan_baku.nama_bahan_baku }}</p>
 												</div>
 												<div class="place-self-center">
 													<p class="font-semibold">
@@ -211,7 +211,7 @@ export default {
 			modalPengadaan: false,
 
 			bahan_baku: [],
-			pengadaan_barang: [],
+			pengadaan_barang: "",
 
 			id_pengadaan: "",
 			nama_pengadaan: "",
@@ -241,16 +241,12 @@ export default {
 	computed: {},
 	methods: {
 		async getPengadaan() {
-			this.$axios
-				.get("/api/pengadaan?page=" + this.page + "&show=" + this.show + "&search=" + this.search + "&status=" + this.selectedStatus)
-				.then((response) => (this.pengadaan_barang = response.data))
-				.catch((error) => console.log(error));
+			const pengadaan_barang = await this.$axios.$get("/api/pengadaan?page=" + this.page + "&show=" + this.show + "&search=" + this.search + "&status=" + this.selectedStatus);
+			this.pengadaan_barang = pengadaan_barang;
 		},
 		async getBahanBaku() {
-			this.$axios
-				.get("/api/bahan-baku")
-				.then((response) => (this.bahan_baku = response.data))
-				.catch((error) => console.log(error));
+			const bahan_baku = await this.$axios.$get("/api/bahan-baku");
+			this.bahan_baku = bahan_baku;
 		},
 
 		searchData() {
@@ -270,7 +266,7 @@ export default {
 
 		addForm() {
 			this.pengadaan.push({
-				id_material: "",
+				id_bahan_baku: "",
 				jumlah_barang: null,
 			});
 		},
@@ -300,7 +296,7 @@ export default {
 
 		async addPengadaan() {
 			this.$axios
-				.post("/api/addPengadaan", {
+				.post("/api/pengadaan", {
 					nama_pengadaan: this.nama_pengadaan,
 					pengadaan: this.pengadaan,
 				})
@@ -344,7 +340,7 @@ export default {
 		},
 		async updatePengadaan() {
 			this.$axios
-				.post("/api/updatePengadaan/" + this.id_pengadaan, {
+				.patch("/api/pengadaan/" + this.id_pengadaan, {
 					nama_pengadaan: this.nama_pengadaan,
 					pengadaan: this.pengadaan,
 				})
@@ -379,7 +375,7 @@ export default {
 				.then((result) => {
 					if (result.isConfirmed) {
 						this.$axios
-							.post("api/validasiPengadaan/" + data)
+							.post("api/pengadaan/validasi/" + data)
 							.then(() => {
 								// this.pengadaan_barang.splice(index, 1);
 								this.$swal.fire("Success!", "Data Berhasil divalidasi.", "success");
@@ -409,7 +405,7 @@ export default {
 				.then((result) => {
 					if (result.isConfirmed) {
 						this.$axios
-							.post("api/deletePengadaan/" + data)
+							.delete("api/pengadaan/" + data)
 							.then(() => {
 								this.pengadaan_barang.data.splice(index, 1);
 							})

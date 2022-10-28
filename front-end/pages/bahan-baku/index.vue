@@ -129,24 +129,13 @@ export default {
 			this.getProduk();
 		},
 		async getBahanBaku() {
-			this.$axios
-				.get("/api/bahan-baku")
-				.then((response) => {
-					this.bahanBaku = response.data;
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+			const bahanBaku = await this.$axios.$get("/api/bahan-baku");
+			this.bahanBaku = bahanBaku;
+			console.log(bahanBaku);
 		},
 		async getProduk() {
-			this.$axios
-				.get("/api/produk")
-				.then((response) => {
-					this.produk = response.data;
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+			const produk = await this.$axios.$get("/api/produk");
+			this.produk = produk;
 		},
 		closeModal() {
 			this.material.satuan_bahan_baku = "";
@@ -157,7 +146,8 @@ export default {
 		},
 
 		searchData() {
-			this.$emit("search-data", this.search);
+			this.getData();
+			// this.$emit("search-data", this.search);
 		},
 		async addBahanBaku() {
 			this.isloading = true;
@@ -181,12 +171,8 @@ export default {
 						timerProgressBar: true,
 					});
 				})
-				.catch((error) => {
-					this.validation = error.response.data;
-				})
-				.finally(() => {
-					this.isloading = false;
-				});
+				.catch((error) => (this.validation = error.response.data))
+				.finally(() => (this.isloading = false));
 		},
 		editBahanBaku(data) {
 			this.updateMode = true;
@@ -220,12 +206,8 @@ export default {
 						timerProgressBar: true,
 					});
 				})
-				.catch((error) => {
-					this.validation = error.response.data;
-				})
-				.finally(() => {
-					this.isloading = false;
-				});
+				.catch((error) => (this.validation = error.response.data))
+				.finally(() => (this.isloading = false));
 		},
 
 		async deleteBahanBaku(id) {
@@ -248,9 +230,7 @@ export default {
 								.then(() => this.$swal.fire("Deleted!", "Data Berhasil dihapus.", "success"))
 								.then(() => this.getData())
 								.catch((error) => console.log(error))
-								.finally(() => {
-									this.isloading = !this.isloading;
-								});
+								.finally(() => (this.isloading = !this.isloading));
 						}, 500);
 					}
 				});

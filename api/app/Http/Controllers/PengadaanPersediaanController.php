@@ -62,9 +62,8 @@ class PengadaanPersediaanController extends Controller
                 'id_pengadaan' => $pengadaan->id_pengadaan,
                 'jumlah_barang' => $data['jumlah_barang'],
             ]);
-
-            return response()->json(200);
         }
+        return response()->json(200);
     }
 
     public function updatePengadaan($id, Request $request)

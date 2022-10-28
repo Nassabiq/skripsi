@@ -46,16 +46,17 @@ Route::put('/bahan-baku/{id_bahan_baku}', [BahanBakuController::class, 'editBaha
 Route::delete('/bahan-baku/{id_bahan_baku}', [BahanBakuController::class, 'deleteBahanBaku']);
 
 Route::get('/stok-masuk', [StokMasukController::class, 'index']);
+Route::post('/stok-masuk', [StokMasukController::class, 'addStok']);
+
 Route::get('/laporan-stok-masuk', [StokMasukController::class, 'laporanBarangMasuk']);
-Route::post('/add-stok', [StokMasukController::class, 'addStok']);
 
 Route::get('/pengadaan', [PengadaanPersediaanController::class, 'index']);
 Route::get('/pengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'details']);
 
-Route::post('/addPengadaan', [PengadaanPersediaanController::class, 'addPengadaan']);
-Route::post('/updatePengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'updatePengadaan']);
-Route::post('/validasiPengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'validasiPengadaan']);
-Route::post('/deletePengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'deletePengadaan']);
+Route::post('/pengadaan', [PengadaanPersediaanController::class, 'addPengadaan']);
+Route::patch('/pengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'updatePengadaan']);
+Route::patch('/pengadaan/validasi/{id_pengadaan}', [PengadaanPersediaanController::class, 'validasiPengadaan']);
+Route::delete('/pengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'deletePengadaan']);
 
 Route::get('/transaksi', [TransaksiPenjualanController::class, 'index']);
 Route::get('/transaksi/{id_transaksi}', [TransaksiPenjualanController::class, 'detailTransaksi']);

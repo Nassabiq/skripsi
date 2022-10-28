@@ -210,32 +210,18 @@ export default {
 	},
 	methods: {
 		async getProducts() {
-			this.$axios
-				.get("/api/produk?page=" + this.productPage + "&show=" + parseInt(this.productSize) + "&search=" + this.search)
-				.then((response) => {
-					this.products = response.data;
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+			const products = await this.$axios.$get("/api/produk?page=" + this.productPage + "&show=" + parseInt(this.productSize) + "&search=" + this.search);
+			this.products = products;
 		},
 		async getCategories() {
-			this.$axios
-				.get("/api/kategori")
-				.then((response) => {
-					this.categories = response.data;
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+			const categories = await this.$axios.$get("/api/kategori");
+			this.categories = categories;
 		},
 		async addProduk() {
 			let file = this.produk.image;
 			let imageData = new FormData();
 
-			file.forEach((img, index) => {
-				imageData.append("image[" + index + "]", file[index]);
-			});
+			file.forEach((img, index) => imageData.append("image[" + index + "]", file[index]));
 			imageData.append("nama_produk", this.produk.nama_produk);
 			imageData.append("id_kategori_produk", this.produk.id_kategori_produk);
 			imageData.append("description", this.produk.description);

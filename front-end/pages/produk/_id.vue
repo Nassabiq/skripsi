@@ -211,26 +211,14 @@ export default {
 
 	methods: {
 		async getData() {
-			setTimeout(() => {
-				this.$axios
-					.get("/api/produk/" + this.$route.params.id)
-					.then((response) => {
-						this.product = response.data;
-						this.product.image = JSON.parse(this.product.image);
-						this.uploadedImage.allImages = [...this.product.image];
-					})
-					.catch((error) => {
-						console.log(error);
-					});
-				this.$axios
-					.get("/api/kategori")
-					.then((response) => {
-						this.categories = response.data;
-					})
-					.catch((error) => {
-						console.log(error);
-					});
-			}, 2000);
+			const product = await this.$axios.$get("/api/produk/" + this.$route.params.id);
+			const categories = await this.$axios.$get("/api/kategori");
+
+			this.product = product;
+			this.product.image = JSON.parse(this.product.image);
+			this.uploadedImage.allImages = [...this.product.image];
+
+			this.categories = categories;
 		},
 		async updateProduk() {
 			this.isloading = !this.isloading;
@@ -257,12 +245,8 @@ export default {
 							timerProgressBar: true,
 						});
 					})
-					.catch((error) => {
-						this.validation = error.response.data;
-					})
-					.finally(() => {
-						this.isloading = !this.isloading;
-					});
+					.catch((error) => (this.validation = error.response.data))
+					.finally(() => (this.isloading = !this.isloading));
 			}, 500);
 		},
 
@@ -312,12 +296,8 @@ export default {
 			let deletedimage = this.uploadedImage.deletedImage;
 			let imageData = new FormData();
 
-			image.forEach((img, index) => {
-				imageData.append("image[" + index + "]", image[index]);
-			});
-			deletedimage.forEach((img, index) => {
-				imageData.append("deletedImage[" + index + "]", JSON.stringify(deletedimage[index]));
-			});
+			image.forEach((img, index) => imageData.append("image[" + index + "]", image[index]));
+			deletedimage.forEach((img, index) => imageData.append("deletedImage[" + index + "]", JSON.stringify(deletedimage[index])));
 
 			this.isloading = !this.isloading;
 			this.$axios
@@ -336,12 +316,8 @@ export default {
 						timerProgressBar: true,
 					});
 				})
-				.catch((error) => {
-					this.validation = error.response.data;
-				})
-				.finally(() => {
-					this.isloading = !this.isloading;
-				});
+				.catch((error) => (this.validation = error.response.data))
+				.finally(() => (this.isloading = !this.isloading));
 		},
 
 		async deleteProduk() {
@@ -361,18 +337,10 @@ export default {
 						setTimeout(() => {
 							this.$axios
 								.delete("api/produk/" + this.product.id_produk)
-								.then(() => {
-									this.$router.push({name: "produk"});
-								})
-								.then(() => {
-									this.$swal.fire("Deleted!", "Your file has been deleted.", "success");
-								})
-								.catch((error) => {
-									console.log(error);
-								})
-								.finally(() => {
-									this.isloading = !this.isloading;
-								});
+								.then(() => this.$router.push({name: "produk"}))
+								.then(() => this.$swal.fire("Deleted!", "Your file has been deleted.", "success"))
+								.catch((error) => console.log(error))
+								.finally(() => (this.isloading = !this.isloading));
 						}, 500);
 					}
 				});

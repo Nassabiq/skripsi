@@ -39,7 +39,7 @@
 								</svg>
 							</button>
 						</div>
-						<div class="grid grid-cols-12 gap-4 p-8">
+						<div class="grid grid-cols-12 gap-4 px-8 py-4">
 							<!-- Content always in 12 grid, don't forget to use col-span -->
 							<slot name="content"></slot>
 						</div>
