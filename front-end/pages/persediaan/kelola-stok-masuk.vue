@@ -45,13 +45,13 @@
 							<th class="p-1"></th>
 						</tr>
 					</thead>
-					<tbody class="divide-y-2 divide-gray-100 divide-dotted" v-if="barangMasuk.data && barangMasuk.data.length > 0">
-						<template v-for="(data, index) in barangMasuk.data">
+					<tbody class="divide-y-2 divide-gray-100 divide-dotted" v-if="stok_masuk.data && stok_masuk.data.length > 0">
+						<template v-for="(data, index) in stok_masuk.data">
 							<tr class="text-sm text-left">
-								<td class="px-3 py-6">{{ data.id_barang_masuk }}</td>
-								<td class="px-3 py-6">{{ $moment(data.tgl_barang_masuk).format("DD MMMM YYYY") }}</td>
+								<td class="px-3 py-6">{{ data.id_stok_masuk }}</td>
+								<td class="px-3 py-6">{{ $moment(data.tgl_stok_masuk).format("DD MMMM YYYY") }}</td>
 								<td class="px-3 py-6">1961</td>
-								<td class="px-3 py-6">{{ data.detail_barang.length }}</td>
+								<td class="px-3 py-6">{{ data.detail_stok.length }}</td>
 								<td class="px-3 py-6">Rp. {{ Intl.NumberFormat().format(data.total_harga_beli) }}</td>
 								<td class="p-2">
 									<button class="p-1 text-blue-400 border border-blue-600 rounded-full focus:bg-blue-100 hover:text-blue-800" @click.prevent="showRow(index)">
@@ -63,14 +63,14 @@
 							</tr>
 							<tr>
 								<td class="p-3 bg-sky-100" colspan="6" v-show="content === index">
-									<div class="px-4 pb-2 font-semibold">Detail Barang Masuk</div>
-									<div class="grid grid-cols-2" v-for="(data, index) in data.detail_barang" :key="index">
+									<div class="px-4 pb-2 font-semibold">Detail Stok Masuk</div>
+									<div class="grid grid-cols-2" v-for="(data, index) in data.detail_stok" :key="index">
 										<div class="col-span-2 md:col-span-1">
 											<div class="border-t border-sky-200">
 												<dl>
 													<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Id Detail Barang Masuk</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ data.id_detail_barang_masuk }}</dd>
+														<dt class="text-xs font-semibold">Id Detail Stok Masuk</dt>
+														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ data.id_detail_stok_masuk }}</dd>
 													</div>
 													<div class="px-3 py-4 bg-slate-50 sm:grid sm:grid-cols-3 sm:gap-4">
 														<dt class="text-xs font-semibold">Nama Bahan Baku</dt>
@@ -84,18 +84,18 @@
 												<dl>
 													<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
 														<dt class="text-xs font-semibold">QTY</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ data.qty }}</dd>
+														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ data.qty_stok }}</dd>
 													</div>
 													<div class="px-3 py-4 bg-slate-50 sm:grid sm:grid-cols-3 sm:gap-4">
 														<dt class="text-xs font-semibold">Harga</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(data.harga) }}</dd>
+														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(data.harga_beli) }}</dd>
 													</div>
 												</dl>
 											</div>
 										</div>
 										<div class="flex flex-col justify-between col-span-2 px-5 py-6 bg-sky-100 md:flex-row">
 											<dt class="text-sm font-semibold">Subtotal</dt>
-											<dd class="mt-1 text-sm font-semibold sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(data.qty * data.harga) }}</dd>
+											<dd class="mt-1 text-sm font-semibold sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(data.qty_stok * data.harga_beli) }}</dd>
 										</div>
 									</div>
 								</td>
@@ -116,48 +116,41 @@
 					</tbody>
 				</table>
 				<div>
-					<Pagination v-if="barangMasuk.data && barangMasuk.per_page < barangMasuk.total" :total-pages="barangMasuk.links.length - 2" :per-page="show" :current-page="barangMasuk.current_page" @pagechanged="onPageChange"></Pagination>
+					<Pagination v-if="stok_masuk.data && stok_masuk.per_page < stok_masuk.total" :total-pages="stok_masuk.links.length - 2" :per-page="show" :current-page="stok_masuk.current_page" @pagechanged="onPageChange"></Pagination>
 				</div>
 			</div>
 		</div>
 		<Modal size="max-w-5xl" title="Tambah Stok" @close-modal="closeModal" v-show="modalTambahStok">
 			<template #content>
-				<div class="col-span-12 md:col-span-6">
-					<p class="text-sm font-semibold">Pengadaan yang sudah divalidasi</p>
+				<div class="col-span-12 space-y-4 md:col-span-6">
+					<p class="font-semibold">Pengadaan yang sudah divalidasi</p>
+					<div class="data" v-for="data in pengadaan">
+						<div class="flex justify-between">
+							<p class="">{{ data.nama_pengadaan }}</p>
+							<button class="btn btn-blue btn-sm" @click.prevent="addToForm(data)">Selesaikan</button>
+						</div>
+						<ul class="list-disc list-inside">
+							<li v-for="list in data.detail_pengadaan" class="my-2 text-sm">{{ list.bahan_baku.nama_bahan_baku }} - {{ list.jumlah_barang + list.bahan_baku.satuan_bahan_baku }}</li>
+						</ul>
+					</div>
 				</div>
 				<div class="col-span-12 space-y-4 md:col-span-6">
 					<div class="grid grid-cols-12 gap-2" v-for="(data, index) in stok">
 						<div class="col-span-12 sm:col-span-5">
 							<label class="label">Nama Bahan Baku</label>
-							<select class="form-input form-input-lg" v-model="stok[index].nama_bahan_baku">
-								<option value="">Pilih Bahan Baku</option>
-								<option :value="material.id_material" v-for="(material, index) in materials">{{ material.nama_bahan_baku }}</option>
+							<select disabled class="form-input form-input-lg" v-model="stok[index].id_bahan_baku">
+								<option value="">Bahan Baku</option>
+								<option :value="data.id_bahan_baku" v-for="(data, index) in bahan_baku">{{ data.nama_bahan_baku }}</option>
 							</select>
-
-							<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.nama_kategori">{{ validation.id_satuan[0] }}</p> -->
 						</div>
 						<div class="col-span-12 sm:col-span-4">
 							<label class="label">Harga</label>
-							<!-- <input class="form-input form-input-lg" placeholder="Rp. ....." v-model.number="stok[index].harga" /> -->
 							<div><number placeholder="Harga.." class="form-input form-input-lg" v-model="stok[index].harga" v-bind="number"></number></div>
 						</div>
 						<div class="col-span-12 sm:col-span-3">
 							<label class="label">Qty</label>
-							<div class="flex gap-2">
-								<div>
-									<input type="text" placeholder="QTY	.." class="form-input form-input-lg" v-model.number="stok[index].qty" />
-									<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.qty">{{ validation.qty[0] }}</p> -->
-								</div>
-								<button class="mt-1 btn btn-sm btn-indigo" v-if="index == 0" @click="addForm">
-									<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-									</svg>
-								</button>
-								<button class="mt-1 btn btn-sm btn-red" v-else @click="deleteForm(index)">
-									<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-									</svg>
-								</button>
+							<div>
+								<input disabled type="text" placeholder="QTY	.." class="form-input form-input-lg" v-model.number="stok[index].qty" />
 							</div>
 						</div>
 					</div>
@@ -194,16 +187,16 @@ export default {
 			content: null,
 			modalTambahStok: false,
 
-			materials: [],
-			units: [],
-			barangMasuk: [],
-			produk: [],
+			bahan_baku: [],
+			stok_masuk: [],
+			pengadaan: [],
 
 			validation: [],
 
+			id_pengadaan: "",
 			stok: [
 				{
-					nama_bahan_baku: "",
+					id_bahan_baku: "",
 					harga: null,
 					qty: null,
 				},
@@ -227,6 +220,7 @@ export default {
 	mounted() {
 		this.getBahanBaku();
 		this.getStokMasuk();
+		this.getPengadaan();
 	},
 
 	computed: {
@@ -243,26 +237,16 @@ export default {
 	methods: {
 		// GET ALL DATA
 		async getBahanBaku() {
-			this.$axios
-				.get("/api/bahan-baku")
-				.then((response) => {
-					this.materials = response.data;
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+			const bahan_baku = await this.$axios.$get("/api/bahan-baku");
+			this.bahan_baku = bahan_baku;
 		},
 		async getStokMasuk() {
-			this.$axios
-				.get("/api/stok-masuk?page=" + this.page + "&show=" + this.show + "&search=" + this.search)
-				.then((response) => this.barangMasuk == response.data)
-				.catch((error) => console.log(error));
+			const stok_masuk = await this.$axios.$get("/api/stok-masuk?page=" + this.page + "&show=" + this.show + "&search=" + this.search);
+			this.stok_masuk = stok_masuk;
 		},
 		async getPengadaan() {
-			this.$axios
-				.get("/api/pengadaan?page=" + this.page + "&show=" + this.show + "&search=" + this.search + "&status=" + this.selectedStatus)
-				.then((response) => this.pengadaan_barang == response.data)
-				.catch((error) => console.log(error));
+			const pengadaan = await this.$axios.$get("/api/pengadaan");
+			this.pengadaan = pengadaan.filter((element) => element.status_pengadaan == 1);
 		},
 		searchData() {
 			this.getStokMasuk();
@@ -285,23 +269,24 @@ export default {
 			this.getStokMasuk();
 		},
 
-		addForm() {
-			this.stok.push({
-				nama_bahan_baku: "",
-				harga: null,
-				qty: null,
+		addToForm(data) {
+			this.stok = [];
+			this.id_pengadaan = data.id_pengadaan;
+			data.detail_pengadaan.forEach((element) => {
+				this.stok.push({
+					id_bahan_baku: element.id_bahan_baku,
+					harga: null,
+					qty: element.jumlah_barang,
+				});
 			});
-		},
-
-		deleteForm(index) {
-			this.stok.splice(index, 1);
 		},
 
 		closeModal() {
 			this.modalTambahStok = false;
+			this.id_pengadaan = "";
 			this.stok = [
 				{
-					nama_bahan_baku: "",
+					id_bahan_baku: "",
 					harga: null,
 					qty: null,
 				},
@@ -315,6 +300,7 @@ export default {
 				.post("/api/stok-masuk", {
 					total: this.getSubtotal,
 					stok: this.stok,
+					id_pengadaan: this.id_pengadaan,
 				})
 				.then((response) => {
 					console.log(response.data);
@@ -332,12 +318,7 @@ export default {
 						timerProgressBar: true,
 					});
 				})
-				.catch((error) => {
-					this.validation = error.response.data;
-				});
-			// .finally(() => {
-			// 	this.isloading = false;
-			// })
+				.catch((error) => (this.validation = error.response.data));
 		},
 	},
 };

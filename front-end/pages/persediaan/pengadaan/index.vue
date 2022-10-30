@@ -375,7 +375,7 @@ export default {
 				.then((result) => {
 					if (result.isConfirmed) {
 						this.$axios
-							.post("api/pengadaan/validasi/" + data)
+							.patch("api/pengadaan/validasi/" + data)
 							.then(() => {
 								// this.pengadaan_barang.splice(index, 1);
 								this.$swal.fire("Success!", "Data Berhasil divalidasi.", "success");

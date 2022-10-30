@@ -222,6 +222,7 @@ export default {
 			let imageData = new FormData();
 
 			file.forEach((img, index) => imageData.append("image[" + index + "]", file[index]));
+
 			imageData.append("nama_produk", this.produk.nama_produk);
 			imageData.append("id_kategori_produk", this.produk.id_kategori_produk);
 			imageData.append("description", this.produk.description);
