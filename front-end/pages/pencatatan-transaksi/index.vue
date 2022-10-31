@@ -143,7 +143,7 @@
 import {number} from "@coders-tm/vue-number-format";
 export default {
 	name: "PencatatanTransaksi",
-	layout: "auth",
+	layout: "user",
 	components: {number},
 	auth: false,
 	data() {

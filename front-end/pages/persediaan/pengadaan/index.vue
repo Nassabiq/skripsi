@@ -28,6 +28,7 @@
 							<option value="">Status Pengadaan</option>
 							<option :value="0">Belum Disetujui</option>
 							<option :value="1">Disetujui</option>
+							<option :value="2">Selesai</option>
 						</select>
 					</div>
 					<div class="">
@@ -60,7 +61,8 @@
 								<td class="p-3">{{ data.nama_pengadaan }}</td>
 								<td class="p-3 text-xs">
 									<span class="px-2 py-1 text-xs text-gray-800 bg-yellow-200 border-2 border-yellow-500 rounded-full whitespace-nowrap" v-if="data.status_pengadaan == 0">Belum disetujui</span>
-									<span class="px-2 py-1 text-xs text-gray-800 bg-green-200 border-2 border-green-500 rounded-full whitespace-nowrap" v-else>Sudah disetujui</span>
+									<span class="px-2 py-1 text-xs text-gray-800 bg-green-200 border-2 border-green-500 rounded-full whitespace-nowrap" v-else-if="data.status_pengadaan == 1">Sudah disetujui</span>
+									<span class="px-2 py-1 text-xs text-gray-800 bg-blue-200 border-2 border-blue-500 rounded-full whitespace-nowrap" v-else>Selesai</span>
 								</td>
 								<td class="p-3">{{ $moment(data.tgl_dibuat).format("DD-MMMM-YYYY") }}</td>
 								<td class="w-48 p-1 py-3">

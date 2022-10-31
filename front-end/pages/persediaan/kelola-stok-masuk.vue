@@ -37,11 +37,11 @@
 				<table class="table table-auto table-produk">
 					<thead class="bg-gray-100">
 						<tr class="text-left text-gray-800 font-title">
-							<th class="p-3">Id Barang Masuk</th>
+							<th class="p-3">Id Stok Masuk</th>
 							<th class="p-3">Tgl Transaksi</th>
 							<th class="p-3">User</th>
 							<th class="p-3">Jumlah Pesanan</th>
-							<th class="p-3">Total Pesanan</th>
+							<th class="p-3">Total Harga Beli</th>
 							<th class="p-1"></th>
 						</tr>
 					</thead>
@@ -61,6 +61,28 @@
 									</button>
 								</td>
 							</tr>
+							<td colspan="6" class="p-3 bg-sky-100" v-show="content === index">
+								<div class="px-4 pb-2 font-semibold">Detail Stok Masuk</div>
+								<div class="grid grid-cols-3 gap-4">
+									<div class="col-span-3 md:col-span-1 bg-white rounded-md shadow-md" v-for="(data, index) in data.detail_stok" :key="index">
+										<div class="flex justify-between px-4 pt-2 pb-1">
+											<div>
+												<p class="text-lg font-semibold tracking-wider">{{ data.bahan_baku.nama_bahan_baku }}</p>
+												<p class="text-xs">Rp. {{ Intl.NumberFormat().format(data.harga_beli) }}</p>
+											</div>
+											<div class="place-self-center">
+												<p class="font-semibold">
+													{{ data.qty_stok }} <span class="text-xs">{{ data.bahan_baku.satuan_bahan_baku }}</span>
+												</p>
+											</div>
+										</div>
+										<div class="flex justify-end space-x-4 px-4 pb-2">
+											<dt class="text-xs font-semibold">Subtotal</dt>
+											<dd class="mt-1 text-xs font-semibold sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(data.qty_stok * data.harga_beli) }}</dd>
+										</div>
+									</div>
+								</div>
+							</td>
 							<tr>
 								<td class="p-3 bg-sky-100" colspan="6" v-show="content === index">
 									<div class="px-4 pb-2 font-semibold">Detail Stok Masuk</div>
@@ -92,10 +114,6 @@
 													</div>
 												</dl>
 											</div>
-										</div>
-										<div class="flex flex-col justify-between col-span-2 px-5 py-6 bg-sky-100 md:flex-row">
-											<dt class="text-sm font-semibold">Subtotal</dt>
-											<dd class="mt-1 text-sm font-semibold sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(data.qty_stok * data.harga_beli) }}</dd>
 										</div>
 									</div>
 								</td>
