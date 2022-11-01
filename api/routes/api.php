@@ -27,6 +27,7 @@ Route::post('/login', [AuthController::class, 'login']);
 // Produk
 Route::get('/produk', [ProdukController::class, 'index']);
 Route::get('/kategori', [ProdukController::class, 'kategori']);
+Route::get('/katalog', [ProdukController::class, 'katalog']);
 Route::get('/produk/{id_produk}', [ProdukController::class, 'detail']);
 
 Route::post('/produk', [ProdukController::class, 'addProduk']);

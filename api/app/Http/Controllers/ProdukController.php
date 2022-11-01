@@ -28,6 +28,12 @@ class ProdukController extends Controller
         $produk =  Produk::with('kategori')->find($id_produk);
         return response()->json($produk, 200);
     }
+    public function katalog(Request $request)
+    {
+        $kategori = '%' . $request->kategori . '%';
+        $produk =  Produk::where('id_kategori_produk', 'like', $kategori)->get();
+        return response()->json($produk, 200);
+    }
 
     public function kategori()
     {
