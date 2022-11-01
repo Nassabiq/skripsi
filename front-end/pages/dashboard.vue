@@ -8,8 +8,8 @@
 
 <script>
 export default {
-	name: "IndexPage",
-	layout: "user",
+	name: "Dashboard",
+	layout: "auth",
 	auth: false,
 	data() {
 		return {

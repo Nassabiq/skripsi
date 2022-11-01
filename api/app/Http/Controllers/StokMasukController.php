@@ -35,42 +35,51 @@ class StokMasukController extends Controller
 
         if ($validator->fails()) return response()->json($validator->messages(), 400);
 
-        // DB::beginTransaction();
-        // try {
-        $pengadaan = PengadaanPersediaan::findOrFail($request->id_pengadaan);
-        $pengadaan->status_pengadaan = 2;
-        $pengadaan->save();
+        DB::beginTransaction();
+        try {
+            $pengadaan = PengadaanPersediaan::findOrFail($request->id_pengadaan);
+            $pengadaan->status_pengadaan = 2;
+            $pengadaan->save();
 
-        $id_stok_masuk = IdGenerator::generate(['table' => 'stok_masuk', 'field' => 'id_stok_masuk', 'length' => 17, 'prefix' => 'Stok-' . date('dmY')]);
-        $stok_masuk = StokMasuk::create([
-            'id_stok_masuk' => $id_stok_masuk,
-            'tgl_stok_masuk' => Carbon::now(),
-            'total_harga_beli' => $request->total,
-        ]);
-
-        foreach ($request->stok as $data) {
-            $id_detail = IdGenerator::generate(['table' => 'detail_stok_masuk', 'field' => 'id_detail_stok_masuk', 'length' => 10, 'prefix' => 'DStok-']);
-            DetailStokMasuk::create([
-                'id_detail_stok_masuk' => $id_detail,
-                'id_bahan_baku' => $data['id_bahan_baku'],
-                'id_stok_masuk' => $stok_masuk->id_stok_masuk,
-                'qty_stok' => $data['qty'],
-                'harga_beli' => $data['harga'],
+            $id_stok_masuk = IdGenerator::generate(['table' => 'stok_masuk', 'field' => 'id_stok_masuk', 'length' => 17, 'prefix' => 'Stok-' . date('dmY')]);
+            $stok_masuk = StokMasuk::create([
+                'id_stok_masuk' => $id_stok_masuk,
+                'tgl_stok_masuk' => Carbon::now(),
+                'total_harga_beli' => $request->total,
             ]);
 
-            $stok = SKU::where('id_bahan_baku', $data['id_bahan_baku'])->get();
-            foreach ($stok as $item) {
-                $item->jml_stok += $data['qty'];
-                $item->save();
-            }
-        }
+            foreach ($request->stok as $data) {
+                $id_detail = IdGenerator::generate(['table' => 'detail_stok_masuk', 'field' => 'id_detail_stok_masuk', 'length' => 10, 'prefix' => 'DStok-']);
+                DetailStokMasuk::create([
+                    'id_detail_stok_masuk' => $id_detail,
+                    'id_bahan_baku' => $data['id_bahan_baku'],
+                    'id_stok_masuk' => $stok_masuk->id_stok_masuk,
+                    'qty_stok' => $data['qty'],
+                    'harga_beli' => $data['harga'],
+                ]);
 
-        DB::commit();
-        return response()->json(200);
-        // } catch (\Throwable $th) {
-        //     //throw $th;
-        //     DB::rollBack();
-        //     return response()->json(400);
-        // }
+                $stok = SKU::where('id_bahan_baku', $data['id_bahan_baku'])->get();
+                foreach ($stok as $item) {
+                    $item->jml_stok += $data['qty'];
+                    $item->save();
+                }
+            }
+
+            DB::commit();
+            return response()->json(200);
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return response()->json(400);
+        }
+    }
+
+    public function laporanBarangMasuk(Request $request)
+    {
+        $from = Carbon::parse($request->from);
+        $to = Carbon::parse($request->to);
+
+        $data = BarangMasuk::with('detailBarang.bahanBaku')->orderBy('tgl_barang_masuk', 'asc')->whereBetween('tgl_barang_masuk', [$from, $to])->get();
+        return response()->json($data, 200);
     }
 }

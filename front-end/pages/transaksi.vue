@@ -8,7 +8,7 @@
 
 <script>
 export default {
-	name: "IndexPage",
+	name: "Transaksi",
 	layout: "user",
 	auth: false,
 	data() {
