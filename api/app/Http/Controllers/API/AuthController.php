@@ -19,9 +19,8 @@ class AuthController extends Controller
             'password' => 'required|string'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors());
-        }
+        if ($validator->fails()) return response()->json($validator->errors());
+
 
         $user = User::create([
             'name' => $request->name,
@@ -41,9 +40,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         $user =  User::where('email', $request['email'])->firstOrFail();

@@ -54,24 +54,29 @@ export default {
 	},
 
 	router: {
-		// middleware: ["auth"],
+		middleware: ["auth"],
 	},
 	axios: {
-		// proxy: true,
+		proxy: true,
 		baseUrl: "http://127.0.0.1:8000",
 		credentials: true,
 	},
-	// proxy: {
-	// 	"/api": {
-	// 		target: "https://localhost:8000",
-	// 		pathRewrite: {"^/api": "/"},
-	// 	},
-	// },
+	proxy: {
+		"/api": {
+			target: "https://127.0.0.1:8000",
+			pathRewrite: {"^/api": "/"},
+		},
+	},
 	auth: {
 		strategies: {
 			laravelSanctum: {
 				provider: "laravel/sanctum",
-				url: "http://127.0.0.1:8000/api",
+				url: "http://127.0.0.1:8000",
+				endpoints: {
+					login: {url: "/api/login", method: "post"},
+					logout: {url: "/api/logout", method: "post"},
+					// user: { url: '/auth/user', method: 'get' }
+				},
 			},
 		},
 	},
