@@ -164,7 +164,6 @@ export default {
 		Pagination,
 	},
 	layout: "auth",
-	auth: false,
 	data() {
 		return {
 			products: [],

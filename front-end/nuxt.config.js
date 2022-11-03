@@ -57,14 +57,14 @@ export default {
 		middleware: ["auth"],
 	},
 	axios: {
-		proxy: true,
+		// proxy: true,
 		baseUrl: "http://127.0.0.1:8000",
 		credentials: true,
 	},
 	proxy: {
-		"/api": {
+		"/laravel": {
 			target: "https://127.0.0.1:8000",
-			pathRewrite: {"^/api": "/"},
+			pathRewrite: {"^/laravel": "/"},
 		},
 	},
 	auth: {
@@ -73,9 +73,13 @@ export default {
 				provider: "laravel/sanctum",
 				url: "http://127.0.0.1:8000",
 				endpoints: {
-					login: {url: "/api/login", method: "post"},
+					login: {url: "/api/login", method: "post", propertyName: "access_token"},
 					logout: {url: "/api/logout", method: "post"},
-					// user: { url: '/auth/user', method: 'get' }
+					user: {url: "/auth/user", method: "get"},
+				},
+				user: {
+					property: "data",
+					autoFetch: false,
 				},
 			},
 		},

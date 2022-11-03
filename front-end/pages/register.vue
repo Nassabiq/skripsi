@@ -74,7 +74,7 @@ export default {
 	},
 	methods: {
 		async register() {
-			e.preventDefault();
+			// e.preventDefault();
 			if (this.password !== this.password_confirmation) {
 				this.validation.push({password: "Password konfirmasi tidak sesuai"});
 			}

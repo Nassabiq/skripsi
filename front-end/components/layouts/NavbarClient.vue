@@ -44,9 +44,16 @@
 								</div>
 								<div class="absolute right-0 z-10 w-48 py-1 mt-2 transition duration-1000 ease-in-out origin-top-right transform bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" :class="{'opacity-0 scale-95': !dropdown, 'opacity-100 scale-100': dropdown}">
 									<!-- Active: "bg-gray-100", Not Active: "" -->
-									<a href="#" class="block px-4 py-2 text-sm text-gray-700 bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-0">Profile</a>
-									<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-1">Transaksi</a>
-									<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+									<template v-if="$auth.loggedIn">
+										<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-0">Profile</a>
+										<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-1">Transaksi</a>
+										<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+									</template>
+									<template v-else>
+										<NuxtLink to="/login">
+											<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-0">Login</a>
+										</NuxtLink>
+									</template>
 								</div>
 
 								<!-- Cart Panel -->

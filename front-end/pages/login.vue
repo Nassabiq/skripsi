@@ -30,6 +30,7 @@
 
 					<div class="mt-6">
 						<span class="block w-full rounded-md shadow-sm">
+							<p class="mt-2 text-xs text-red-500" v-if="validation.message">{{ validation.message }}</p>
 							<button type="submit" class="flex justify-center w-full px-4 py-2 text-sm font-medium text-white transition duration-150 ease-in-out bg-green-600 border border-transparent rounded-md hover:bg-green-500 focus:outline-none focus:border-green-700 focus:ring-green-500 active:bg-green-700">
 								<div>Sign in</div>
 							</button>
@@ -59,15 +60,20 @@ export default {
 	methods: {
 		async login() {
 			try {
-				await this.$auth.loginWith("laravelSanctum", {
-					data: {
-						email: this.form.email,
-						password: this.form.password,
-					},
-				});
-				this.$router.push("/");
+				const login = await this.$auth
+					.loginWith("laravelSanctum", {
+						data: {
+							email: this.form.email,
+							password: this.form.password,
+						},
+					})
+					.then((res) => {
+						this.$auth.setUser(res.data.data);
+					});
+				// this.$router.push("/");
 			} catch (error) {
-				console.log("gagal " + error);
+				this.validation = error.response.data;
+				console.log(error.response.data);
 			}
 		},
 	},

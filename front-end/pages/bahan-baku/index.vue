@@ -99,7 +99,9 @@ import Modal from "../../components/ModalComponent.vue";
 
 export default {
 	layout: "auth",
+	name: "bahan-baku",
 	components: {Spinner, Modal},
+	auth: false,
 	data() {
 		return {
 			modalBahanBaku: false,
@@ -147,7 +149,6 @@ export default {
 
 		searchData() {
 			this.getData();
-			// this.$emit("search-data", this.search);
 		},
 		async addBahanBaku() {
 			this.isloading = true;
