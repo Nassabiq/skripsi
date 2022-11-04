@@ -35,9 +35,7 @@
 								<div>Sign in</div>
 							</button>
 						</span>
-						<!-- <NuxtLink to="/register" class="flex justify-end text-sm font-semibold text-green-500 hover:text-green-700">
-							Register
-						</NuxtLink> -->
+						<NuxtLink to="/register" class="flex justify-end text-sm font-semibold text-green-500 hover:text-green-700"> Register </NuxtLink>
 					</div>
 				</form>
 			</div>
@@ -60,17 +58,15 @@ export default {
 	methods: {
 		async login() {
 			try {
-				const login = await this.$auth
-					.loginWith("laravelSanctum", {
-						data: {
-							email: this.form.email,
-							password: this.form.password,
-						},
-					})
-					.then((res) => {
-						this.$auth.setUser(res.data.data);
-					});
-				// this.$router.push("/");
+				const login = await this.$auth.loginWith("laravelSanctum", {
+					data: {
+						email: this.form.email,
+						password: this.form.password,
+					},
+				});
+				// console.log(login);
+				this.$auth.setUser(this.form);
+				this.$router.push("/");
 			} catch (error) {
 				this.validation = error.response.data;
 				console.log(error.response.data);

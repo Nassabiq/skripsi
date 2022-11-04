@@ -3,7 +3,6 @@
 		<p class="text-3xl font-semibold text-blue-600">Hello World</p>
 		<button v-if="$auth.loggedIn" @click.prevent="logout" class="text-xl font-semibold text-blue-600">Logout</button>
 		{{ $auth.loggedIn }}
-		{{ $store.state.auth.loggedIn }}
 		<!-- {{ user.name }} -->
 	</div>
 </template>
