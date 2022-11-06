@@ -47,7 +47,7 @@
 									<template v-if="$auth.loggedIn">
 										<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-0">Profile</a>
 										<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-1">Transaksi</a>
-										<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+										<a href="#" @click.prevent="logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-2">Log out</a>
 									</template>
 									<template v-else>
 										<NuxtLink to="/login">
@@ -156,6 +156,10 @@ export default {
 	methods: {
 		showCart() {
 			this.cart = !this.cart;
+		},
+		async logout() {
+			await this.$auth.logout();
+			this.$router.push("/login");
 		},
 	},
 };

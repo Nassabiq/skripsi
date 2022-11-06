@@ -58,18 +58,19 @@ export default {
 	methods: {
 		async login() {
 			try {
-				const login = await this.$auth.loginWith("laravelSanctum", {
+				const login = await this.$auth.loginWith("laravelJWT", {
 					data: {
 						email: this.form.email,
 						password: this.form.password,
 					},
 				});
 				// console.log(login);
-				this.$auth.setUser(this.form);
+				// this.$auth.setUser(login.user.name);
+				// this.$auth.setUserToken(login.access_token);
 				this.$router.push("/");
 			} catch (error) {
-				this.validation = error.response.data;
-				console.log(error.response.data);
+				// this.validation = error.response.data;
+				console.log(error);
 			}
 		},
 	},

@@ -43,7 +43,7 @@ class AuthController extends Controller
         }
 
         $user =  User::where('email', $request['email'])->firstOrFail();
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = auth()->login($user);
 
         return response()->json([
             'message' => 'Welcome ' . $user->name,
@@ -54,7 +54,7 @@ class AuthController extends Controller
 
     public function logout()
     {
-        auth()->user()->tokens()->delete();
+        auth()->logout();
         return [
             'message' => 'You have successfully logged out and the token was successfully deleted'
         ];

@@ -26,7 +26,7 @@
 										<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
 									</svg>
 
-									<p class="text-xs font-semibold">Add to Cart</p>
+									<p class="text-xs font-semibold" @click.prevent="modal = !modal">Add to Cart</p>
 								</class>
 							</a>
 							<!-- More products... -->
@@ -36,22 +36,89 @@
 				<div v-else>Tidak Ada Data</div>
 			</div>
 		</div>
-		<!-- <button v-if="$auth.loggedIn" @click.prevent="logout" class="text-xl font-semibold text-blue-600">Logout</button>
-    {{ user.name }} -->
+		<!-- Modal Tambah Produk -->
+		<Modal size="max-w-xl" title="Add to Cart" @close-modal="closeModal" v-show="modal">
+			<template #content>
+				<div class="col-span-12 md:col-span-6">
+					<label class="label">QTY</label>
+					<input type="text" class="form-input form-input-lg" placeholder="QTY ... " />
+					<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.nama_produk">{{ validation.nama_produk[0] }}</p> -->
+				</div>
+				<div class="col-span-12 md:col-span-6">
+					<label class="label">Jenis Bahan</label>
+					<select class="form-input form-input-lg">
+						<option value="">Pilih Bahan</option>
+						<!-- <option :value="category.id_kategori_produk" v-for="category in categories">
+							{{ category.nama_kategori }}
+						</option> -->
+					</select>
+					<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.id_kategori_produk">{{ validation.id_kategori_produk[0] }}</p> -->
+				</div>
+				<div class="col-span-12 md:col-span-6">
+					<label class="text-xs font-semibold text-gray-700">Ukuran</label>
+				</div>
+				<div class="col-span-12 md:col-span-6">
+					<label class="text-xs font-semibold text-gray-700">Harga</label>
+				</div>
+				<div class="col-span-12">
+					<label class="label">Finishing</label>
+					<div class="mt-1">
+						<section>
+							<client-only>
+								<quill-editor ref="editor" :options="editorOption" />
+							</client-only>
+						</section>
+						<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.description">{{ validation.description[0] }}</p> -->
+					</div>
+				</div>
+				<div class="col-span-12">
+					<label class="label">Catatan</label>
+					<div class="mt-1">
+						<section>
+							<client-only>
+								<quill-editor ref="editor" :options="editorOption" />
+							</client-only>
+						</section>
+						<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.informasi_pemesanan">{{ validation.informasi_pemesanan[0] }}</p> -->
+					</div>
+				</div>
+			</template>
+			<template #submit>
+				<!-- <button class="btn btn-lg btn-green" @click="addProduk">Submit</button> -->
+			</template>
+		</Modal>
 	</div>
 </template>
 
 <script>
+import Modal from "../components/ModalComponent.vue";
 export default {
 	name: "Katalog",
 	layout: "user",
 	auth: false,
+	components: {Modal},
 	data() {
 		return {
 			// user : this.$auth.user
 			products: [],
 			categories: [],
 			id_kategori: "",
+
+			modal: false,
+
+			editorOption: {
+				// Some Quill options...
+				theme: "snow",
+				modules: {
+					toolbar: [
+						["bold", "italic", "underline", "strike"],
+						["blockquote", "code-block"],
+						[{"color": []}, {"background": []}], // dropdown with defaults from theme
+						[{"font": []}],
+						[{"align": []}],
+					],
+				},
+			},
 		};
 	},
 	mounted() {
@@ -75,10 +142,9 @@ export default {
 			this.id_kategori = "";
 			this.getProducts();
 		},
-		// async logout(){
-		//   await this.$auth.logout();
-		//   this.$router.push('/login');
-		// }
+		closeModal() {
+			this.modal = !this.modal;
+		},
 	},
 };
 </script>
