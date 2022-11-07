@@ -25,6 +25,6 @@ class Produk extends Model
 
     public function stok()
     {
-        return $this->belongsTo(SKU::class, 'id_sku', 'id_sku');
+        return $this->hasMany(SKU::class, 'id_produk', 'id_produk');
     }
 }

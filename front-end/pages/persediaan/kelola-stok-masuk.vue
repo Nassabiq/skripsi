@@ -64,7 +64,7 @@
 							<td colspan="6" class="p-3 bg-sky-100" v-show="content === index">
 								<div class="px-4 pb-2 font-semibold">Detail Stok Masuk</div>
 								<div class="grid grid-cols-3 gap-4">
-									<div class="col-span-3 md:col-span-1 bg-white rounded-md shadow-md" v-for="(data, index) in data.detail_stok" :key="index">
+									<div class="col-span-3 bg-white rounded-md shadow-md md:col-span-1" v-for="(data, index) in data.detail_stok" :key="index">
 										<div class="flex justify-between px-4 pt-2 pb-1">
 											<div>
 												<p class="text-lg font-semibold tracking-wider">{{ data.bahan_baku.nama_bahan_baku }}</p>
@@ -76,7 +76,7 @@
 												</p>
 											</div>
 										</div>
-										<div class="flex justify-end space-x-4 px-4 pb-2">
+										<div class="flex justify-end px-4 pb-2 space-x-4">
 											<dt class="text-xs font-semibold">Subtotal</dt>
 											<dd class="mt-1 text-xs font-semibold sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(data.qty_stok * data.harga_beli) }}</dd>
 										</div>

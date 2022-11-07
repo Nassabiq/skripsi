@@ -31,7 +31,7 @@ class ProdukController extends Controller
     public function katalog(Request $request)
     {
         $kategori = '%' . $request->kategori . '%';
-        $produk =  Produk::where('id_kategori_produk', 'like', $kategori)->get();
+        $produk =  Produk::with(['stok.harga', 'stok.bahanBaku'])->where('id_kategori_produk', 'like', $kategori)->get();
         return response()->json($produk, 200);
     }
 
@@ -47,6 +47,8 @@ class ProdukController extends Controller
         'satuan_produk'   => 'required',
         'description'   => 'required',
         'informasi_pemesanan'   => 'required',
+        'image'   => 'required|max:5',
+        'image.*'   => 'image|mimes:jpeg,png,jpg,gif,svg|max:5000',
     ];
     public $messages = [];
     // CREATE RECORD INTO DATABASE
@@ -94,8 +96,6 @@ class ProdukController extends Controller
             'satuan_produk'   => 'required',
             'description'   => 'required',
             'informasi_pemesanan'   => 'required',
-            'image'   => 'required|max:5',
-            'image.*'   => 'image|mimes:jpeg,png,jpg,gif,svg|max:5000',
         ]);
 
         if ($validator->fails()) return response()->json($validator->errors(), 400);

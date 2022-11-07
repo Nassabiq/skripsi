@@ -3,18 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\BahanBaku;
+use App\Models\HargaJualProduk;
 use App\Models\SKU;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class BahanBakuController extends Controller
 {
-    //
     public function index()
     {
-        $bahan_baku = BahanBaku::with('stok.produk')->get();
+        $bahan_baku = BahanBaku::with(['stok.produk', 'stok.harga'])->get();
         return response()->json($bahan_baku, 200);
     }
 
@@ -24,28 +26,46 @@ class BahanBakuController extends Controller
             'nama_bahan_baku'   => 'required',
             'satuan_bahan_baku'   => 'required',
             'id_produk'   => 'required',
+            'harga' => 'required'
         ]);
 
         if ($validator->fails()) return response()->json($validator->errors(), 400);
 
-        $id_bahan_baku = IdGenerator::generate(['table' => 'bahan_baku', 'field' => 'id_bahan_baku', 'length' => 10, 'prefix' => 'BB-']);
-        $id_sku = IdGenerator::generate(['table' => 'sku', 'field' => 'id_sku', 'length' => 10, 'prefix' => 'SKU-']);
+        DB::beginTransaction();
+        try {
 
-        $material = BahanBaku::create([
-            'id_bahan_baku' => $id_bahan_baku,
-            'nama_bahan_baku' => $request->nama_bahan_baku,
-            'slug_bahan_baku' => Str::slug($request->nama_bahan_baku),
-            'satuan_bahan_baku' => $request->satuan_bahan_baku,
-        ]);
+            $id_bahan_baku = IdGenerator::generate(['table' => 'bahan_baku', 'field' => 'id_bahan_baku', 'length' => 10, 'prefix' => 'BB-']);
+            $id_sku = IdGenerator::generate(['table' => 'sku', 'field' => 'id_sku', 'length' => 10, 'prefix' => 'SKU-']);
+            $id_harga_jual = IdGenerator::generate(['table' => 'harga_jual_produk', 'field' => 'id_harga_jual', 'length' => 10, 'prefix' => 'PPrc-']);
 
-        SKU::create([
-            'id_sku' => $id_sku,
-            'id_bahan_baku' => $id_bahan_baku,
-            'id_produk' => $request->id_produk,
-            'jml_stok' => 0
-        ]);
+            BahanBaku::create([
+                'id_bahan_baku' => $id_bahan_baku,
+                'nama_bahan_baku' => $request->nama_bahan_baku,
+                'slug_bahan_baku' => Str::slug($request->nama_bahan_baku),
+                'satuan_bahan_baku' => $request->satuan_bahan_baku,
+            ]);
 
-        return response()->json($material, 200);
+            SKU::create([
+                'id_sku' => $id_sku,
+                'id_bahan_baku' => $id_bahan_baku,
+                'id_produk' => $request->id_produk,
+                'jml_stok' => 0
+            ]);
+
+            HargaJualProduk::create([
+                'id_harga_jual' => $id_harga_jual,
+                'id_sku' => $id_sku,
+                'harga_produk' => $request->harga,
+                'tgl_diubah' => Carbon::now()
+            ]);
+
+            DB::commit();
+            return response()->json(["message" => "Data Berhasil disimpan"], 200);
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return response()->json($th, 400);
+        }
     }
 
     public function editBahanBaku(Request $request, $id)

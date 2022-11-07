@@ -83,6 +83,10 @@
 					</select>
 					<p class="mt-2 text-xs text-red-500" v-if="validation.id_produk">{{ validation.id_produk[0] }}</p>
 				</div>
+				<div class="col-span-12 sm:col-span-9" v-if="!updateMode">
+					<label class="label">Harga Awal</label>
+					<div><number placeholder="Harga.." class="form-input form-input-lg" v-model="material.harga" v-bind="number"></number></div>
+				</div>
 			</template>
 			<template #submit>
 				<button class="btn btn-lg btn-green" @click.prevent="addBahanBaku" v-if="!updateMode">Submit</button>
@@ -96,11 +100,12 @@
 <script>
 import Spinner from "../../components/SpinnerLoading.vue";
 import Modal from "../../components/ModalComponent.vue";
+import {number} from "@coders-tm/vue-number-format";
 
 export default {
 	layout: "auth",
 	name: "bahan-baku",
-	components: {Spinner, Modal},
+	components: {Spinner, number, Modal},
 	auth: false,
 	data() {
 		return {
@@ -114,6 +119,7 @@ export default {
 				nama_bahan_baku: "",
 				satuan_bahan_baku: "",
 				id_produk: "",
+				harga: "",
 			},
 			validation: [],
 			isloading: false,
@@ -143,8 +149,10 @@ export default {
 			this.material.satuan_bahan_baku = "";
 			this.material.id_produk = "";
 			this.material.nama_bahan_baku = "";
+			this.material.harga = "";
 			this.validation = [];
 			this.modalBahanBaku = false;
+			this.updateMode = false;
 		},
 
 		searchData() {
@@ -157,6 +165,7 @@ export default {
 					nama_bahan_baku: this.material.nama_bahan_baku,
 					satuan_bahan_baku: this.material.satuan_bahan_baku,
 					id_produk: this.material.id_produk,
+					harga: this.material.harga,
 				})
 				.then(() => {
 					this.closeModal();

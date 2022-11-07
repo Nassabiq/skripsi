@@ -69,24 +69,6 @@ export default {
 	// },
 	auth: {
 		strategies: {
-			// laravelSanctum: {
-			// 	provider: "laravel/sanctum",
-			// 	url: "http://127.0.0.1:8000",
-			// 	endpoints: {
-			// 		login: {url: "/api/login", method: "post", propertyName: "access_token"},
-			// 		logout: {url: "/api/logout", method: "post"},
-			// 		// user: {url: "/auth/user", method: "get"},
-			// 	},
-			// 	// user: {
-			// 	// 	autoFetch: true,
-			// 	// },
-			// },
-			// cookie: {
-			// 	cookie: {
-			// 		// (optional) If set, we check this cookie existence for loggedIn check
-			// 		name: "XSRF-TOKEN",
-			// 	},
-			// },
 			"laravelJWT": {
 				provider: "laravel/jwt",
 				url: "http://127.0.0.1:8000",
