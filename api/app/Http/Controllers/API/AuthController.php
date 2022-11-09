@@ -26,6 +26,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
+        $user->assignRole('Pelanggan');
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -38,17 +39,15 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
+        if (!Auth::attempt($request->only('email', 'password'))) return response()->json(['message' => 'Unauthorized'], 401);
 
-        $user =  User::where('email', $request['email'])->firstOrFail();
+        $user =  User::where('email', $request['email'])->first();
         $token = auth()->login($user);
 
         return response()->json([
             'message' => 'Welcome ' . $user->name,
             'access_token' => $token,
-            'token_type' => 'Bearer'
+            'token_type' => 'Bearer',
         ]);
     }
 

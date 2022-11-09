@@ -73,7 +73,7 @@ Route::get('/analisis-hpp', [AnalisisHPPController::class, 'index']);
 Route::group(['middleware' => ['auth:api']], function () {
 
     Route::get('/user', function () {
-        return auth()->user();
+        return auth()->user()->load('roles');
     });
     Route::post('/logout', [AuthController::class, 'logout']);
 });
