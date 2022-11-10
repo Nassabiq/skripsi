@@ -134,14 +134,6 @@
 				</div>
 			</div>
 		</nav>
-		<main>
-			<div class="py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
-				<!-- Replace with your content -->
-				<Nuxt />
-
-				<!-- /End replace -->
-			</div>
-		</main>
 	</div>
 </template>
 

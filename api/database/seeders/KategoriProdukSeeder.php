@@ -14,7 +14,6 @@ class KategoriProdukSeeder extends Seeder
      */
     public function run()
     {
-        //
         KategoriProduk::factory()->count(10)->create();
     }
 }

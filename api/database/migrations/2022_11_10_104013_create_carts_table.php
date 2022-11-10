@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDetailTransaksiTable extends Migration
+class CreateCartsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,17 @@ class CreateDetailTransaksiTable extends Migration
      */
     public function up()
     {
-        Schema::create('detail_transaksi', function (Blueprint $table) {
-            $table->string('id_detail_transaksi')->unique();
-            $table->primary('id_detail_transaksi');
+        Schema::create('carts', function (Blueprint $table) {
+            $table->string('id_cart')->unique();
+            $table->primary('id_cart');
 
-            $table->string('id_transaksi')->references('id_transaksi')->on('transaksi_penjualan');
-            $table->string('id_produk')->references('id_produk')->on('produk');
+            $table->string('id_user')->references('id_user')->on('users');
+            $table->string('id_produk')->references('id_produk')->on('products');
 
             $table->string('jenis_bahan');
             $table->integer('qty_produk');
             $table->integer('ukuran')->nullable();
             $table->string('finishing')->nullable();
-            $table->longText('catatan')->nullable();
-            $table->integer('subtotal');
         });
     }
 
@@ -36,6 +34,6 @@ class CreateDetailTransaksiTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detail_transaksi');
+        Schema::dropIfExists('carts');
     }
 }

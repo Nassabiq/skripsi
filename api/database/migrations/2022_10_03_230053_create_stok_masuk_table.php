@@ -17,6 +17,7 @@ class CreateStokMasukTable extends Migration
             $table->string('id_stok_masuk')->unique();
             $table->primary('id_stok_masuk');
 
+            $table->string('id_user')->references('id_user')->on('users');
             $table->dateTime('tgl_stok_masuk');
             $table->integer('total_harga_beli');
         });

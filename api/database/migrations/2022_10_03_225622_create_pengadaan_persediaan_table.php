@@ -17,6 +17,8 @@ class CreatePengadaanPersediaanTable extends Migration
             $table->string('id_pengadaan')->unique();
             $table->primary('id_pengadaan');
 
+            $table->string('id_user')->references('id_user')->on('users');
+
             $table->string('nama_pengadaan');
             $table->integer('status_pengadaan');
             $table->dateTime('tgl_dibuat');

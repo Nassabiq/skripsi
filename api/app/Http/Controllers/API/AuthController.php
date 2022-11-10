@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -20,8 +21,10 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) return response()->json($validator->errors());
+        $id_user = IdGenerator::generate(['table' => 'users', 'field' => 'id_user', 'length' => 10, 'prefix' => 'USER-']);
 
         $user = User::create([
+            'id_user' => $id_user,
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
