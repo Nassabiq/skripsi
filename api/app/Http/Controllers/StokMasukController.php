@@ -70,7 +70,7 @@ class StokMasukController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return response()->json(400);
+            return response()->json($th, 400);
         }
     }
 

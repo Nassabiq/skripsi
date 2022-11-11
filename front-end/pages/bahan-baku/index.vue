@@ -20,26 +20,22 @@
 					<thead class="bg-gray-100">
 						<tr class="text-left text-gray-800 font-title">
 							<th class="p-3">Nama Bahan Baku</th>
-							<th class="p-3">Produk</th>
-							<th class="p-3">Stok</th>
 							<th class="p-3">Satuan</th>
 							<th class="p-3"></th>
 						</tr>
 					</thead>
 					<tbody class="divide-y-2 divide-gray-100 divide-dotted">
-						<template v-if="bahanBaku.length > 0">
-							<tr class="text-sm" v-for="(data, index) in bahanBaku">
-								<td class="p-3">{{ data.nama_bahan_baku }}</td>
-								<td class="p-3" v-for="item in data.stok">{{ item.produk.nama_produk }}</td>
-								<td class="p-3" v-for="item in data.stok">{{ item.jml_stok }}</td>
-								<td class="p-3">{{ data.satuan_bahan_baku }}</td>
+						<template v-if="bahanBaku.data && bahanBaku.data.length > 0">
+							<tr class="text-sm" v-for="item in bahanBaku.data">
+								<td class="p-3">{{ item.nama_bahan_baku }}</td>
+								<td class="p-3">{{ item.satuan_bahan_baku }}</td>
 								<td class="p-2">
-									<button class="btn btn-sm btn-indigo" @click.prevent="editBahanBaku(data)">
+									<button class="btn btn-sm btn-indigo" @click.prevent="editBahanBaku(item)">
 										<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
 											<path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
 										</svg>
 									</button>
-									<button class="btn btn-sm btn-red" @click.prevent="deleteBahanBaku(data.id_bahan_baku)">
+									<button class="btn btn-sm btn-red" @click.prevent="deleteBahanBaku(item.id_bahan_baku)">
 										<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
 											<path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
 										</svg>
@@ -75,18 +71,6 @@
 					<input type="text" class="form-input form-input-lg" placeholder="Satuan ... " v-model="material.satuan_bahan_baku" />
 					<p class="mt-2 text-xs text-red-500" v-if="validation.satuan_bahan_baku">{{ validation.satuan_bahan_baku[0] }}</p>
 				</div>
-				<div class="col-span-12 sm:col-span-9">
-					<label class="label">Bahan Baku untuk : </label>
-					<select class="form-input form-input-lg" v-model="material.id_produk">
-						<option value="">Pilih Produk</option>
-						<option :value="data.id_produk" v-for="(data, index) in produk">{{ data.nama_produk }}</option>
-					</select>
-					<p class="mt-2 text-xs text-red-500" v-if="validation.id_produk">{{ validation.id_produk[0] }}</p>
-				</div>
-				<div class="col-span-12 sm:col-span-9" v-if="!updateMode">
-					<label class="label">Harga Awal</label>
-					<div><number placeholder="Harga.." class="form-input form-input-lg" v-model="material.harga" v-bind="number"></number></div>
-				</div>
 			</template>
 			<template #submit>
 				<button class="btn btn-lg btn-green" @click.prevent="addBahanBaku" v-if="!updateMode">Submit</button>
@@ -100,12 +84,12 @@
 <script>
 import Spinner from "../../components/SpinnerLoading.vue";
 import Modal from "../../components/ModalComponent.vue";
-import {number} from "@coders-tm/vue-number-format";
+import Pagination from "../../components/Pagination.vue";
 
 export default {
 	layout: "auth",
 	name: "bahan-baku",
-	components: {Spinner, number, Modal},
+	components: {Spinner, Modal, Pagination},
 	auth: false,
 	data() {
 		return {
@@ -118,45 +102,41 @@ export default {
 			material: {
 				nama_bahan_baku: "",
 				satuan_bahan_baku: "",
-				id_produk: "",
-				harga: "",
 			},
 			validation: [],
 			isloading: false,
 			updateMode: false,
 
 			search: "",
+			size: 10,
+			page: 1,
 		};
 	},
 	mounted() {
-		this.getData();
+		this.getBahanBaku();
 	},
 	methods: {
-		async getData() {
-			this.getBahanBaku();
-			this.getProduk();
-		},
 		async getBahanBaku() {
-			const bahanBaku = await this.$axios.$get("/api/bahan-baku");
+			const bahanBaku = await this.$axios.$get("/api/bahan-baku?page=" + this.page + "&show=" + parseInt(this.size) + "&search=" + this.search);
 			this.bahanBaku = bahanBaku;
-			console.log(bahanBaku);
-		},
-		async getProduk() {
-			const produk = await this.$axios.$get("/api/produk");
-			this.produk = produk;
 		},
 		closeModal() {
 			this.material.satuan_bahan_baku = "";
-			this.material.id_produk = "";
 			this.material.nama_bahan_baku = "";
-			this.material.harga = "";
 			this.validation = [];
 			this.modalBahanBaku = false;
 			this.updateMode = false;
 		},
 
 		searchData() {
-			this.getData();
+			this.getBahanBaku();
+		},
+		onChangeRecordsPerPage() {
+			this.getBahanBaku();
+		},
+		onPageChange(page) {
+			this.page = page;
+			this.getBahanBaku();
 		},
 		async addBahanBaku() {
 			this.isloading = true;
@@ -164,12 +144,10 @@ export default {
 				.post("/api/bahan-baku", {
 					nama_bahan_baku: this.material.nama_bahan_baku,
 					satuan_bahan_baku: this.material.satuan_bahan_baku,
-					id_produk: this.material.id_produk,
-					harga: this.material.harga,
 				})
 				.then(() => {
 					this.closeModal();
-					this.getData();
+					this.getBahanBaku();
 				})
 				.then(() => {
 					this.$swal.fire({
@@ -191,7 +169,6 @@ export default {
 			this.id_bahan_baku = data.id_bahan_baku;
 			this.material.nama_bahan_baku = data.nama_bahan_baku;
 			this.material.satuan_bahan_baku = data.satuan_bahan_baku;
-			this.material.id_produk = data.stok[0].id_produk;
 		},
 
 		async updateBahanBaku() {
@@ -200,11 +177,10 @@ export default {
 				.put("/api/bahan-baku/" + this.id_bahan_baku, {
 					nama_bahan_baku: this.material.nama_bahan_baku,
 					satuan_bahan_baku: this.material.satuan_bahan_baku,
-					id_produk: this.material.id_produk,
 				})
 				.then(() => {
 					this.closeModal();
-					this.getData();
+					this.getBahanBaku();
 				})
 				.then(() => {
 					this.$swal.fire({
@@ -238,7 +214,7 @@ export default {
 							this.$axios
 								.delete("api/bahan-baku/" + id)
 								.then(() => this.$swal.fire("Deleted!", "Data Berhasil dihapus.", "success"))
-								.then(() => this.getData())
+								.then(() => this.getBahanBaku())
 								.catch((error) => console.log(error))
 								.finally(() => (this.isloading = !this.isloading));
 						}, 500);

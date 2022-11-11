@@ -47,6 +47,9 @@
 									<template v-if="$auth.loggedIn">
 										<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-0">Profile</a>
 										<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-1">Transaksi</a>
+										<NuxtLink to="/dashboard">
+											<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-1">Admin Page</a>
+										</NuxtLink>
 										<a href="#" @click.prevent="logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-2">Log out</a>
 									</template>
 									<template v-else>

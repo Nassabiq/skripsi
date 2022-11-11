@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Image;
 
 class ProdukController extends Controller
 {
@@ -17,15 +16,15 @@ class ProdukController extends Controller
     {
         $search = '%' . $request->search . '%';
         $produk = $request->show == null
-            ? Produk::with('kategori')->get()
-            : Produk::with('kategori')->where('nama_produk', 'like', $search)->paginate($request->show);
+            ? Produk::with('kategori', 'stok')->get()
+            : Produk::with('kategori', 'stok')->where('nama_produk', 'like', $search)->paginate($request->show);
 
         return response()->json($produk, 200);
     }
 
     public function detail($id_produk)
     {
-        $produk =  Produk::with('kategori')->find($id_produk);
+        $produk =  Produk::with('kategori', 'stok')->find($id_produk);
         return response()->json($produk, 200);
     }
     public function katalog(Request $request)

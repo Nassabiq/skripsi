@@ -31,13 +31,13 @@
 					<template v-if="products.data && products.data.length > 0">
 						<a href="#" class="px-3 py-2 bg-gray-100 rounded-lg shadow-lg group shadow-gray-200" v-for="product in products.data">
 							<NuxtLink :to="{name: 'produk-id', params: {id: product.id_produk}}">
-								<div class="w-full overflow-hidden bg-gray-200 rounded-lg aspect-w-1 aspect-h-1">
+								<div class="w-full overflow-hidden bg-gray-200 rounded-lg aspect-square">
 									<img :src="'http://localhost:8000/storage/image_produk/' + product.id_produk + '/' + JSON.parse(product.image)[0].filename" alt="" class="object-cover w-full h-full border-2 rounded-md border-slate-200" />
 									<!-- <img :src="product.image" class="object-cover object-center w-full h-full group-hover:opacity-75" /> -->
 								</div>
 								<p class="mt-4 text-gray-700">{{ product.nama_produk }}</p>
 								<p class="mt-1 text-sm font-medium text-gray-900">
-									Rp. 48<span class="mt-4 text-xs text-gray-600">/ {{ product.satuan_produk }}</span>
+									<span class="text-xs text-gray-600" v-text="product.stok.length > 0 ? 'Harga' : 'Data Harga Belum ada'"></span> <span class="mt-4 text-xs text-gray-600">/{{ product.satuan_produk }}</span>
 								</p>
 							</NuxtLink>
 						</a>
@@ -111,7 +111,12 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-span-12 sm:col-span-7">
+				<div class="col-span-12 space-y-4 sm:col-span-7">
+					<!-- <div v-if="!updateMode" class="mt-2">
+						<label class="label">Harga Awal</label>
+
+						<div><number placeholder="Harga.." class="block w-full mt-1 text-xs border-2 border-gray-300 rounded shadow outline-none focus:border-green-300 md:w-1/2 form-input-lg" v-model="produk.harga" v-bind="number"></number></div>
+					</div> -->
 					<div>
 						<label class="label">Deskripsi</label>
 						<div class="mt-1">
@@ -155,6 +160,7 @@
 import Modal from "../../components/ModalComponent.vue";
 import Spinner from "../../components/SpinnerLoading.vue";
 import Pagination from "../../components/Pagination.vue";
+import {number} from "@coders-tm/vue-number-format";
 
 export default {
 	name: "IndexPage",
@@ -162,6 +168,7 @@ export default {
 		Modal,
 		Spinner,
 		Pagination,
+		number,
 	},
 	layout: "auth",
 	data() {
@@ -275,6 +282,7 @@ export default {
 			this.produk.description = "";
 			this.produk.informasi_pemesanan = "";
 			this.produk.image = [];
+			this.produk.harga = "";
 
 			this.validation = [];
 

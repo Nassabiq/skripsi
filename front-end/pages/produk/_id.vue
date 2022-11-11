@@ -2,11 +2,11 @@
 	<div class="gap-4 space-y-4 margin-auth">
 		<div class="card">
 			<div class="grid grid-cols-12 gap-4">
-				<div class="col-span-5">
+				<div class="col-span-12 md:col-span-4">
 					<div class="item">
-						<img v-if="product.image" :src="imageUrl + product.id_produk + '/' + currentImage" class="object-cover w-full border-2 border-slate-200 h-80" />
+						<img v-if="product.image" :src="imageUrl + product.id_produk + '/' + currentImage" class="object-cover w-full border-2 aspect-square border-slate-200 h-80" />
 						<!-- <img :src="product.image" class="object-cover w-full border-2 border-slate-200 h-80" /> -->
-						<!-- <Skeleton v-else /> -->
+						<Skeleton v-else />
 						<!-- <p v-else>Delete</p> -->
 					</div>
 					<div class="grid grid-cols-4 gap-4 mt-4 thumbnails">
@@ -24,7 +24,7 @@
 						</button>
 					</div>
 				</div>
-				<div class="col-span-7">
+				<div class="col-span-12 md:col-span-7">
 					<div class="grid grid-cols-12">
 						<div class="col-span-10 item">
 							<p v-if="product.nama_produk" class="text-4xl font-semibold text-gray-700 capitalize font-title">{{ product.nama_produk }}</p>
@@ -49,6 +49,40 @@
 						<p class="text-xl font-bold text-gray-500 capitalize">
 							Rp. 40,000<span class="mt-4 text-xs text-gray-600"> /{{ product.satuan_produk }}</span>
 						</p>
+					</div>
+					<div class="py-4 border-b-2 border-slate-200">
+						<div class="flex justify-between">
+							<p class="pb-2 text-xl font-bold text-gray-600 capitalize">Jenis Bahan</p>
+							<button class="btn btn-sm btn-with-icon btn-green" @click.prevent="openModalJenisBahan">
+								<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+									<path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+									<path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+								</svg>
+								<p class="text-xs text-white">Tambah Jenis Bahan</p>
+							</button>
+						</div>
+						<p v-show="product.stok !== undefined && product.stok.length > 0" class="text-sm text-justify text-slate-500">
+							{{ product.stok }}
+						</p>
+						<!-- <p v-else class="text-sm text-justify text-slate-500">Tidak Ada Data</p> -->
+						<!-- <Skeleton :count="5" v-else /> -->
+					</div>
+					<div class="py-4 border-b-2 border-slate-200">
+						<div class="flex justify-between">
+							<p class="pb-2 text-xl font-bold text-gray-600 capitalize">Jenis Finishing</p>
+							<!-- <button class="btn btn-sm btn-with-icon btn-green" @click.prevent="openModalJenisBahan">
+								<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+									<path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+									<path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+								</svg>
+								<p class="text-xs text-white">Tambah Jenis Bahan</p>
+							</button> -->
+						</div>
+						<!-- <p v-show="product.stok !== undefined && product.stok.length > 0" class="text-sm text-justify text-slate-500">
+							{{ product.stok }}
+						</p> -->
+						<!-- <p v-else class="text-sm text-justify text-slate-500">Tidak Ada Data</p> -->
+						<!-- <Skeleton :count="5" v-else /> -->
 					</div>
 					<div class="py-4 border-b-2 border-slate-200">
 						<p class="pb-2 text-xl font-bold text-gray-600 capitalize">Deskripsi</p>
@@ -154,6 +188,13 @@
 				<button class="btn btn-lg btn-indigo" @click.prevent="updateImage">Update</button>
 			</template>
 		</Modal>
+
+		<Modal size="max-w-2xl" title="Tambah Jenis Bahan" @close-modal="closeModalJenisBahan" v-show="modalJenisBahan">
+			<template #content> </template>
+			<template #submit>
+				<!-- <button class="btn btn-lg btn-indigo" @click.prevent="updateImage">Update</button> -->
+			</template>
+		</Modal>
 		<Spinner v-show="isloading"></Spinner>
 	</div>
 </template>
@@ -190,6 +231,7 @@ export default {
 
 			modal: false,
 			modalImage: false,
+			modalJenisBahan: false,
 			isloading: false,
 			validation: [],
 
@@ -273,11 +315,18 @@ export default {
 		openModalImage() {
 			this.modalImage = !this.modalImage;
 		},
+		openModalJenisBahan() {
+			this.modalJenisBahan = !this.modalJenisBahan;
+		},
 
 		closeModalImage() {
 			this.modalImage = false;
 			this.uploadedImage.addImage = [];
 			this.uploadedImage.deletedImage = [];
+			this.getData();
+		},
+		closeModalJenisBahan() {
+			this.modalJenisBahan = false;
 			this.getData();
 		},
 

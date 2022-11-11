@@ -19,7 +19,13 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array<int, string>
      */
+    protected $primaryKey = 'id_user';
+    public $incrementing = false;
+    protected $keyType = 'string';
+    public $timestamps = false;
+
     protected $fillable = [
+        'id_user',
         'name',
         'email',
         'password',
