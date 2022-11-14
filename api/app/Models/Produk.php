@@ -27,4 +27,8 @@ class Produk extends Model
     {
         return $this->hasMany(SKU::class, 'id_produk', 'id_produk');
     }
+    public function finishing()
+    {
+        return $this->hasMany(Finishing::class, 'id_produk', 'id_produk');
+    }
 }

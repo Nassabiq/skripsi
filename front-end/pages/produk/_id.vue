@@ -5,13 +5,11 @@
 				<div class="col-span-12 md:col-span-4">
 					<div class="item">
 						<img v-if="product.image" :src="imageUrl + product.id_produk + '/' + currentImage" class="object-cover w-full border-2 aspect-square border-slate-200 h-80" />
-						<!-- <img :src="product.image" class="object-cover w-full border-2 border-slate-200 h-80" /> -->
 						<Skeleton v-else />
-						<!-- <p v-else>Delete</p> -->
 					</div>
 					<div class="grid grid-cols-4 gap-4 mt-4 thumbnails">
 						<div class="col-span-1 cursor-pointer" v-for="(img, index) in product.image" :key="index" @click.prevent="activateImage(index)">
-							<img :src="imageUrl + product.id_produk + '/' + img.filename" alt="" :class="activeImage == index ? 'outline outline-offset-2 outline-4 outline-sky-500 ring-2 ring-red-300' : ''" class="object-cover w-full h-24 rounded-md" />
+							<img :src="imageUrl + product.id_produk + '/' + img.filename" alt="" :class="activeImage == index ? 'outline outline-offset-2 outline-4 outline-sky-500 ring-2 ring-red-300' : ''" class="object-cover w-full rounded-md aspect-square" />
 						</div>
 					</div>
 
@@ -24,7 +22,7 @@
 						</button>
 					</div>
 				</div>
-				<div class="col-span-12 md:col-span-7">
+				<div class="col-span-12 md:col-span-8">
 					<div class="grid grid-cols-12">
 						<div class="col-span-10 item">
 							<p v-if="product.nama_produk" class="text-4xl font-semibold text-gray-700 capitalize font-title">{{ product.nama_produk }}</p>
@@ -33,65 +31,56 @@
 						</div>
 						<div class="flex items-center justify-end col-span-2 gap-2">
 							<button class="btn btn-sm btn-green" @click.prevent="openModal">
-								<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+								<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
 									<path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
 									<path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
 								</svg>
 							</button>
 							<button class="btn btn-sm btn-red" @click="deleteProduk">
-								<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+								<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
 									<path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
 								</svg>
 							</button>
 						</div>
 					</div>
 					<div class="py-2 border-b-2 border-slate-200">
-						<p class="text-xl font-bold text-gray-500 capitalize">
+						<!-- <p class="text-xl font-bold text-gray-500 capitalize">
 							Rp. 40,000<span class="mt-4 text-xs text-gray-600"> /{{ product.satuan_produk }}</span>
-						</p>
+						</p> -->
 					</div>
 					<div class="py-4 border-b-2 border-slate-200">
 						<div class="flex justify-between">
-							<p class="pb-2 text-xl font-bold text-gray-600 capitalize">Jenis Bahan</p>
-							<button class="btn btn-sm btn-with-icon btn-green" @click.prevent="openModalJenisBahan">
-								<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-									<path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-									<path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+							<p class="pb-2 text-lg font-bold text-gray-600 capitalize">Jenis Bahan</p>
+							<!-- <button class="btn btn-sm btn-with-icon btn-indigo" @click.prevent="openModalJenisBahan">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
 								</svg>
-								<p class="text-xs text-white">Tambah Jenis Bahan</p>
-							</button>
-						</div>
-						<p v-show="product.stok !== undefined && product.stok.length > 0" class="text-sm text-justify text-slate-500">
-							{{ product.stok }}
-						</p>
-						<!-- <p v-else class="text-sm text-justify text-slate-500">Tidak Ada Data</p> -->
-						<!-- <Skeleton :count="5" v-else /> -->
-					</div>
-					<div class="py-4 border-b-2 border-slate-200">
-						<div class="flex justify-between">
-							<p class="pb-2 text-xl font-bold text-gray-600 capitalize">Jenis Finishing</p>
-							<!-- <button class="btn btn-sm btn-with-icon btn-green" @click.prevent="openModalJenisBahan">
-								<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-									<path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-									<path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
-								</svg>
-								<p class="text-xs text-white">Tambah Jenis Bahan</p>
+
+								<span class="text-xs text-white">Tambah Jenis Bahan</span>
 							</button> -->
 						</div>
-						<!-- <p v-show="product.stok !== undefined && product.stok.length > 0" class="text-sm text-justify text-slate-500">
+						<p v-if="product.stok !== undefined && product.stok.length > 0" class="text-sm text-justify text-slate-500">
 							{{ product.stok }}
-						</p> -->
-						<!-- <p v-else class="text-sm text-justify text-slate-500">Tidak Ada Data</p> -->
+						</p>
+						<p v-else class="text-sm text-justify text-slate-500">Tidak Ada Data</p>
 						<!-- <Skeleton :count="5" v-else /> -->
+					</div>
+					<div class="py-4 border-b-2 border-slate-200">
+						<div class="flex justify-between">
+							<p class="pb-2 text-lg font-bold text-gray-600 capitalize">Jenis Finishing</p>
+						</div>
+						<ul>
+							<li class="text-xs text-gray-700" v-for="data in product.finishing">{{ data.nama_finishing }}</li>
+						</ul>
 					</div>
 					<div class="py-4 border-b-2 border-slate-200">
 						<p class="pb-2 text-xl font-bold text-gray-600 capitalize">Deskripsi</p>
-						<p v-if="product.description" class="text-sm text-justify text-slate-500" v-html="product.description"></p>
+						<p v-if="product.description" class="text-xs text-justify text-slate-500" v-html="product.description"></p>
 						<Skeleton :count="5" v-else />
 					</div>
 					<div class="py-4 border-b-2 border-slate-200">
 						<p class="pb-2 text-xl font-bold text-gray-600 capitalize">Informasi Pemesanan</p>
-						<p v-if="product.description" class="text-sm text-justify text-slate-500" v-html="product.informasi_pemesanan"></p>
+						<p v-if="product.description" class="text-xs text-justify text-slate-500" v-html="product.informasi_pemesanan"></p>
 						<Skeleton :count="5" v-else />
 					</div>
 				</div>
@@ -189,12 +178,6 @@
 			</template>
 		</Modal>
 
-		<Modal size="max-w-2xl" title="Tambah Jenis Bahan" @close-modal="closeModalJenisBahan" v-show="modalJenisBahan">
-			<template #content> </template>
-			<template #submit>
-				<!-- <button class="btn btn-lg btn-indigo" @click.prevent="updateImage">Update</button> -->
-			</template>
-		</Modal>
 		<Spinner v-show="isloading"></Spinner>
 	</div>
 </template>
@@ -202,11 +185,12 @@
 <script>
 import Spinner from "../../components/SpinnerLoading.vue";
 import {Skeleton} from "vue-loading-skeleton";
+import {number} from "@coders-tm/vue-number-format";
 
 export default {
 	auth: false,
 	layout: "auth",
-	components: {Spinner, Skeleton},
+	components: {Spinner, Skeleton, number},
 	data() {
 		return {
 			firstLoad: false,
@@ -226,8 +210,10 @@ export default {
 				deletedImage: [],
 				allImages: [],
 			},
+
 			// image: [],
 			categories: [],
+			bahanBaku: [],
 
 			modal: false,
 			modalImage: false,
@@ -238,7 +224,6 @@ export default {
 			previewImage: null,
 			activeImage: 0,
 			imageUrl: "http://localhost:8000/storage/image_produk/",
-			// + product.slug + "/"
 		};
 	},
 	computed: {
@@ -291,7 +276,6 @@ export default {
 					.finally(() => (this.isloading = !this.isloading));
 			}, 500);
 		},
-
 		activateImage(imageIndex) {
 			this.activeImage = imageIndex;
 		},

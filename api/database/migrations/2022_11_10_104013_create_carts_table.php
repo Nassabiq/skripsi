@@ -18,9 +18,8 @@ class CreateCartsTable extends Migration
             $table->primary('id_cart');
 
             $table->string('id_user')->references('id_user')->on('users');
-            $table->string('id_produk')->references('id_produk')->on('products');
+            $table->string('id_sku')->references('id_sku')->on('sku');
 
-            $table->string('jenis_bahan');
             $table->integer('qty_produk');
             $table->integer('ukuran')->nullable();
             $table->string('finishing')->nullable();

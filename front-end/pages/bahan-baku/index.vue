@@ -24,8 +24,8 @@
 							<th class="p-3"></th>
 						</tr>
 					</thead>
-					<tbody class="divide-y-2 divide-gray-100 divide-dotted">
-						<template v-if="bahanBaku.data && bahanBaku.data.length > 0">
+					<template v-if="bahanBaku.data && bahanBaku.data.length > 0">
+						<tbody class="divide-y-2 divide-gray-100 divide-dotted">
 							<tr class="text-sm" v-for="item in bahanBaku.data">
 								<td class="p-3">{{ item.nama_bahan_baku }}</td>
 								<td class="p-3">{{ item.satuan_bahan_baku }}</td>
@@ -42,8 +42,14 @@
 									</button>
 								</td>
 							</tr>
-						</template>
-						<template v-else>
+						</tbody>
+						<div class="py-2 mt-2 mb-6">
+							<Pagination v-if="bahanBaku.data && bahanBaku.per_page < bahanBaku.total" :total-pages="bahanBaku.links.length - 2" :per-page="size" :current-page="bahanBaku.current_page" @pagechanged="onPageChange"></Pagination>
+						</div>
+					</template>
+
+					<template v-else>
+						<tbody class="divide-y-2 divide-gray-100 divide-dotted">
 							<tr class="text-sm">
 								<td colspan="4">
 									<div class="flex items-center justify-center gap-4 py-20 font-semibold text-center">
@@ -54,8 +60,8 @@
 									</div>
 								</td>
 							</tr>
-						</template>
-					</tbody>
+						</tbody>
+					</template>
 				</table>
 			</div>
 		</div>
@@ -108,7 +114,7 @@ export default {
 			updateMode: false,
 
 			search: "",
-			size: 10,
+			size: 5,
 			page: 1,
 		};
 	},

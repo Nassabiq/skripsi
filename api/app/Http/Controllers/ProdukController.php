@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Finishing;
+use App\Models\HargaJualProduk;
 use App\Models\KategoriProduk;
 use App\Models\Produk;
+use App\Models\SKU;
+use Carbon\Carbon;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -24,7 +29,7 @@ class ProdukController extends Controller
 
     public function detail($id_produk)
     {
-        $produk =  Produk::with('kategori', 'stok')->find($id_produk);
+        $produk =  Produk::with('kategori', 'stok', 'finishing')->find($id_produk);
         return response()->json($produk, 200);
     }
     public function katalog(Request $request)
@@ -47,43 +52,68 @@ class ProdukController extends Controller
         'description'   => 'required',
         'informasi_pemesanan'   => 'required',
         'image'   => 'required|max:5',
-        'image.*'   => 'image|mimes:jpeg,png,jpg,gif,svg|max:5000',
+        'image.*'   => 'image|mimes:jpeg,png,jpg,gif,svg|max:10000',
     ];
-    public $messages = [];
     // CREATE RECORD INTO DATABASE
     public function addProduk(Request $request)
     {
+        var_dump($request->all());
         $validator = Validator::make($request->all(), $this->rules);
-
         if ($validator->fails()) return response()->json($validator->errors(), 400);
 
-        $files = [];
-        $id = IdGenerator::generate(['table' => 'produk', 'field' => 'id_produk', 'length' => 10, 'prefix' => 'Prod-']);
+        DB::beginTransaction();
+        try {
+            $id_produk = IdGenerator::generate(['table' => 'produk', 'field' => 'id_produk', 'length' => 10, 'prefix' => 'Prod-']);
 
-        $i = 1;
-        $path = '/temporary';
-        if ($request->hasFile('image')) {
-            foreach ($request->file('image') as $key => $image) {
-                $filename = "image-" . $id . "-" . $i++ . "." . $image->getClientOriginalExtension();
-                $image->storeAs('image_produk/' . $id, $filename);
+            // SAVE IMAGE TO STORAGE
+            $i = 1;
+            $files = [];
+            if ($request->hasFile('image')) {
+                foreach ($request->file('image') as $key => $image) {
+                    $filename = "image-" . $id_produk . "-" . $i++ . "." . $image->getClientOriginalExtension();
+                    $image->storeAs('image_produk/' . $id_produk, $filename);
 
-                // $dir = DIRECTORY_SEPARATOR;
-                $fileUrl = "image_produk/" . $id . "/" . $filename;
-                $files[] = compact('filename', 'fileUrl');
+                    // $dir = DIRECTORY_SEPARATOR;
+                    $fileUrl = "image_produk/" . $id_produk . "/" . $filename;
+                    $files[] = compact('filename', 'fileUrl');
+                }
+            } else return response()->json('Invalid', 400);
+
+            $produk = Produk::create([
+                'id_produk' => $id_produk,
+                'id_kategori_produk' => $request->id_kategori_produk,
+                'nama_produk' => $request->nama_produk,
+                'slug_produk' => Str::slug($request->nama_produk),
+                'image' => json_encode($files),
+                'satuan_produk' => $request->satuan_produk,
+                'description' => $request->description,
+                'informasi_pemesanan' => $request->informasi_pemesanan,
+            ]);
+
+            foreach ($request->finishing as $item) {
+                $id_finishing = IdGenerator::generate(['table' => 'finishing', 'field' => 'id_finishing', 'length' => 12, 'prefix' => 'FP-']);
+                Finishing::create(['id_finishing' => $id_finishing, 'id_produk' => $id_produk, 'nama_finishing' => $item]);
             }
-        } else return response()->json('Invalid', 400);
+            foreach (json_decode($request->bahan) as $item) {
+                $id_sku = IdGenerator::generate(['table' => 'sku', 'field' => 'id_sku', 'length' => 12, 'prefix' => 'SKU-']);
+                $id_harga_jual = IdGenerator::generate(['table' => 'harga_jual_produk', 'field' => 'id_harga_jual', 'length' => 12, 'prefix' => 'HP-']);
 
-        $produk = Produk::create([
-            'id_produk' => $id,
-            'id_kategori_produk' => $request->id_kategori_produk,
-            'nama_produk' => $request->nama_produk,
-            'slug_produk' => Str::slug($request->nama_produk),
-            'image' => json_encode($files),
-            'satuan_produk' => $request->satuan_produk,
-            'description' => $request->description,
-            'informasi_pemesanan' => $request->informasi_pemesanan,
-        ]);
-        return response()->json($produk, 200);
+                SKU::create(['id_sku' => $id_sku, 'id_produk' => $id_produk, 'id_bahan_baku' => $item->id, 'jml_stok' => 0]);
+                HargaJualProduk::create([
+                    'id_harga_jual' => $id_harga_jual,
+                    'id_sku' => $id_sku,
+                    'harga_produk' => $item->harga,
+                    'tgl_diubah' => Carbon::now()
+                ]);
+            }
+
+            DB::commit();
+            return response()->json($produk, 200);
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return response()->json($th, 400);
+        }
     }
 
     // UPDATE DATA INTO DATABASE

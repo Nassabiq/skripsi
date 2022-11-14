@@ -18,9 +18,8 @@ class CreateDetailTransaksiTable extends Migration
             $table->primary('id_detail_transaksi');
 
             $table->string('id_transaksi')->references('id_transaksi')->on('transaksi_penjualan');
-            $table->string('id_produk')->references('id_produk')->on('produk');
+            $table->string('id_sku')->references('id_sku')->on('sku');
 
-            $table->string('jenis_bahan');
             $table->integer('qty_produk');
             $table->integer('ukuran')->nullable();
             $table->string('finishing')->nullable();

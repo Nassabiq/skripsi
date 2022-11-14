@@ -51,9 +51,9 @@
 			</div>
 		</div>
 		<!-- Modal Tambah Produk -->
-		<Modal size="max-w-4xl" title="Tambah Produk" @close-modal="closeModal" v-show="modal">
+		<Modal size="max-w-7xl" title="Tambah Produk" @close-modal="closeModal" v-show="modal">
 			<template #content>
-				<div class="col-span-12 sm:col-span-5">
+				<div class="col-span-12 sm:col-span-4">
 					<div class="my-2">
 						<label class="label">Nama Produk</label>
 						<input type="text" class="form-input form-input-lg" placeholder="Nama Produk ... " v-model="produk.nama_produk" />
@@ -111,12 +111,61 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-span-12 space-y-4 sm:col-span-7">
-					<!-- <div v-if="!updateMode" class="mt-2">
-						<label class="label">Harga Awal</label>
-
-						<div><number placeholder="Harga.." class="block w-full mt-1 text-xs border-2 border-gray-300 rounded shadow outline-none focus:border-green-300 md:w-1/2 form-input-lg" v-model="produk.harga" v-bind="number"></number></div>
-					</div> -->
+				<div class="col-span-12 mt-2 space-y-4 sm:col-span-8">
+					<div class="grid grid-cols-12 gap-4">
+						<div class="col-span-12 md:col-span-6">
+							<label class="label">Finishing</label>
+							<div class="flex gap-4 mb-2" v-for="(data, index) in produk.finishing">
+								<input type="text" class="form-input form-input-lg" placeholder="Finishing" v-model="produk.finishing[index].data" />
+								<button class="mt-1 btn btn-sm btn-indigo" v-if="index == 0" @click="addForm">
+									<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+									</svg>
+								</button>
+								<button class="mt-1 btn btn-sm btn-red" v-else @click="deleteForm(index)">
+									<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+									</svg>
+								</button>
+							</div>
+						</div>
+						<div class="col-span-12 md:col-span-6">
+							<div class="grid grid-cols-12 gap-4" v-for="(data, index) in produk.jenisBahan">
+								<div class="col-span-6">
+									<label class="label">Jenis Bahan</label>
+									<select class="form-input form-input-lg" v-model="produk.jenisBahan[index].id">
+										<option value="">Pilih Jenis Bahan</option>
+										<option :hidden="produk.jenisBahan.find((item) => item.id == data.id_bahan_baku)" :value="data.id_bahan_baku" v-for="data in bahanBaku">
+											<!-- <template v-if="produk.jenisBahan[index].id !== data.id_bahan_baku">
+											</template> -->
+											{{ data.nama_bahan_baku }}
+										</option>
+									</select>
+									<p class="mt-2 text-xs text-red-500" v-if="validation.id_kategori_produk">{{ validation.id_kategori_produk[0] }}</p>
+								</div>
+								<div class="col-span-6">
+									<div>
+										<label class="label">Harga Awal</label>
+										<div class="flex justify-between gap-2">
+											<div><number placeholder="Harga.." class="form-input form-input-lg" v-model="produk.jenisBahan[index].harga" v-bind="number"></number></div>
+											<button class="mt-1 btn btn-sm btn-indigo" v-if="index == 0" @click="addFormBahan">
+												<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+												</svg>
+											</button>
+											<button class="mt-1 btn btn-sm btn-red" v-else @click="deleteFormBahan(index)">
+												<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+												</svg>
+											</button>
+											<p class="mt-2 text-xs text-red-500" v-if="validation.nama_produk">{{ validation.harga[0] }}</p>
+										</div>
+										<!-- <input type="text" class="form-input form-input-lg" placeholder="Harga Awal ... " v-model="jenisBahan.harga" /> -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 					<div>
 						<label class="label">Deskripsi</label>
 						<div class="mt-1">
@@ -175,6 +224,7 @@ export default {
 		return {
 			products: [],
 			categories: [],
+			bahanBaku: [],
 
 			produk: {
 				nama_produk: "",
@@ -183,6 +233,13 @@ export default {
 				description: "",
 				informasi_pemesanan: "",
 				image: [],
+				finishing: [{data: ""}],
+				jenisBahan: [
+					{
+						id: "",
+						harga: "",
+					},
+				],
 			},
 
 			modal: false,
@@ -221,10 +278,14 @@ export default {
 		},
 		async getCategories() {
 			const categories = await this.$axios.$get("/api/kategori");
+			const bahanBaku = await this.$axios.$get("/api/bahan-baku");
 			this.categories = categories;
+			this.bahanBaku = bahanBaku;
 		},
 		async addProduk() {
 			let file = this.produk.image;
+			let finishing = this.produk.finishing;
+			let bahan = this.produk.jenisBahan;
 			let imageData = new FormData();
 
 			file.forEach((img, index) => imageData.append("image[" + index + "]", file[index]));
@@ -234,6 +295,11 @@ export default {
 			imageData.append("description", this.produk.description);
 			imageData.append("informasi_pemesanan", this.produk.informasi_pemesanan);
 			imageData.append("satuan_produk", this.produk.satuan_produk);
+			finishing.forEach((element, index) => imageData.append("finishing[" + index + "]", finishing[index].data));
+			bahan.forEach((element, index) => {
+				imageData.append("bahan[" + index + "]", bahan[index]);
+				// imageData.append("bahan.harga_produk[" + index + "]", bahan[index].harga);
+			});
 
 			this.isloading = true;
 			setTimeout(() => {
@@ -257,9 +323,7 @@ export default {
 						console.log(error.response.data);
 						this.validation = error.response.data;
 					})
-					.finally(() => {
-						this.isloading = false;
-					});
+					.finally(() => (this.isloading = false));
 			}, 500);
 		},
 
@@ -282,7 +346,8 @@ export default {
 			this.produk.description = "";
 			this.produk.informasi_pemesanan = "";
 			this.produk.image = [];
-			this.produk.harga = "";
+			this.produk.finishing = [{data: ""}];
+			this.produk.jenisBahan = [{id: "", harga: ""}];
 
 			this.validation = [];
 
@@ -311,6 +376,19 @@ export default {
 		onPageChange(page) {
 			this.productPage = page;
 			this.getProducts();
+		},
+
+		addForm() {
+			this.produk.finishing.push({data: ""});
+		},
+		deleteForm(index) {
+			this.produk.finishing.splice(index, 1);
+		},
+		addFormBahan() {
+			this.produk.jenisBahan.push({id: "", harga: ""});
+		},
+		deleteFormBahan(index) {
+			this.produk.jenisBahan.splice(index, 1);
 		},
 	},
 };
