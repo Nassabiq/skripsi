@@ -1,14 +1,14 @@
 <template>
 	<div class="auth">
 		<div class="grid grid-cols-5 gap-4">
-			<div class="col-span-5 space-y-4 md:col-span-1 card">
+			<div class="col-span-5 space-y-4 md:col-span-2 lg:col-span-1 card">
 				<p class="text-2xl font-semibold text-gray-800">Katalog</p>
 				<ul class="space-y-1">
 					<li @click.prevent="clear" :class="{'bg-green-600 text-white': id_kategori == ''}" class="px-4 py-2 text-sm font-medium text-gray-800 rounded-md cursor-pointer hover:bg-green-600 hover:text-white">All Data</li>
 					<li @click.prevent="getKatalog(data.id_kategori_produk)" :class="{'bg-green-600 text-white': id_kategori == data.id_kategori_produk}" class="px-4 py-2 text-sm font-medium text-gray-800 rounded-md cursor-pointer hover:bg-green-600 hover:text-white" v-for="(data, index) in categories">{{ data.nama_kategori }}</li>
 				</ul>
 			</div>
-			<div class="col-span-5 md:col-span-4">
+			<div class="col-span-5 md:col-span-3 lg:col-span-4">
 				<div v-if="products.length > 0">
 					<div class="max-w-2xl px-2 mx-auto sm:py-2 sm:px-4 lg:max-w-7xl">
 						<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
@@ -19,7 +19,8 @@
 								</div>
 								<p class="mt-1 font-semibold text-gray-700">{{ product.nama_produk }}</p>
 								<p class="text-xs font-medium text-gray-900" v-if="product.stok[0]">
-									Rp. {{ Intl.NumberFormat().format(product.stok[0].harga[0].harga_produk) }}
+									<span v-text="harga(product.stok)"></span>
+									<!-- Rp. {{ Intl.NumberFormat().format(product.stok[0].harga[0].harga_produk) }} -->
 									<span class="mt-4 text-xs text-gray-600"> / {{ product.satuan_produk }}</span>
 								</p>
 								<div class="flex items-center justify-end gap-2 hover:text-green-600">
@@ -104,30 +105,19 @@
 						<div class="col-span-12">
 							<div>
 								<label class="label">Finishing</label>
-								<div class="mt-1">
-									<section>
-										<quill-editor ref="editor" :options="editorOption" v-model="cart.finishing" />
-										<client-only> </client-only>
-									</section>
-									<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.description">{{ validation.description[0] }}</p> -->
-								</div>
+								<select class="form-input form-input-lg" v-model="cart.finishing">
+									<option value="">Pilih Jenis Finishing</option>
+									<option :value="data.id_finishing" v-for="data in modalData.finishing">
+										{{ data.nama_finishing }}
+									</option>
+								</select>
 							</div>
 						</div>
-						<div class="col-span-12">
-							<!-- <div>
-								<label class="label">Catatan</label>
-								<div class="mt-1">
-									<section>
-										<quill-editor ref="editor" :options="editorOption" v-model="cart.catatan" />
-										<client-only> </client-only>
-									</section>
-								</div>
-							</div> -->
-							<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.informasi_pemesanan">{{ validation.informasi_pemesanan[0] }}</p> -->
-						</div>
-						<div class="col-span-12" v-if="cart.bahan_baku.price">
-							<label class="text-xs font-semibold text-gray-700">Subtotal</label>
-							<p class="text-lg text-gray-700">Rp. {{ Intl.NumberFormat().format(cart.bahan_baku.price * (cart.panjang * cart.lebar) * cart.qty) }}</p>
+						<div class="flex justify-end col-span-12" v-if="cart.bahan_baku.price">
+							<div>
+								<label class="text-xs font-semibold text-gray-700">Subtotal</label>
+								<p class="text-lg text-gray-700">Rp. {{ Intl.NumberFormat().format(subtotal(modalData)) }}</p>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -157,10 +147,10 @@ export default {
 
 			cart: {
 				bahan_baku: "",
-				ukuran: "",
 				qty: 0,
 				finishing: "",
-				catatan: "",
+				panjang: "",
+				lebar: "",
 			},
 			validation: [],
 			modal: false,
@@ -178,6 +168,7 @@ export default {
 		this.getProducts();
 		this.getCategories();
 	},
+	computed: {},
 	methods: {
 		async getProducts() {
 			const products = await this.$axios.$get("/api/katalog?kategori=" + this.id_kategori);
@@ -203,14 +194,32 @@ export default {
 			this.modalData = null;
 			this.cart = {
 				bahan_baku: "",
-				ukuran: "",
 				qty: 0,
 				finishing: "",
-				catatan: "",
 				panjang: "",
 				lebar: "",
 			};
 			this.modal = !this.modal;
+		},
+		harga(data) {
+			let result = [];
+			data.forEach((element) => {
+				element.harga.forEach((element) => {
+					result.push(element.harga_produk);
+				});
+			});
+			let number = result.sort(function (a, b) {
+				return a - b;
+			});
+			let smallest = number[0];
+			let highest = number[number.length - 1];
+
+			let price = "Rp. " + Intl.NumberFormat().format(smallest) + " - Rp. " + Intl.NumberFormat().format(highest);
+			return price;
+		},
+
+		subtotal(data) {
+			return data.satuan_produk == "m2" ? this.cart.bahan_baku.price * (this.cart.panjang * this.cart.lebar) * this.cart.qty : this.cart.bahan_baku.price * this.cart.qty;
 		},
 
 		addToCart() {},

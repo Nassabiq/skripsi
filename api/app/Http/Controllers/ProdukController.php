@@ -21,21 +21,21 @@ class ProdukController extends Controller
     {
         $search = '%' . $request->search . '%';
         $produk = $request->show == null
-            ? Produk::with('kategori', 'stok')->get()
-            : Produk::with('kategori', 'stok')->where('nama_produk', 'like', $search)->paginate($request->show);
+            ? Produk::with('kategori', 'stok.harga')->get()
+            : Produk::with('kategori', 'stok.harga')->where('nama_produk', 'like', $search)->paginate($request->show);
 
         return response()->json($produk, 200);
     }
 
     public function detail($id_produk)
     {
-        $produk =  Produk::with('kategori', 'stok', 'finishing')->find($id_produk);
+        $produk =  Produk::with('kategori', 'stok.bahanBaku', 'stok.harga', 'finishing')->find($id_produk);
         return response()->json($produk, 200);
     }
     public function katalog(Request $request)
     {
         $kategori = '%' . $request->kategori . '%';
-        $produk =  Produk::with(['stok.harga', 'stok.bahanBaku'])->where('id_kategori_produk', 'like', $kategori)->get();
+        $produk =  Produk::with(['stok.harga', 'stok.bahanBaku', 'finishing'])->where('id_kategori_produk', 'like', $kategori)->get();
         return response()->json($produk, 200);
     }
 
@@ -94,15 +94,16 @@ class ProdukController extends Controller
                 $id_finishing = IdGenerator::generate(['table' => 'finishing', 'field' => 'id_finishing', 'length' => 12, 'prefix' => 'FP-']);
                 Finishing::create(['id_finishing' => $id_finishing, 'id_produk' => $id_produk, 'nama_finishing' => $item]);
             }
-            foreach (json_decode($request->bahan) as $item) {
+            foreach ($request->bahan as $item) {
+                $data = json_decode($item);
                 $id_sku = IdGenerator::generate(['table' => 'sku', 'field' => 'id_sku', 'length' => 12, 'prefix' => 'SKU-']);
                 $id_harga_jual = IdGenerator::generate(['table' => 'harga_jual_produk', 'field' => 'id_harga_jual', 'length' => 12, 'prefix' => 'HP-']);
 
-                SKU::create(['id_sku' => $id_sku, 'id_produk' => $id_produk, 'id_bahan_baku' => $item->id, 'jml_stok' => 0]);
+                SKU::create(['id_sku' => $id_sku, 'id_produk' => $id_produk, 'id_bahan_baku' => $data->id, 'jml_stok' => 0]);
                 HargaJualProduk::create([
                     'id_harga_jual' => $id_harga_jual,
                     'id_sku' => $id_sku,
-                    'harga_produk' => $item->harga,
+                    'harga_produk' => $data->harga,
                     'tgl_diubah' => Carbon::now()
                 ]);
             }

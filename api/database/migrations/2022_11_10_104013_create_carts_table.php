@@ -19,10 +19,10 @@ class CreateCartsTable extends Migration
 
             $table->string('id_user')->references('id_user')->on('users');
             $table->string('id_sku')->references('id_sku')->on('sku');
+            $table->string('id_finishing')->references('id_finishing')->on('finishing')->nullable();
 
             $table->integer('qty_produk');
             $table->integer('ukuran')->nullable();
-            $table->string('finishing')->nullable();
         });
     }
 

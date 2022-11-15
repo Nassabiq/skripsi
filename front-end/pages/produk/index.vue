@@ -37,7 +37,7 @@
 								</div>
 								<p class="mt-4 text-gray-700">{{ product.nama_produk }}</p>
 								<p class="mt-1 text-sm font-medium text-gray-900">
-									<span class="text-xs text-gray-600" v-text="product.stok.length > 0 ? 'Harga' : 'Data Harga Belum ada'"></span> <span class="mt-4 text-xs text-gray-600">/{{ product.satuan_produk }}</span>
+									<span class="text-xs text-gray-600" v-text="product.stok.length > 0 ? 'Rp. ' + Intl.NumberFormat().format(product.stok[0].harga[0].harga_produk) : 'Data Harga Belum ada'"></span> <span class="mt-4 text-xs text-gray-600">/{{ product.satuan_produk }}</span>
 								</p>
 							</NuxtLink>
 						</a>
@@ -51,7 +51,7 @@
 			</div>
 		</div>
 		<!-- Modal Tambah Produk -->
-		<Modal size="max-w-7xl" title="Tambah Produk" @close-modal="closeModal" v-show="modal">
+		<Modal size="max-w-6xl" title="Tambah Produk" @close-modal="closeModal" v-show="modal">
 			<template #content>
 				<div class="col-span-12 sm:col-span-4">
 					<div class="my-2">
@@ -220,6 +220,7 @@ export default {
 		number,
 	},
 	layout: "auth",
+	auth: false,
 	data() {
 		return {
 			products: [],
@@ -297,15 +298,14 @@ export default {
 			imageData.append("satuan_produk", this.produk.satuan_produk);
 			finishing.forEach((element, index) => imageData.append("finishing[" + index + "]", finishing[index].data));
 			bahan.forEach((element, index) => {
-				imageData.append("bahan[" + index + "]", bahan[index]);
-				// imageData.append("bahan.harga_produk[" + index + "]", bahan[index].harga);
+				imageData.append("bahan[" + index + "]", JSON.stringify(bahan[index]));
 			});
 
 			this.isloading = true;
 			setTimeout(() => {
 				this.$axios
 					.post("/api/produk", imageData)
-					.then((response) => {
+					.then(() => {
 						this.closeModal();
 						this.getProducts();
 					})

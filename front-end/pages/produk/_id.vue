@@ -23,7 +23,7 @@
 					</div>
 				</div>
 				<div class="col-span-12 md:col-span-8">
-					<div class="grid grid-cols-12">
+					<div class="grid grid-cols-12 py-2 border-b-2 border-slate-200">
 						<div class="col-span-10 item">
 							<p v-if="product.nama_produk" class="text-4xl font-semibold text-gray-700 capitalize font-title">{{ product.nama_produk }}</p>
 							<p v-if="product.kategori" class="text-sm text-gray-600">{{ product.kategori.nama_kategori }}</p>
@@ -43,35 +43,30 @@
 							</button>
 						</div>
 					</div>
-					<div class="py-2 border-b-2 border-slate-200">
-						<!-- <p class="text-xl font-bold text-gray-500 capitalize">
-							Rp. 40,000<span class="mt-4 text-xs text-gray-600"> /{{ product.satuan_produk }}</span>
-						</p> -->
-					</div>
 					<div class="py-4 border-b-2 border-slate-200">
-						<div class="flex justify-between">
-							<p class="pb-2 text-lg font-bold text-gray-600 capitalize">Jenis Bahan</p>
-							<!-- <button class="btn btn-sm btn-with-icon btn-indigo" @click.prevent="openModalJenisBahan">
-								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-									<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-								</svg>
-
-								<span class="text-xs text-white">Tambah Jenis Bahan</span>
-							</button> -->
+						<div class="grid grid-cols-2 gap-4 space-x-4">
+							<div class="col-span-2 md:col-span-1">
+								<p class="pb-2 text-lg font-bold text-gray-600 capitalize">Jenis Bahan</p>
+								<div v-if="product.stok !== undefined && product.stok.length > 0" class="text-sm text-justify text-slate-500">
+									<ul>
+										<li v-for="data in product.stok" class="space-y-4">
+											<div class="flex justify-between">
+												<p class="text-sm text-gray-700">{{ data.bahan_baku.nama_bahan_baku }}</p>
+												<p class="text-base font-semibold text-gray-700">Rp. {{ Intl.NumberFormat().format(product.stok[0].harga[0].harga_produk) }}</p>
+											</div>
+										</li>
+									</ul>
+								</div>
+								<p v-else class="text-sm text-justify text-slate-500">Tidak Ada Data</p>
+								<!-- <Skeleton :count="5" v-else /> -->
+							</div>
+							<div class="col-span-2 md:col-span-1">
+								<p class="pb-2 text-lg font-bold text-gray-600 capitalize">Jenis Finishing</p>
+								<ul>
+									<li class="text-sm text-gray-700" v-for="data in product.finishing">{{ data.nama_finishing }}</li>
+								</ul>
+							</div>
 						</div>
-						<p v-if="product.stok !== undefined && product.stok.length > 0" class="text-sm text-justify text-slate-500">
-							{{ product.stok }}
-						</p>
-						<p v-else class="text-sm text-justify text-slate-500">Tidak Ada Data</p>
-						<!-- <Skeleton :count="5" v-else /> -->
-					</div>
-					<div class="py-4 border-b-2 border-slate-200">
-						<div class="flex justify-between">
-							<p class="pb-2 text-lg font-bold text-gray-600 capitalize">Jenis Finishing</p>
-						</div>
-						<ul>
-							<li class="text-xs text-gray-700" v-for="data in product.finishing">{{ data.nama_finishing }}</li>
-						</ul>
 					</div>
 					<div class="py-4 border-b-2 border-slate-200">
 						<p class="pb-2 text-xl font-bold text-gray-600 capitalize">Deskripsi</p>
@@ -110,6 +105,8 @@
 					<input type="text" class="form-input form-input-lg" placeholder="Satuan Produk ... " v-model="product.satuan_produk" />
 					<p class="mt-2 text-xs text-red-500" v-if="validation.satuan_produk">{{ validation.satuan_produk[0] }}</p>
 				</div>
+				<div class="col-span-12 md:col-span-6"></div>
+				<div class="col-span-12 md:col-span-6"></div>
 				<div class="col-span-12">
 					<label class="label">Deskripsi</label>
 					<div class="mt-1">
@@ -119,7 +116,6 @@
 							</client-only>
 						</section>
 						<p class="mt-2 text-xs text-red-500" v-if="validation.description">{{ validation.description[0] }}</p>
-						<!-- <textarea id="about" name="about" rows="8" class="form-input form-input-sm" v-model="product.description"></textarea> -->
 					</div>
 				</div>
 				<div class="col-span-12">
@@ -217,7 +213,6 @@ export default {
 
 			modal: false,
 			modalImage: false,
-			modalJenisBahan: false,
 			isloading: false,
 			validation: [],
 
@@ -299,18 +294,11 @@ export default {
 		openModalImage() {
 			this.modalImage = !this.modalImage;
 		},
-		openModalJenisBahan() {
-			this.modalJenisBahan = !this.modalJenisBahan;
-		},
 
 		closeModalImage() {
 			this.modalImage = false;
 			this.uploadedImage.addImage = [];
 			this.uploadedImage.deletedImage = [];
-			this.getData();
-		},
-		closeModalJenisBahan() {
-			this.modalJenisBahan = false;
 			this.getData();
 		},
 
