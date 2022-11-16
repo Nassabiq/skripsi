@@ -192,8 +192,27 @@ export default {
 			this.getProducts();
 		},
 		showModal(data) {
-			this.modalData = data;
-			this.modal = !this.modal;
+			if (this.$auth.loggedIn) {
+				this.modalData = data;
+				this.modal = !this.modal;
+			} else {
+				this.$swal
+					.fire({
+						icon: "error",
+						title: "Oops...",
+						text: "Anda harus login terlebih dahulu!",
+						showCloseButton: true,
+						showCancelButton: true,
+						cancelButtonColor: "#d33",
+						confirmButtonText: "Login",
+					})
+					.then((result) => {
+						/* Read more about isConfirmed, isDenied below */
+						if (result.isConfirmed) {
+							this.$router.push("/login");
+						}
+					});
+			}
 		},
 		closeModal() {
 			this.modalData = null;

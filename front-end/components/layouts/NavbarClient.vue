@@ -82,7 +82,7 @@
 														<div class="relative flex-1 px-4 mt-6 sm:px-6">
 															<!-- Replace with your content -->
 															<div class="absolute inset-0 px-4 sm:px-6">
-																<div class="h-full border-2 border-gray-200 border-dashed" aria-hidden="true"></div>
+																<div class="h-full border-2 border-gray-200 border-dashed" aria-hidden="true">{{ data }}</div>
 															</div>
 															<!-- /End replace -->
 														</div>
@@ -146,15 +146,26 @@ export default {
 		return {
 			dropdown: false,
 			cart: false,
+			data: [],
 		};
 	},
 	methods: {
 		showCart() {
 			this.cart = !this.cart;
 		},
+		async getCart() {
+			const data = await this.$axios.$get("/api/cart");
+			this.data = data;
+		},
 		async logout() {
 			await this.$auth.logout();
-			this.$router.push("/login");
+			// this.$router.push("/login");
+			this.$swal.fire({
+				icon: "success",
+				showCloseButton: true,
+				showConfirmButton: false,
+				text: "Anda Berhasil Logout!",
+			});
 		},
 	},
 };

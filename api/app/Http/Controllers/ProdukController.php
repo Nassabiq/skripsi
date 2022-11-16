@@ -53,6 +53,8 @@ class ProdukController extends Controller
         'informasi_pemesanan'   => 'required',
         'image'   => 'required|max:5',
         'image.*'   => 'image|mimes:jpeg,png,jpg,gif,svg|max:10000',
+        'finishing'   => 'required',
+        'bahan'   => 'required',
     ];
     // CREATE RECORD INTO DATABASE
     public function addProduk(Request $request)

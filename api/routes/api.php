@@ -22,12 +22,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::get('/katalog', [ProdukController::class, 'katalog']);
 
 // Produk
-Route::get('/produk', [ProdukController::class, 'index']);
 Route::get('/kategori', [ProdukController::class, 'kategori']);
 Route::get('/produk/{id_produk}', [ProdukController::class, 'detail']);
 
@@ -60,8 +59,7 @@ Route::patch('/pengadaan/{id_pengadaan}', [PengadaanPersediaanController::class,
 Route::patch('/pengadaan/validasi/{id_pengadaan}', [PengadaanPersediaanController::class, 'validasiPengadaan']);
 Route::delete('/pengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'deletePengadaan']);
 
-Route::get('/cart', [TransaksiPenjualanController::class, 'index']);
-Route::post('/cart', [TransaksiPenjualanController::class, 'addToCart']);
+
 
 Route::get('/transaksi', [TransaksiPenjualanController::class, 'index']);
 Route::get('/transaksi/{id_transaksi}', [TransaksiPenjualanController::class, 'detailTransaksi']);
@@ -74,6 +72,19 @@ Route::post('/changeStatus/{id_transaksi}', [TransaksiPenjualanController::class
 Route::get('/analisis-hpp', [AnalisisHPPController::class, 'index']);
 
 Route::group(['middleware' => ['auth:api']], function () {
+
+    // Produk
+    Route::get('/produk', [ProdukController::class, 'index']);
+    Route::get('/kategori', [ProdukController::class, 'kategori']);
+    Route::get('/produk/{id_produk}', [ProdukController::class, 'detail']);
+
+    Route::post('/produk', [ProdukController::class, 'addProduk']);
+    Route::patch('/produk/{id_produk}', [ProdukController::class, 'updateProduk']);
+    Route::patch('/produk/image/{id_produk}', [ProdukController::class, 'updateImage']);
+    Route::delete('/produk/{id_produk}', [ProdukController::class, 'deleteProduk']);
+
+    Route::get('/cart', [TransaksiPenjualanController::class, 'cart']);
+    Route::post('/cart', [TransaksiPenjualanController::class, 'addToCart']);
 
     Route::get('/user', function () {
         return auth()->user()->load('roles');

@@ -10,8 +10,10 @@ use App\Models\TransaksiPenjualan;
 use Carbon\Carbon;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class TransaksiPenjualanController extends Controller
 {
@@ -40,6 +42,12 @@ class TransaksiPenjualanController extends Controller
         return response()->json($data, 200);
     }
 
+    public function cart(Request $request)
+    {
+        $data = Cart::where('id_user', auth()->user()->id_user)->first();
+        return response()->json($data, 200);
+    }
+
     public function addToCart(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -47,7 +55,6 @@ class TransaksiPenjualanController extends Controller
             'id_sku'   => 'required',
             'finishing'   => 'required',
             'qty_produk'   => 'required|numeric',
-            // 'ukuran'   => 'required|numeric',
         ]);
 
         if ($validator->fails()) return response()->json($validator->errors(), 400);
