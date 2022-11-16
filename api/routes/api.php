@@ -24,16 +24,12 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
+// Produk
 Route::get('/katalog', [ProdukController::class, 'katalog']);
 
-// Produk
+Route::get('/produk', [ProdukController::class, 'index']);
 Route::get('/kategori', [ProdukController::class, 'kategori']);
-Route::get('/produk/{id_produk}', [ProdukController::class, 'detail']);
 
-Route::post('/produk', [ProdukController::class, 'addProduk']);
-Route::patch('/produk/{id_produk}', [ProdukController::class, 'updateProduk']);
-Route::patch('/produk/image/{id_produk}', [ProdukController::class, 'updateImage']);
-Route::delete('/produk/{id_produk}', [ProdukController::class, 'deleteProduk']);
 
 // Route::post('/addKategori', [ProductController::class, 'addKategori']);
 // Route::post('/updateKategori/{id_kategori_produk}', [ProductController::class, 'updateKategori']);
@@ -74,8 +70,6 @@ Route::get('/analisis-hpp', [AnalisisHPPController::class, 'index']);
 Route::group(['middleware' => ['auth:api']], function () {
 
     // Produk
-    Route::get('/produk', [ProdukController::class, 'index']);
-    Route::get('/kategori', [ProdukController::class, 'kategori']);
     Route::get('/produk/{id_produk}', [ProdukController::class, 'detail']);
 
     Route::post('/produk', [ProdukController::class, 'addProduk']);

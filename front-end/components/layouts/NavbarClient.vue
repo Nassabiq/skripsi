@@ -82,7 +82,37 @@
 														<div class="relative flex-1 px-4 mt-6 sm:px-6">
 															<!-- Replace with your content -->
 															<div class="absolute inset-0 px-4 sm:px-6">
-																<div class="h-full border-2 border-gray-200 border-dashed" aria-hidden="true">{{ data }}</div>
+																<div class="h-full border-2 border-gray-200 border-dashed" aria-hidden="true">
+																	{{ cart_data }}
+																	<div class="flow-root p-4">
+																		<ul role="list" class="-my-6 divide-y divide-gray-200">
+																			<li class="flex py-6">
+																				<div class="flex-shrink-0 w-24 h-24 overflow-hidden border border-gray-200 rounded-md">
+																					<img src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg" alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt." class="object-cover object-center w-full h-full" />
+																				</div>
+
+																				<div class="flex flex-col flex-1 ml-4">
+																					<div>
+																						<div class="flex justify-between text-base font-medium text-gray-900">
+																							<h3>
+																								<a href="#">Throwback Hip Bag</a>
+																							</h3>
+																							<p class="ml-4">$90.00</p>
+																						</div>
+																						<p class="mt-1 text-sm text-gray-500">Salmon</p>
+																					</div>
+																					<div class="flex items-end justify-between flex-1 text-sm">
+																						<p class="text-gray-500">Qty 1</p>
+
+																						<div class="flex">
+																							<button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
+																						</div>
+																					</div>
+																				</div>
+																			</li>
+																		</ul>
+																	</div>
+																</div>
 															</div>
 															<!-- /End replace -->
 														</div>
@@ -146,16 +176,19 @@ export default {
 		return {
 			dropdown: false,
 			cart: false,
-			data: [],
+			cart_data: [],
 		};
+	},
+	mounted() {
+		this.getCart();
 	},
 	methods: {
 		showCart() {
 			this.cart = !this.cart;
 		},
 		async getCart() {
-			const data = await this.$axios.$get("/api/cart");
-			this.data = data;
+			const cart_data = await this.$axios.$get("/api/cart");
+			this.cart_data = cart_data;
 		},
 		async logout() {
 			await this.$auth.logout();
