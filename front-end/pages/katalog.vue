@@ -65,23 +65,27 @@
 									{{ data.bahan_baku.nama_bahan_baku }}
 								</option>
 							</select>
+							<p class="mt-2 text-xs text-red-500" v-if="validation.id_sku">{{ validation.id_sku[0] }}</p>
+
 							<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.id_kategori_produk">{{ validation.id_kategori_produk[0] }}</p> -->
 						</div>
 						<div class="col-span-12 md:col-span-6">
 							<label class="label">Jumlah Order (Dalam Pcs)</label>
 							<div class="flex justify-between gap-2">
-								<button class="mt-1 btn btn-sm btn-indigo" @click.prevent="cart.qty--" :disabled="cart.qty <= 0">
+								<button class="mt-1 btn btn-sm btn-indigo" @click.prevent="cart.qty_produk--" :disabled="cart.qty_produk <= 0">
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
 										<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" />
 									</svg>
 								</button>
-								<input type="text" class="form-input form-input-lg" v-model="cart.qty" placeholder="QTY ... " disabled />
-								<button class="mt-1 btn btn-sm btn-indigo" @click.prevent="cart.qty++">
+								<input type="text" class="form-input form-input-lg" v-model="cart.qty_produk" placeholder="QTY ... " disabled />
+								<button class="mt-1 btn btn-sm btn-indigo" @click.prevent="cart.qty_produk++">
 									<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
 									</svg>
 								</button>
 							</div>
+							<p class="mt-2 text-xs text-red-500" v-if="validation.qty_produk">{{ validation.qty_produk[0] }}</p>
+
 							<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.nama_produk">{{ validation.nama_produk[0] }}</p> -->
 						</div>
 
@@ -111,6 +115,7 @@
 										{{ data.nama_finishing }}
 									</option>
 								</select>
+								<p class="mt-2 text-xs text-red-500" v-if="validation.finishing">{{ validation.finishing[0] }}</p>
 							</div>
 						</div>
 						<div class="flex justify-end col-span-12" v-if="cart.bahan_baku.price">
@@ -147,7 +152,7 @@ export default {
 
 			cart: {
 				bahan_baku: "",
-				qty: 0,
+				qty_produk: 0,
 				finishing: "",
 				panjang: "",
 				lebar: "",
@@ -219,10 +224,37 @@ export default {
 		},
 
 		subtotal(data) {
-			return data.satuan_produk == "m2" ? this.cart.bahan_baku.price * (this.cart.panjang * this.cart.lebar) * this.cart.qty : this.cart.bahan_baku.price * this.cart.qty;
+			return data.satuan_produk == "m2" ? this.cart.bahan_baku.price * (this.cart.panjang * this.cart.lebar) * this.cart.qty_produk : this.cart.bahan_baku.price * this.cart.qty_produk;
 		},
 
-		addToCart() {},
+		addToCart() {
+			this.$axios
+				.post("/api/cart", {
+					id_user: this.$auth.user.id_user,
+					id_sku: this.cart.bahan_baku.id,
+					finishing: this.cart.finishing,
+					ukuran: this.cart.panjang * this.cart.lebar,
+					qty_produk: this.cart.qty_produk,
+				})
+				.then((response) => {
+					this.closeModal();
+					this.getProducts();
+				})
+				.then(() => {
+					this.$swal.fire({
+						icon: "success",
+						title: "Success...",
+						text: "Data Berhasil ditambah!",
+						showConfirmButton: false,
+						timer: 1500,
+						timerProgressBar: true,
+					});
+				})
+				.catch((error) => {
+					console.log(error);
+					this.validation = error.response.data;
+				});
+		},
 	},
 };
 </script>

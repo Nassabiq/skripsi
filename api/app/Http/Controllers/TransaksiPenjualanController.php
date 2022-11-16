@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\DetailTransaksi;
 use App\Models\PencatatanProduksi;
 use App\Models\Product;
@@ -39,6 +40,30 @@ class TransaksiPenjualanController extends Controller
         return response()->json($data, 200);
     }
 
+    public function addToCart(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id_user'   => 'required',
+            'id_sku'   => 'required',
+            'finishing'   => 'required',
+            'qty_produk'   => 'required|numeric',
+            // 'ukuran'   => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) return response()->json($validator->errors(), 400);
+
+        $id_cart = IdGenerator::generate(['table' => 'carts', 'field' => 'id_cart', 'length' => 10, 'prefix' => 'cart-']);
+
+        Cart::create([
+            'id_cart' => $id_cart,
+            'id_user' => $request->id_user,
+            'id_sku' => $request->id_sku,
+            'id_finishing' => $request->finishing,
+            'qty_produk' => $request->qty_produk,
+            'ukuran' => $request->ukuran,
+        ]);
+    }
+
     public function laporanPenjualan(Request $request)
     {
         $from = Carbon::parse($request->from);
@@ -71,9 +96,7 @@ class TransaksiPenjualanController extends Controller
                 'total'   => 'required|numeric',
             ]);
 
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 400);
-            }
+            if ($validator->fails()) return response()->json($validator->errors(), 400);
 
             $id_transaksi = IdGenerator::generate(['table' => 'transaksi_penjualan', 'field' => 'id_transaksi', 'length' => 20, 'prefix' => 'ORDER-' . date('dmY')]);
 

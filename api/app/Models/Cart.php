@@ -13,10 +13,18 @@ class Cart extends Model
     protected $keyType = 'string';
     public $timestamps = false;
 
-    protected $fillable = ['id_detail_transaksi', 'id_transaksi', 'id_produk', 'jenis_bahan', 'qty_produk', 'subtotal', 'ukuran', 'catatan', 'jenis_finishing'];
+    protected $fillable = ['id_cart', 'id_user', 'id_sku', 'id_finishing', 'qty_produk', 'ukuran'];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
+    public function sku()
+    {
+        return $this->belongsTo(SKU::class, 'id_sku', 'id_sku');
+    }
+    public function finishing()
+    {
+        return $this->belongsTo(SKU::class, 'id_sku', 'id_sku');
     }
 }

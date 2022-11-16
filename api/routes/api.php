@@ -60,6 +60,9 @@ Route::patch('/pengadaan/{id_pengadaan}', [PengadaanPersediaanController::class,
 Route::patch('/pengadaan/validasi/{id_pengadaan}', [PengadaanPersediaanController::class, 'validasiPengadaan']);
 Route::delete('/pengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'deletePengadaan']);
 
+Route::get('/cart', [TransaksiPenjualanController::class, 'index']);
+Route::post('/cart', [TransaksiPenjualanController::class, 'addToCart']);
+
 Route::get('/transaksi', [TransaksiPenjualanController::class, 'index']);
 Route::get('/transaksi/{id_transaksi}', [TransaksiPenjualanController::class, 'detailTransaksi']);
 Route::get('/dataTransaksi', [TransaksiPenjualanController::class, 'dataTransaksi']);
