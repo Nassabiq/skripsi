@@ -9,7 +9,6 @@
 						</div>
 						<div class="hidden md:block">
 							<div class="flex items-baseline ml-10 space-x-4">
-								<!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
 								<NuxtLink to="/">
 									<a href="#" class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-green-700 hover:text-white" aria-current="page">Home</a>
 								</NuxtLink>
@@ -61,66 +60,7 @@
 
 								<!-- Cart Panel -->
 								<div class="relative z-10" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
-									<!-- <div class="fixed inset-0 transition-opacity duration-500 ease-in-out bg-gray-500" :class="{'bg-opacity-75 ': cart, ' bg-opacity-0': !cart}"></div> -->
-									<div class="fixed inset-0 overflow-hidden transition duration-1000 ease-in-out transform" :class="{'translate-x-0 ': cart, 'translate-x-full': !cart}">
-										<div class="absolute inset-0 overflow-hidden">
-											<div class="fixed inset-y-0 right-0 flex max-w-full pl-10 pointer-events-none">
-												<div class="relative w-screen max-w-md pointer-events-auto">
-													<div class="flex flex-col h-full py-6 overflow-y-scroll bg-white border-l-2 border-green-600 shadow-xl">
-														<div class="px-4 sm:px-6">
-															<div class="flex justify-between">
-																<h2 class="text-lg font-semibold text-gray-900" id="slide-over-title">Cart</h2>
-																<button @click.prevent="showCart" type="button" class="text-gray-700 rounded-md hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white">
-																	<span class="sr-only">Close panel</span>
-																	<!-- Heroicon name: outline/x-mark -->
-																	<svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-																		<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-																	</svg>
-																</button>
-															</div>
-														</div>
-														<div class="relative flex-1 px-4 mt-6 sm:px-6">
-															<!-- Replace with your content -->
-															<div class="absolute inset-0 px-4 sm:px-6">
-																<div class="h-full border-2 border-gray-200 border-dashed" aria-hidden="true">
-																	{{ cart_data }}
-																	<div class="flow-root p-4">
-																		<ul role="list" class="-my-6 divide-y divide-gray-200">
-																			<li class="flex py-6">
-																				<div class="flex-shrink-0 w-24 h-24 overflow-hidden border border-gray-200 rounded-md">
-																					<img src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg" alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt." class="object-cover object-center w-full h-full" />
-																				</div>
-
-																				<div class="flex flex-col flex-1 ml-4">
-																					<div>
-																						<div class="flex justify-between text-base font-medium text-gray-900">
-																							<h3>
-																								<a href="#">Throwback Hip Bag</a>
-																							</h3>
-																							<p class="ml-4">$90.00</p>
-																						</div>
-																						<p class="mt-1 text-sm text-gray-500">Salmon</p>
-																					</div>
-																					<div class="flex items-end justify-between flex-1 text-sm">
-																						<p class="text-gray-500">Qty 1</p>
-
-																						<div class="flex">
-																							<button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
-																						</div>
-																					</div>
-																				</div>
-																			</li>
-																		</ul>
-																	</div>
-																</div>
-															</div>
-															<!-- /End replace -->
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
+									<Cart @close-cart="cart = !cart" class="fixed inset-0 overflow-hidden transition duration-1000 ease-in-out transform" :class="{'translate-x-0 ': cart, 'translate-x-full': !cart}"></Cart>
 								</div>
 							</div>
 						</div>
@@ -171,25 +111,20 @@
 </template>
 
 <script>
+import Cart from "../Cart.vue";
 export default {
+	components: {Cart},
 	data() {
 		return {
 			dropdown: false,
 			cart: false,
-			cart_data: [],
 		};
-	},
-	mounted() {
-		this.getCart();
 	},
 	methods: {
 		showCart() {
 			this.cart = !this.cart;
 		},
-		async getCart() {
-			const cart_data = await this.$axios.$get("/api/cart");
-			this.cart_data = cart_data;
-		},
+
 		async logout() {
 			await this.$auth.logout();
 			// this.$router.push("/login");

@@ -25,6 +25,6 @@ class Cart extends Model
     }
     public function finishing()
     {
-        return $this->belongsTo(SKU::class, 'id_sku', 'id_sku');
+        return $this->belongsTo(Finishing::class, 'id_sku', 'id_sku');
     }
 }

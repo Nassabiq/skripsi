@@ -44,7 +44,7 @@ class TransaksiPenjualanController extends Controller
 
     public function cart(Request $request)
     {
-        $data = Cart::where('id_user', auth()->user()->id_user)->first();
+        $data = Cart::with('sku.produk', 'sku.bahanBaku', 'sku.harga')->where('id_user', auth()->user()->id_user)->get();
         return response()->json($data, 200);
     }
 
