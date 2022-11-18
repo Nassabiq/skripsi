@@ -79,6 +79,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::get('/cart', [TransaksiPenjualanController::class, 'cart']);
     Route::post('/cart', [TransaksiPenjualanController::class, 'addToCart']);
+    Route::delete('/cart/{id_cart}', [TransaksiPenjualanController::class, 'removeCart']);
 
     Route::get('/user', function () {
         return auth()->user()->load('roles');

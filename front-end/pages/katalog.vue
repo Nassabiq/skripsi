@@ -258,6 +258,8 @@ export default {
 				.then((response) => {
 					this.closeModal();
 					this.getProducts();
+					this.$forceUpdate();
+					// this.$axios.$get("/api/cart");
 				})
 				.then(() => {
 					this.$swal.fire({

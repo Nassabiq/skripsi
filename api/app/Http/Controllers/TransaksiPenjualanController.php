@@ -71,6 +71,14 @@ class TransaksiPenjualanController extends Controller
         ]);
     }
 
+    public function removeCart($id_cart)
+    {
+        $data = Cart::where('id_cart', $id_cart)->first();
+        $data->delete();
+        return response()->json($data, 200);
+    }
+
+
     public function laporanPenjualan(Request $request)
     {
         $from = Carbon::parse($request->from);
