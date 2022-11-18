@@ -22,8 +22,8 @@
 								<div class="flex-col overflow-y-auto border-2 border-gray-200 border-dashed h-[90%]" aria-hidden="true">
 									<div class="flow-root p-4">
 										<ul role="list" class="-my-6 divide-y divide-gray-200">
-											<template v-if="$auth.loggedIn">
-												<li class="flex py-6 border-b-2 border-gray-200" v-for="data in cart">
+											<!-- <template v-if="$auth.loggedIn"> -->
+											<!-- <li class="flex py-6 border-b-2 border-gray-200" v-for="data in cart">
 													<div class="flex-shrink-0 w-24 h-24 overflow-hidden border border-gray-200 rounded-md">
 														<img :src="'http://localhost:8000/storage/image_produk/' + data.sku.produk.id_produk + '/' + JSON.parse(data.sku.produk.image)[0].filename" alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt." class="object-cover object-center w-full h-full" />
 													</div>
@@ -46,14 +46,14 @@
 															</div>
 														</div>
 													</div>
-												</li>
-											</template>
+												</li> -->
+											<!-- </template>
 											<template v-else>
 												<li class="flex py-6 text-center">Silahkan Login Terlebih Dahulu</li>
-											</template>
+											</template> -->
 										</ul>
 									</div>
-									<!-- {{ cart }} -->
+									{{ cart }}
 								</div>
 								<div class="flex justify-center my-4 btn btn-indigo btn-lg">
 									<button class="btn-with-icon" type="submit">
@@ -74,19 +74,24 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from "vuex";
 export default {
 	data() {
 		return {
-			cart: [],
+			// cart: [],
 		};
 	},
 	mounted() {
-		this.getCart();
+		this.fetch();
+	},
+	computed: {
+		cart() {
+			return this.$store.state.cart;
+		},
 	},
 	methods: {
-		async getCart() {
-			const cart = await this.$axios.$get("/api/cart");
-			this.cart = cart;
+		fetch() {
+			this.$store.dispatch("fetchCarts");
 		},
 		harga(data) {
 			let price = data.sku.harga[data.sku.harga.length - 1].harga_produk * data.qty_produk;
