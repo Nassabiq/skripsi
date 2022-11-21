@@ -218,7 +218,7 @@ export default {
 			this.modalData = null;
 			this.cart = {
 				bahan_baku: "",
-				qty: 0,
+				qty_produk: 0,
 				finishing: "",
 				panjang: "",
 				lebar: "",
@@ -252,10 +252,10 @@ export default {
 					id_user: this.$auth.user.id_user,
 					id_sku: this.cart.bahan_baku.id,
 					finishing: this.cart.finishing,
-					ukuran: this.cart.panjang * this.cart.lebar,
+					ukuran: (this.cart.panjang || this.cart.lebar) == 0 ? null : JSON.stringify({panjang: this.cart.panjang, lebar: this.cart.lebar}),
 					qty_produk: this.cart.qty_produk,
 				})
-				.then((response) => {
+				.then(() => {
 					this.closeModal();
 					this.getProducts();
 					this.$store.dispatch("cart/fetchCarts");

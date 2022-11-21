@@ -60,8 +60,7 @@ class TransaksiPenjualanController extends Controller
         if ($validator->fails()) return response()->json($validator->errors(), 400);
 
         $id_cart = IdGenerator::generate(['table' => 'carts', 'field' => 'id_cart', 'length' => 10, 'prefix' => 'cart-']);
-
-        Cart::create([
+        $cart = Cart::create([
             'id_cart' => $id_cart,
             'id_user' => $request->id_user,
             'id_sku' => $request->id_sku,
@@ -69,6 +68,8 @@ class TransaksiPenjualanController extends Controller
             'qty_produk' => $request->qty_produk,
             'ukuran' => $request->ukuran,
         ]);
+
+        return response()->json(['messages' => 'Data Keranjang Berhasil Ditambahkan'], 200);
     }
 
     public function removeCart($id_cart)

@@ -21,7 +21,7 @@ class CreateDetailTransaksiTable extends Migration
             $table->string('id_sku')->references('id_sku')->on('sku');
 
             $table->integer('qty_produk');
-            $table->integer('ukuran')->nullable();
+            $table->json('ukuran')->nullable();
             $table->string('finishing')->nullable();
             $table->longText('catatan')->nullable();
             $table->integer('subtotal');

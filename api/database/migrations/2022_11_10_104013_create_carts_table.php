@@ -22,7 +22,7 @@ class CreateCartsTable extends Migration
             $table->string('id_finishing')->references('id_finishing')->on('finishing')->nullable();
 
             $table->integer('qty_produk');
-            $table->integer('ukuran')->nullable();
+            $table->json('ukuran')->nullable();
         });
     }
 
