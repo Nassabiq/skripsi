@@ -1,19 +1,18 @@
 export const state = () => ({
-	cart: [],
+	data: [],
 });
 
 export const getters = {};
 
 export const mutations = {
 	setCarts: (state, data) => {
-		state.cart.push(...data);
+		state.data = data;
 	},
 };
 
 export const actions = {
-	async fetchCarts() {
+	async fetchCarts({commit}) {
 		let data = await this.$axios.$get("/api/cart");
-		commit("setCarts", response);
-		return data;
+		commit("setCarts", data);
 	},
 };
