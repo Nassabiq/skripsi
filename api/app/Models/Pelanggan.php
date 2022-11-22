@@ -19,4 +19,8 @@ class Pelanggan extends Model
     protected $fillable = ['id_pelanggan', 'id_user', 'nama_pelanggan', 'alamat', 'no_telp'];
 
     // Tambahkan Relasi ke User $this->belongsTo
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
 }

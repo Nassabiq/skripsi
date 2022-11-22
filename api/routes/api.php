@@ -3,6 +3,7 @@
 use App\Http\Controllers\AnalisisHPPController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\BahanBakuController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\PengadaanPersediaanController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\StokMasukController;
@@ -77,12 +78,12 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::patch('/produk/image/{id_produk}', [ProdukController::class, 'updateImage']);
     Route::delete('/produk/{id_produk}', [ProdukController::class, 'deleteProduk']);
 
-    Route::get('/cart', [TransaksiPenjualanController::class, 'cart']);
-    Route::post('/cart', [TransaksiPenjualanController::class, 'addToCart']);
-    Route::delete('/cart/{id_cart}', [TransaksiPenjualanController::class, 'removeCart']);
+    Route::get('/cart', [CartController::class, 'index']);
+    Route::post('/cart', [CartController::class, 'addToCart']);
+    Route::delete('/cart/{id_cart}', [CartController::class, 'removeCart']);
 
     Route::get('/user', function () {
-        return auth()->user()->load('roles');
+        return auth()->user()->load('roles', 'pelanggan');
     });
     Route::post('/logout', [AuthController::class, 'logout']);
 });

@@ -10,10 +10,8 @@ use App\Models\TransaksiPenjualan;
 use Carbon\Carbon;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class TransaksiPenjualanController extends Controller
 {
@@ -39,43 +37,6 @@ class TransaksiPenjualanController extends Controller
                 ->orderBy('tgl_transaksi', 'desc')
                 ->paginate($request->show);
         }
-        return response()->json($data, 200);
-    }
-
-    public function cart(Request $request)
-    {
-        $data = Cart::with('sku.produk', 'sku.bahanBaku', 'sku.harga')->where('id_user', auth()->user()->id_user)->get();
-        return response()->json($data, 200);
-    }
-
-    public function addToCart(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'id_user'   => 'required',
-            'id_sku'   => 'required',
-            'finishing'   => 'required',
-            'qty_produk'   => 'required|numeric',
-        ]);
-
-        if ($validator->fails()) return response()->json($validator->errors(), 400);
-
-        $id_cart = IdGenerator::generate(['table' => 'carts', 'field' => 'id_cart', 'length' => 10, 'prefix' => 'cart-']);
-        $cart = Cart::create([
-            'id_cart' => $id_cart,
-            'id_user' => $request->id_user,
-            'id_sku' => $request->id_sku,
-            'id_finishing' => $request->finishing,
-            'qty_produk' => $request->qty_produk,
-            'ukuran' => $request->ukuran,
-        ]);
-
-        return response()->json(['messages' => 'Data Keranjang Berhasil Ditambahkan'], 200);
-    }
-
-    public function removeCart($id_cart)
-    {
-        $data = Cart::where('id_cart', $id_cart)->first();
-        $data->delete();
         return response()->json($data, 200);
     }
 
@@ -115,7 +76,6 @@ class TransaksiPenjualanController extends Controller
             if ($validator->fails()) return response()->json($validator->errors(), 400);
 
             $id_transaksi = IdGenerator::generate(['table' => 'transaksi_penjualan', 'field' => 'id_transaksi', 'length' => 20, 'prefix' => 'ORDER-' . date('dmY')]);
-
             $transaksi = TransaksiPenjualan::create([
                 'id_transaksi' => $id_transaksi,
                 'nama_pemesan' => $request->nama_pemesan,
@@ -128,20 +88,7 @@ class TransaksiPenjualanController extends Controller
             ]);
 
             foreach ($request->pesanan as $data) {
-                $id_detail = IdGenerator::generate([
-                    'table' => 'detail_transaksi',
-                    'field' => 'id_detail_transaksi',
-                    'length' => 17,
-                    'prefix' => 'DtlOrder-'
-                ]);
-
-                $id_produksi = IdGenerator::generate([
-                    'table' => 'pencatatan_produksi',
-                    'field' => 'id_pencatatan',
-                    'length' => 20,
-                    'prefix' => 'Produksi-'
-                ]);
-
+                $id_detail = IdGenerator::generate(['table' => 'detail_transaksi', 'field' => 'id_detail_transaksi', 'length' => 17, 'prefix' => 'DtlOrder-']);
                 $detail_transaksi = DetailTransaksi::create([
                     'id_detail_transaksi' => $id_detail,
                     'id_transaksi' => $transaksi->id_transaksi,
@@ -152,25 +99,6 @@ class TransaksiPenjualanController extends Controller
                     'finishing' => $data['finishing'],
                     'laminasi' => $data['laminasi'],
                 ]);
-
-                $produksi = PencatatanProduksi::create([
-                    'id_pencatatan' => $id_produksi,
-                    'id_detail_transaksi' => $detail_transaksi->id_detail_transaksi,
-                    'tgl_produksi' => Carbon::now()
-                ]);
-
-
-                $product = Product::with('material')->where('id_produk', $detail_transaksi->id_produk)->first();
-                foreach ($product->material as $data) {
-                    $produksi->materials()->attach($data->id_material, ['stok_digunakan' => $detail_transaksi->qty]);
-
-                    if ($data->stok >= $detail_transaksi->qty) {
-                        $data->stok = $data->stok - $detail_transaksi->qty;
-                        $data->save();
-                    } else {
-                        return response()->json('Stok tidak cukup', 400);
-                    }
-                }
 
                 DB::commit();
             }

@@ -4,24 +4,49 @@
 			<div class="space-y-4 md:col-span-1">
 				<span class="text-xl font-semibold text-gray-800">Informasi Kontak</span>
 				<div class="flex items-center px-2">
-					<input id="remember-me" name="remember-me" type="checkbox" v-model="existedPelanggan" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring focus:ring-offset-2 focus:ring-indigo-500" />
+					<input type="checkbox" v-model="existedPelanggan" class="w-4 h-4 text-indigo-600 border-gray-300 rounded-md focus:ring focus:ring-offset-2 focus:ring-indigo-500" />
 					<label for="remember-me" class="block ml-2 text-sm text-gray-900">Gunakan data pelanggan yang sudah ada</label>
 				</div>
-				<div class="px-8 py-6 space-y-4 bg-white border-2 border-gray-200 rounded-md">
+				<div class="px-8 py-6 space-y-4 bg-white border-2 border-gray-200 rounded-md" v-if="!existedPelanggan">
 					<div class="flex justify-between gap-6">
 						<div class="w-full">
 							<label class="text-sm font-semibold text-gray-700">Nama Pelanggan</label>
-							<input type="text" class="form-input form-input-lg" v-model="pelanggan.nama_pelanggan" placeholder="Nama Pelanggan ... " />
+							<input type="text" class="form-input form-input-lg" v-model="customer.nama_pelanggan" placeholder="Nama Pelanggan ... " />
 						</div>
 						<div class="w-full">
 							<label class="text-sm font-semibold text-gray-700">No Telepon</label>
-							<input type="text" class="form-input form-input-lg" v-model="pelanggan.no_telp" placeholder="No Telepon ... " />
+							<input type="text" class="form-input form-input-lg" v-model="customer.no_telp" placeholder="No Telepon ... " />
 						</div>
 					</div>
 					<div class="w-full">
 						<label class="text-sm font-semibold text-gray-700">Alamat</label>
 						<div class="mt-1">
-							<textarea id="about" name="about" rows="8" class="form-input form-input-lg" v-model="pelanggan.no_telp" placeholder="you@example.com"></textarea>
+							<textarea id="about" name="about" rows="8" class="form-input form-input-lg" v-model="customer.no_telp" placeholder="you@example.com"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="px-8 py-6 space-y-4 bg-white border-2 border-gray-200 rounded-md" v-else>
+					<span class="text-gray-800 font-semibold"> Data Pelanggan </span>
+
+					<div v-if="pelanggan.length > 0">
+						<!-- Active: "ring-2 ring-indigo-500" -->
+						<label v-for="data in pelanggan" class="group relative border rounded-md py-3 px-4 flex items-center justify-center text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 bg-white shadow-sm text-gray-900 cursor-pointer active:ring-2 ring-indigo-500">
+							<input type="radio" name="size-choice" class="sr-only" aria-labelledby="size-choice-3-label" v-model="selectedUser" />
+							<span id="size-choice-3-label">M</span>
+
+							<!--
+                            Active: "border", Not Active: "border-2"     
+                            Checked: "border-indigo-500", Not Checked: "border-transparent"
+						-->
+							<span class="pointer-events-none absolute -inset-px rounded-md border-2 active:border active:border-indigo-500 border-transparent" aria-hidden="true"></span>
+						</label>
+					</div>
+					<div v-else class="border-2 py-12 border-gray-400 rounded-md border-dashed">
+						<div class="w-full flex items-center justify-center gap-4">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-yellow-500">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+							</svg>
+							<span class="text-gray-700 font-semibold">Tidak Ada Data</span>
 						</div>
 					</div>
 				</div>
@@ -49,7 +74,16 @@
 								<p class="mt-1 text-sm text-gray-500">{{ data.sku.bahan_baku.nama_bahan_baku }}</p>
 							</div>
 							<div class="flex items-end justify-between flex-1 text-sm">
-								<p class="text-gray-500">{{ data.qty_produk }} {{ data.sku.produk.satuan_produk }}</p>
+								<!-- <p class="text-gray-500" v-text="qty(data)"></p> -->
+								<ul>
+									<template v-if="data.sku.produk.satuan_produk == 'm2'">
+										<li class="text-xs text-gray-600">Panjang: {{ JSON.parse(data.ukuran).panjang }} meter, Lebar: {{ JSON.parse(data.ukuran).lebar }} meter</li>
+										<li class="text-xs text-gray-600">QTY: {{ data.qty_produk + " pcs" }}</li>
+									</template>
+									<template v-else>
+										<li class="text-xs text-gray-600">QTY: {{ data.qty_produk + "" + data.sku.produk.satuan_produk }}</li>
+									</template>
+								</ul>
 								<p class="ml-4 text-sm font-semibold text-gray-800" v-text="harga(data)"></p>
 							</div>
 						</div>
@@ -76,12 +110,14 @@ export default {
 	// layout: "user",
 	data() {
 		return {
-			pelanggan: {
+			customer: {
 				nama_pelanggan: "",
 				no_telepon: "",
 				alamat: "",
 			},
+			validation: [],
 			existedPelanggan: false,
+			selectedUser: false,
 		};
 	},
 	created() {
@@ -93,10 +129,13 @@ export default {
 		},
 		total() {
 			let data = this.cart;
-			// data.forEach((element) => {});
+
 			const first = 0;
 			let result = data.reduce((accumulator, currentValue) => accumulator + currentValue.sku.harga[currentValue.sku.harga.length - 1].harga_produk * currentValue.qty_produk, first);
 			return "Rp. " + Intl.NumberFormat().format(result);
+		},
+		pelanggan() {
+			return this.$auth.user.pelanggan;
 		},
 	},
 	methods: {

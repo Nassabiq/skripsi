@@ -58,19 +58,15 @@ export default {
 	methods: {
 		async login() {
 			try {
-				const login = await this.$auth.loginWith("laravelJWT", {
+				await this.$auth.loginWith("laravelJWT", {
 					data: {
 						email: this.form.email,
 						password: this.form.password,
 					},
 				});
-				// console.log(login);
-				// this.$auth.setUser(login.user.name);
-				// this.$auth.setUserToken(login.access_token);
-				this.$router.push("/");
+				this.$router.back();
 			} catch (error) {
-				// this.validation = error.response.data;
-				console.log(error);
+				this.validation = error.response.data;
 			}
 		},
 	},

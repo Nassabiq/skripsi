@@ -252,7 +252,7 @@ export default {
 					id_user: this.$auth.user.id_user,
 					id_sku: this.cart.bahan_baku.id,
 					finishing: this.cart.finishing,
-					ukuran: (this.cart.panjang || this.cart.lebar) == 0 ? null : JSON.stringify({panjang: this.cart.panjang, lebar: this.cart.lebar}),
+					ukuran: (this.cart.panjang || this.cart.lebar) == 0 ? null : JSON.stringify({panjang: parseInt(this.cart.panjang), lebar: parseInt(this.cart.lebar)}),
 					qty_produk: this.cart.qty_produk,
 				})
 				.then(() => {
