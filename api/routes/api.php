@@ -7,7 +7,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\PengadaanPersediaanController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\StokMasukController;
-use App\Http\Controllers\TransaksiPenjualanController;
+use App\Http\Controllers\TransaksiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -58,13 +58,13 @@ Route::delete('/pengadaan/{id_pengadaan}', [PengadaanPersediaanController::class
 
 
 
-Route::get('/transaksi', [TransaksiPenjualanController::class, 'index']);
-Route::get('/transaksi/{id_transaksi}', [TransaksiPenjualanController::class, 'detailTransaksi']);
-Route::get('/dataTransaksi', [TransaksiPenjualanController::class, 'dataTransaksi']);
-Route::get('/laporanPenjualan', [TransaksiPenjualanController::class, 'laporanPenjualan']);
+Route::get('/transaksi', [TransaksiController::class, 'index']);
+Route::get('/transaksi/{id_transaksi}', [TransaksiController::class, 'detailTransaksi']);
+Route::get('/dataTransaksi', [TransaksiController::class, 'dataTransaksi']);
+Route::get('/laporanPenjualan', [TransaksiController::class, 'laporanPenjualan']);
 
-Route::post('/submitTransaksi', [TransaksiPenjualanController::class, 'submitTransaksi']);
-Route::post('/changeStatus/{id_transaksi}', [TransaksiPenjualanController::class, 'changeStatus']);
+Route::post('/transaksi', [TransaksiController::class, 'submitTransaksi']);
+Route::post('/changeStatus/{id_transaksi}', [TransaksiController::class, 'changeStatus']);
 
 Route::get('/analisis-hpp', [AnalisisHPPController::class, 'index']);
 

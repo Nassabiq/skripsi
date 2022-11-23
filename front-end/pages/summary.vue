@@ -21,16 +21,16 @@
 					<div class="w-full">
 						<label class="text-sm font-semibold text-gray-700">Alamat</label>
 						<div class="mt-1">
-							<textarea id="about" name="about" rows="8" class="form-input form-input-lg" v-model="customer.no_telp" placeholder="you@example.com"></textarea>
+							<textarea id="about" name="about" rows="8" class="form-input form-input-lg" v-model="customer.alamat" placeholder="you@example.com"></textarea>
 						</div>
 					</div>
 				</div>
 				<div class="px-8 py-6 space-y-4 bg-white border-2 border-gray-200 rounded-md" v-else>
-					<span class="text-gray-800 font-semibold"> Data Pelanggan </span>
+					<span class="font-semibold text-gray-800"> Data Pelanggan </span>
 
 					<div v-if="pelanggan.length > 0">
 						<!-- Active: "ring-2 ring-indigo-500" -->
-						<label v-for="data in pelanggan" class="group relative border rounded-md py-3 px-4 flex items-center justify-center text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 bg-white shadow-sm text-gray-900 cursor-pointer active:ring-2 ring-indigo-500">
+						<label v-for="data in pelanggan" class="relative flex items-center justify-center px-4 py-3 text-sm font-medium text-gray-900 uppercase bg-white border rounded-md shadow-sm cursor-pointer group hover:bg-gray-50 focus:outline-none sm:flex-1 active:ring-2 ring-indigo-500">
 							<input type="radio" name="size-choice" class="sr-only" aria-labelledby="size-choice-3-label" v-model="selectedUser" />
 							<span id="size-choice-3-label">M</span>
 
@@ -38,15 +38,15 @@
                             Active: "border", Not Active: "border-2"     
                             Checked: "border-indigo-500", Not Checked: "border-transparent"
 						-->
-							<span class="pointer-events-none absolute -inset-px rounded-md border-2 active:border active:border-indigo-500 border-transparent" aria-hidden="true"></span>
+							<span class="absolute border-2 border-transparent rounded-md pointer-events-none -inset-px active:border active:border-indigo-500" aria-hidden="true"></span>
 						</label>
 					</div>
-					<div v-else class="border-2 py-12 border-gray-400 rounded-md border-dashed">
-						<div class="w-full flex items-center justify-center gap-4">
+					<div v-else class="py-12 border-2 border-gray-400 border-dashed rounded-md">
+						<div class="flex items-center justify-center w-full gap-4">
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-yellow-500">
 								<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
 							</svg>
-							<span class="text-gray-700 font-semibold">Tidak Ada Data</span>
+							<span class="font-semibold text-gray-700">Tidak Ada Data</span>
 						</div>
 					</div>
 				</div>
@@ -94,7 +94,7 @@
 					</li>
 				</ul>
 			</div>
-			<button class="fixed bottom-0 right-0 m-4 btn-with-icon btn btn-lg btn-indigo">
+			<button class="fixed bottom-0 right-0 m-4 btn-with-icon btn btn-lg btn-indigo" @click.prevent="payment">
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-white">
 					<path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 004.25 22.5h15.5a1.875 1.875 0 001.865-2.071l-1.263-12a1.875 1.875 0 00-1.865-1.679H16.5V6a4.5 4.5 0 10-9 0zM12 3a3 3 0 00-3 3v.75h6V6a3 3 0 00-3-3zm-3 8.25a3 3 0 106 0v-.75a.75.75 0 011.5 0v.75a4.5 4.5 0 11-9 0v-.75a.75.75 0 011.5 0v.75z" clip-rule="evenodd" />
 				</svg>
@@ -140,11 +140,39 @@ export default {
 	},
 	methods: {
 		harga(data) {
-			let price = data.sku.harga[data.sku.harga.length - 1].harga_produk * data.qty_produk;
-			return "Rp. " + Intl.NumberFormat().format(price);
+			if (data.sku.produk.satuan_produk == "m2") {
+				let ukuran = JSON.parse(data.ukuran).panjang * JSON.parse(data.ukuran).lebar;
+				let price = data.sku.harga[data.sku.harga.length - 1].harga_produk * ukuran * data.qty_produk;
+				return "Rp. " + Intl.NumberFormat().format(price);
+			} else {
+				let price = data.sku.harga[data.sku.harga.length - 1].harga_produk * data.qty_produk;
+				return "Rp. " + Intl.NumberFormat().format(price);
+			}
 		},
 		fetch() {
 			this.$store.dispatch("cart/fetchCarts");
+		},
+		payment() {
+			this.$axios
+				.post("/api/transaksi", {
+					pelanggan: this.existedPelanggan == true ? null : this.customer,
+					transaksi: this.cart,
+				})
+				.then(() => {
+					// this.closeModal();
+					// this.getBahanBaku();
+				})
+				.then(() => {
+					this.$swal.fire({
+						icon: "success",
+						title: "Success...",
+						text: "Data Berhasil ditambah!",
+						showConfirmButton: false,
+						timer: 1500,
+						timerProgressBar: true,
+					});
+				})
+				.catch((error) => (this.validation = error.response.data));
 		},
 	},
 };
