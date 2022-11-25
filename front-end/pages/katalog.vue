@@ -223,6 +223,7 @@ export default {
 				panjang: "",
 				lebar: "",
 			};
+			this.validation = [];
 			this.modal = !this.modal;
 		},
 		harga(data) {

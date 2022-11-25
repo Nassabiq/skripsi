@@ -70,6 +70,8 @@ class TransaksiController extends Controller
                     'nama_pelanggan'   => 'required',
                     'no_telp'   => 'required',
                     'alamat'   => 'required',
+                ], [
+                    'required' => 'form ini harus diisi'
                 ]);
                 if ($validatePelanggan->fails()) return response()->json($validatePelanggan->errors(), 400);
 
@@ -90,9 +92,8 @@ class TransaksiController extends Controller
                 'tgl_transaksi' => Carbon::now(),
                 'status_pesanan' => 0,
                 'status_pembayaran' => 0,
-                // 'no_resi' => 0, //Ubah dulu
-                'no_resi' => 0,
                 'total_harga' => $request->total,
+                'catatan' => $request->catatan,
             ]);
 
             foreach (json_decode($request->transaksi) as $data) {
@@ -116,8 +117,6 @@ class TransaksiController extends Controller
                     'id_finishing' => $data->id_finishing,
 
                     'subtotal' => $result,
-                    'catatan' => "",
-                    // 'catatan' => $data['catatan'],
                 ]);
 
                 Cart::where('id_cart', $data->id_cart)->delete();

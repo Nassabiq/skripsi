@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
         // \App\Models\Product::factory(20)->create();
         // \App\Models\ProductCategory::factory(10)->create();
 
-        $this->call([RoleSeeder::class, UserSeeder::class]);
+        $this->call([RoleSeeder::class, UserSeeder::class, BahanBakuSeeder::class]);
         // Produk::factory(50)->create();
         KategoriProduk::factory(10)->create();
     }

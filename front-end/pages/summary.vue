@@ -12,16 +12,19 @@
 						<div class="w-full">
 							<label class="text-sm font-semibold text-gray-700">Nama Pelanggan</label>
 							<input type="text" class="form-input form-input-lg" v-model="customer.nama_pelanggan" placeholder="Nama Pelanggan ... " />
+							<p class="mt-2 text-xs text-red-500" v-if="validation.nama_pelanggan">{{ validation.nama_pelanggan[0] }}</p>
 						</div>
 						<div class="w-full">
 							<label class="text-sm font-semibold text-gray-700">No Telepon</label>
 							<input type="text" class="form-input form-input-lg" v-model="customer.no_telp" placeholder="No Telepon ... " />
+							<p class="mt-2 text-xs text-red-500" v-if="validation.no_telp">{{ validation.no_telp[0] }}</p>
 						</div>
 					</div>
 					<div class="w-full">
 						<label class="text-sm font-semibold text-gray-700">Alamat</label>
 						<div class="mt-1">
 							<textarea id="about" name="about" rows="8" class="form-input form-input-lg" v-model="customer.alamat" placeholder="you@example.com"></textarea>
+							<p class="mt-2 text-xs text-red-500" v-if="validation.alamat">{{ validation.alamat[0] }}</p>
 						</div>
 					</div>
 				</div>
@@ -88,18 +91,43 @@
 							</div>
 						</div>
 					</li>
+					<li class="py-4 border-b-2 border-gray-200">
+						<label class="text-sm font-semibold text-gray-700">Pilih Pengiriman</label>
+						<div class="flex flex-col gap-4 mt-1 md:flex-row">
+							<label class="relative flex items-center justify-center px-4 py-3 text-sm font-medium text-gray-900 bg-white border rounded-md shadow-sm cursor-pointer group hover:bg-gray-50 focus:outline-none sm:flex-1" :class="shipment == 0 ? 'ring-2 ring-indigo-500' : ''">
+								<input type="radio" v-model="shipment" value="0" class="sr-only" aria-labelledby="size-choice-0-label" />
+								<span id="size-choice-0-label">Jasa Kirim (Kurir)</span>
+								<span class="absolute rounded-md pointer-events-none -inset-px" :class="shipment == 0 ? 'border border-indigo-500' : 'border-2 border-transparent'" aria-hidden="true"></span>
+							</label>
+
+							<label class="relative flex items-center justify-center px-4 py-3 text-sm font-medium text-gray-900 bg-white border rounded-md shadow-sm cursor-pointer group hover:bg-gray-50 focus:outline-none sm:flex-1" :class="shipment == 1 ? 'ring-2 ring-indigo-500' : ''">
+								<input type="radio" v-model="shipment" value="1" class="sr-only" aria-labelledby="size-choice-1-label" />
+								<span id="size-choice-1-label">Diambil di Toko</span>
+								<span class="absolute rounded-md pointer-events-none -inset-px" :class="shipment == 1 ? 'border border-indigo-500' : 'border-2 border-transparent'" aria-hidden="true"></span>
+							</label>
+						</div>
+					</li>
+					<li class="py-4 border-b-2 border-gray-200">
+						<label class="text-sm font-semibold text-gray-700">Catatan Pesanan</label>
+						<div class="mt-1">
+							<textarea id="about" name="about" rows="4" class="form-input form-input-lg" v-model="catatan" placeholder="you@example.com"></textarea>
+							<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.alamat">{{ validation.alamat[0] }}</p> -->
+						</div>
+					</li>
 					<li class="flex justify-between py-6 border-b-2 border-gray-200">
 						<div class="font-semibold text-gray-900">Total</div>
 						<div class="font-semibold text-gray-700">Rp. {{ Intl.NumberFormat().format(total) }}</div>
 					</li>
+					<li class="flex justify-center py-6">
+						<button class="btn-with-icon btn btn-lg btn-indigo" @click="payment">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-white">
+								<path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 004.25 22.5h15.5a1.875 1.875 0 001.865-2.071l-1.263-12a1.875 1.875 0 00-1.865-1.679H16.5V6a4.5 4.5 0 10-9 0zM12 3a3 3 0 00-3 3v.75h6V6a3 3 0 00-3-3zm-3 8.25a3 3 0 106 0v-.75a.75.75 0 011.5 0v.75a4.5 4.5 0 11-9 0v-.75a.75.75 0 011.5 0v.75z" clip-rule="evenodd" />
+							</svg>
+							<span>Lanjutkan Pembayaran</span>
+						</button>
+					</li>
 				</ul>
 			</div>
-			<button class="fixed bottom-0 right-0 m-4 btn-with-icon btn btn-lg btn-indigo" @click="payment">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-white">
-					<path fill-rule="evenodd" d="M7.5 6v.75H5.513c-.96 0-1.764.724-1.865 1.679l-1.263 12A1.875 1.875 0 004.25 22.5h15.5a1.875 1.875 0 001.865-2.071l-1.263-12a1.875 1.875 0 00-1.865-1.679H16.5V6a4.5 4.5 0 10-9 0zM12 3a3 3 0 00-3 3v.75h6V6a3 3 0 00-3-3zm-3 8.25a3 3 0 106 0v-.75a.75.75 0 011.5 0v.75a4.5 4.5 0 11-9 0v-.75a.75.75 0 011.5 0v.75z" clip-rule="evenodd" />
-				</svg>
-				<span>Lanjutkan Pembayaran</span>
-			</button>
 		</div>
 	</div>
 </template>
@@ -110,11 +138,14 @@ export default {
 	// layout: "user",
 	data() {
 		return {
+			catatan: "",
 			customer: {
 				nama_pelanggan: "",
 				no_telepon: "",
 				alamat: "",
 			},
+			shipment: null,
+
 			validation: [],
 			existedPelanggan: false,
 			selectedUser: false,
@@ -164,6 +195,8 @@ export default {
 				.post("/api/transaksi", {
 					pelanggan: this.existedPelanggan == true ? null : this.customer,
 					user: this.$auth.user.id_user,
+					shipment: this.shipment,
+					catatan: this.catatan,
 					transaksi: JSON.stringify(this.cart),
 					total: this.total,
 				})
@@ -181,7 +214,7 @@ export default {
 						timerProgressBar: true,
 					});
 				})
-				.catch((error) => (this.validation = error.response));
+				.catch((error) => (this.validation = error.response.data));
 		},
 	},
 };

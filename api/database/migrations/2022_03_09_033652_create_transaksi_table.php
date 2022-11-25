@@ -23,7 +23,10 @@ class CreateTransaksiTable extends Migration
             $table->integer('status_pesanan');
             $table->integer('status_pembayaran');
             $table->integer('total_harga');
-            $table->longText('no_resi');
+            $table->integer('pengiriman');
+
+            $table->longText('catatan')->nullable();
+            $table->longText('no_resi')->nullable();
         });
     }
 
