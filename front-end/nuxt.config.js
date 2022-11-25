@@ -76,6 +76,7 @@ export default {
 					login: {url: "/api/login", method: "post"},
 					logout: {url: "/api/logout", method: "post"},
 					user: {url: "/api/user", method: "get"},
+					refresh: {url: "/api/refresh", method: "post"},
 					// ...
 				},
 				token: {

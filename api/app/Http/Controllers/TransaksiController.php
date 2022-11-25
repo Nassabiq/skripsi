@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\DetailTransaksi;
+use App\Models\Pelanggan;
 use App\Models\Transaksi;
 use Carbon\Carbon;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
@@ -61,57 +62,73 @@ class TransaksiController extends Controller
 
     public function submitTransaksi(Request $request)
     {
-        // return response()->json($request->pelanggan, 200);
-        // $data = $request->pelanggan;
-        var_dump(is_array($request->transaksi) ? true : false);
-        // foreach ($request->transaksi as $data) {
-        //     # code...
-        //     print_r($data);
-        // }
+        DB::beginTransaction();
+        try {
+            $existedPelanggan = is_array($request->pelanggan);
+            if ($existedPelanggan) {
+                $validatePelanggan = Validator::make($request->pelanggan, [
+                    'nama_pelanggan'   => 'required',
+                    'no_telp'   => 'required',
+                    'alamat'   => 'required',
+                ]);
+                if ($validatePelanggan->fails()) return response()->json($validatePelanggan->errors(), 400);
 
-        // DB::beginTransaction();
-        // try {
+                $id_pelanggan = IdGenerator::generate(['table' => 'pelanggan', 'field' => 'id_pelanggan', 'length' => 10, 'prefix' => 'CUST-']);
+                $pelanggan = Pelanggan::create([
+                    'id_pelanggan' => $id_pelanggan,
+                    'id_user' => $request->user,
+                    'nama_pelanggan' => $request->pelanggan['nama_pelanggan'],
+                    'alamat' => $request->pelanggan['alamat'],
+                    'no_telp' => $request->pelanggan['no_telp'],
+                ]);
+            }
 
-        //     $validator = Validator::make($request->all(), [
-        //         'nama_pemesan'   => 'required',
-        //         'no_telp'   => 'required',
-        //         'alamat'   => 'required',
-        //     ]);
+            $id_transaksi = IdGenerator::generate(['table' => 'transaksi', 'field' => 'id_transaksi', 'length' => 20, 'prefix' => 'ORDER-' . date('dmY')]);
+            $transaksi = Transaksi::create([
+                'id_transaksi' => $id_transaksi,
+                'id_pelanggan' => $existedPelanggan ? $pelanggan->id_pelanggan : $request->pelanggan,
+                'tgl_transaksi' => Carbon::now(),
+                'status_pesanan' => 0,
+                'status_pembayaran' => 0,
+                // 'no_resi' => 0, //Ubah dulu
+                'no_resi' => 0,
+                'total_harga' => $request->total,
+            ]);
 
-        //     if ($validator->fails()) return response()->json($validator->errors(), 400);
+            foreach (json_decode($request->transaksi) as $data) {
+                $last_array = end($data->sku->harga);
+                $price = $last_array->harga_produk;
 
-        //     $id_transaksi = IdGenerator::generate(['table' => 'transaksi_penjualan', 'field' => 'id_transaksi', 'length' => 20, 'prefix' => 'ORDER-' . date('dmY')]);
-        //     $transaksi = Transaksi::create([
-        //         'id_transaksi' => $id_transaksi,
-        //         'nama_pemesan' => $request->nama_pemesan,
-        //         'alamat' => $request->alamat,
-        //         'no_telp' => $request->no_telp,
-        //         'tgl_transaksi' => Carbon::now(),
-        //         'status_pesanan' => 0,
-        //         'total_harga' => $request->total,
-        //         'total_pembayaran' => $request->total_pembayaran
-        //     ]);
+                $satuanMeterPersegi = $data->sku->produk->satuan_produk == "m2";
+                $ukuran = json_decode($data->ukuran);
+                $resultUkuran = $satuanMeterPersegi ? $ukuran->panjang  * $ukuran->lebar : null;
+                $totalPrice = $satuanMeterPersegi ? $price * $resultUkuran : $price;
 
-        //     foreach ($request->pesanan as $data) {
-        //         $id_detail = IdGenerator::generate(['table' => 'detail_transaksi', 'field' => 'id_detail_transaksi', 'length' => 17, 'prefix' => 'DtlOrder-']);
-        //         $detail_transaksi = DetailTransaksi::create([
-        //             'id_detail_transaksi' => $id_detail,
-        //             'id_transaksi' => $transaksi->id_transaksi,
-        //             'id_produk' => $data['id_produk'],
-        //             'jenis_bahan' => $data['jenis_bahan'],
-        //             'qty' => $data['qty'],
-        //             'subtotal' => $data['qty'] * $data['harga'],
-        //             'finishing' => $data['finishing'],
-        //             'laminasi' => $data['laminasi'],
-        //         ]);
+                $result = $totalPrice * $data->qty_produk;
 
-        //         DB::commit();
-        //     }
-        // } catch (\Throwable $th) {
-        //     return response()->json('Something Went Wrong', 400);
-        //     DB::rollback();
-        //     //throw $th;
-        // }
+                $id_detail = IdGenerator::generate(['table' => 'detail_transaksi', 'field' => 'id_detail_transaksi', 'length' => 17, 'prefix' => 'DtlOrder-']);
+                DetailTransaksi::create([
+                    'id_detail_transaksi' => $id_detail,
+                    'id_transaksi' => $transaksi->id_transaksi,
+                    'id_sku' => $data->id_sku,
+                    'qty_produk' => $data->qty_produk,
+                    'ukuran' => $data->ukuran,
+                    'id_finishing' => $data->id_finishing,
+
+                    'subtotal' => $result,
+                    'catatan' => "",
+                    // 'catatan' => $data['catatan'],
+                ]);
+
+                Cart::where('id_cart', $data->id_cart)->delete();
+            }
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            return response()->json('Something Went Wrong', 400);
+            DB::rollback();
+            //throw $th;
+        }
     }
 
     public function changeStatus($id, Request $request)

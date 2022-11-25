@@ -57,17 +57,12 @@ Route::patch('/pengadaan/validasi/{id_pengadaan}', [PengadaanPersediaanControlle
 Route::delete('/pengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'deletePengadaan']);
 
 
-
-Route::get('/transaksi', [TransaksiController::class, 'index']);
-Route::get('/transaksi/{id_transaksi}', [TransaksiController::class, 'detailTransaksi']);
-Route::get('/dataTransaksi', [TransaksiController::class, 'dataTransaksi']);
-Route::get('/laporanPenjualan', [TransaksiController::class, 'laporanPenjualan']);
-
 Route::post('/transaksi', [TransaksiController::class, 'submitTransaksi']);
 Route::post('/changeStatus/{id_transaksi}', [TransaksiController::class, 'changeStatus']);
 
 Route::get('/analisis-hpp', [AnalisisHPPController::class, 'index']);
 
+Route::post('/refresh', fn () =>  auth()->refresh());
 Route::group(['middleware' => ['auth:api']], function () {
 
     // Produk
@@ -82,8 +77,11 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/cart', [CartController::class, 'addToCart']);
     Route::delete('/cart/{id_cart}', [CartController::class, 'removeCart']);
 
-    Route::get('/user', function () {
-        return auth()->user()->load('roles', 'pelanggan');
-    });
+    Route::get('/transaksi', [TransaksiController::class, 'index']);
+    Route::get('/transaksi/{id_transaksi}', [TransaksiController::class, 'detailTransaksi']);
+    Route::get('/dataTransaksi', [TransaksiController::class, 'dataTransaksi']);
+    Route::get('/laporanPenjualan', [TransaksiController::class, 'laporanPenjualan']);
+
+    Route::get('/user', fn () => auth()->user()->load('roles', 'pelanggan'));
     Route::post('/logout', [AuthController::class, 'logout']);
 });
