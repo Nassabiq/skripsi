@@ -67,7 +67,7 @@
 					</div>
 					<div class="flex px-6 py-4 space-x-8 border-b-2 bg-gray-50 border-slate 200" v-for="detail in data.detail_transaksi">
 						<div class="flex-shrink-0 overflow-hidden border border-gray-200 rounded-md w-36 h-36">
-							<img :src="'http://localhost:8000/storage/image_produk/' + detail.sku.produk.id_produk + '/' + JSON.parse(detail.sku.produk.image)[0].filename" class="object-cover object-center w-full h-full" />
+							<img :src="'http://localhost:8000/storage/image_produk/' + detail.sku.produk.id_produk + '/' + JSON.parse(detail.sku.produk.image_produk)[0].filename" class="object-cover object-center w-full h-full" />
 						</div>
 						<div class="flex flex-col flex-1 ml-4">
 							<div>
@@ -76,7 +76,7 @@
 										<p class="font-semibold tracking-wider text-gray-700 whitespace-nowrap">{{ detail.sku.produk.nama_produk }}</p>
 										<p class="text-xs text-gray-600 whitespace-nowrap">{{ detail.sku.bahan_baku.nama_bahan_baku }}</p>
 										<p class="my-2 text-xs tracking-widest text-gray-600 whitespace-nowrap"><span class="font-semibold tracking-normal">Finishing: </span>{{ detail.finishing.nama_finishing }}</p>
-										<p class="my-2 text-xs text-gray-600" v-html="detail.sku.produk.description.slice(0, 200) + ' ...'"></p>
+										<p class="my-2 text-xs text-gray-600" v-html="detail.sku.produk.deskripsi_produk.slice(0, 200) + ' ...'"></p>
 									</div>
 									<div>
 										<!-- <p class="px-2 py-1 text-xs font-semibold text-gray-700 whitespace-nowrap" v-if>

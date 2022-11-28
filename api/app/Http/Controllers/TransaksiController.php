@@ -18,7 +18,6 @@ class TransaksiController extends Controller
     public function index(Request $request)
     {
         $id_user = $request->user;
-        $status_pembayaran = '%' . $request->pembayaran . '%';
         $status_pesanan = '%' . $request->pesanan . '%';
 
         $data = Transaksi::whereHas('pelanggan', function ($q) use ($id_user) {
@@ -31,7 +30,24 @@ class TransaksiController extends Controller
                 'detailTransaksi.finishing',
                 'pelanggan'
             ])->orderBy('tgl_transaksi', 'desc')->get();
+        return response()->json($data, 200);
+    }
+    public function dataTransaksi(Request $request)
+    {
+        $search = '%' . $request->search . '%';
+        $status = '%' . $request->selectedStatus . '%';
+        // $produk = $request->show == null;
 
+
+        $data = Transaksi::where('id_transaksi', 'like', $search)
+            ->where('status_pesanan', 'like', $status)
+            ->with(
+                'detailTransaksi.sku.harga',
+                'detailTransaksi.sku.produk',
+                'detailTransaksi.sku.bahanBaku',
+                'detailTransaksi.finishing',
+                'pelanggan'
+            )->orderBy('tgl_transaksi', 'desc')->paginate($request->show);
         return response()->json($data, 200);
     }
 
@@ -50,7 +66,13 @@ class TransaksiController extends Controller
 
     public function detailTransaksi($id)
     {
-        $data = Transaksi::with('detailTransaksi.produk.harga', 'detailTransaksi.produk.categories.satuan')->where('id_transaksi', $id)->first();
+        $data = Transaksi::with(
+            'detailTransaksi.sku.harga',
+            'detailTransaksi.sku.produk',
+            'detailTransaksi.sku.bahanBaku',
+            'detailTransaksi.finishing',
+            'pelanggan'
+        )->where('id_transaksi', $id)->first();
         return response()->json($data, 200);
     }
 
@@ -84,7 +106,7 @@ class TransaksiController extends Controller
                 'id_transaksi' => $id_transaksi,
                 'id_pelanggan' => $existedPelanggan ? $pelanggan->id_pelanggan : $request->pelanggan,
                 'tgl_transaksi' => Carbon::now(),
-                'status_pesanan' => $request->shipment == 0 ? 1 : 2,
+                'status_pesanan' => 1,
                 'status_pembayaran' => 0,
                 'total_harga' => $request->total,
                 'catatan' => $request->catatan,
@@ -127,7 +149,7 @@ class TransaksiController extends Controller
 
     public function changeStatus($id, Request $request)
     {
-        $data = TransaksiPenjualan::findOrFail($id);
+        $data = Transaksi::findOrFail($id);
         $data->status_pesanan = $request->status_pesanan + 1;
         $data->save();
 

@@ -14,7 +14,7 @@
 						<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
 							<a href="#" class="px-3 py-2 bg-gray-100 rounded-lg shadow-lg group shadow-gray-200" v-for="product in products">
 								<div class="w-full overflow-hidden bg-gray-200 rounded-lg aspect-square">
-									<img :src="'http://localhost:8000/storage/image_produk/' + product.id_produk + '/' + JSON.parse(product.image)[0].filename" alt="" class="object-cover w-full h-full border-2 rounded-md border-slate-200" />
+									<img :src="'http://localhost:8000/storage/image_produk/' + product.id_produk + '/' + JSON.parse(product.image_produk)[0].filename" alt="" class="object-cover w-full h-full border-2 rounded-md border-slate-200" />
 									<!-- <img :src="product.image" class="object-cover object-center w-full h-full group-hover:opacity-75" /> -->
 								</div>
 								<p class="mt-1 font-semibold text-gray-700">{{ product.nama_produk }}</p>
@@ -48,7 +48,7 @@
 					<p class="text-2xl font-semibold">{{ modalData.nama_produk }}</p>
 					<div>
 						<label class="label">Informasi Produk</label>
-						<p class="text-sm" v-html="modalData.description"></p>
+						<p class="text-sm" v-html="modalData.deskripsi_produk"></p>
 					</div>
 					<div>
 						<label class="label">Informasi Pemesanan</label>

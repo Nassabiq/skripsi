@@ -13,7 +13,7 @@
 			</div>
 			<vue-html2pdf :show-layout="true" :float-layout="false" :enable-download="true" :preview-modal="false" :paginate-elements-by-height="1400" :pdf-quality="2" :manual-pagination="false" pdf-format="a4" :filename="transaksi.id_transaksi" pdf-orientation="portrait" pdf-content-width="800px" ref="html2Pdf">
 				<!-- @progress="onProgress($event)" @hasStartedGeneration="hasStartedGeneration()" @hasGenerated="hasGenerated($event)" -->
-				<section slot="pdf-content" class="bg-white">
+				<section slot="pdf-content" class="bg-white" v-if="transaksi">
 					<div class="grid grid-cols-12 p-4">
 						<div class="col-span-12">
 							<p class="flex justify-center my-8 text-2xl font-semibold text-cemter">Order Quotation</p>
@@ -25,13 +25,13 @@
 							</div>
 							<div class="px-2 py-3 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 								<dt class="text-sm font-medium text-gray-500">Nama Pemesan</dt>
-								<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">: {{ transaksi.nama_pemesan }}</dd>
+								<!-- <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" v-if="transaksi.pelanggan.nama_pelanggan"></dd> -->
 							</div>
 						</div>
 						<div class="col-span-6">
 							<div class="px-2 py-3 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 								<dt class="text-sm font-medium text-gray-500">No. Telp</dt>
-								<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">: {{ transaksi.no_telp }}</dd>
+								<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ transaksi.pelanggan.no_telp }}</dd>
 							</div>
 							<div class="px-2 py-3 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 								<dt class="text-sm font-medium text-gray-500">Tgl Transaksi</dt>
@@ -56,16 +56,16 @@
 									<tbody class="">
 										<template v-for="(data, index) in transaksi.detail_transaksi">
 											<tr class="text-gray-800 font-title">
-												<td class="p-3 text-sm border border-slate-300">{{ data.produk.nama_produk }}</td>
-												<td class="p-3 text-sm border border-slate-300">{{ data.qty }}{{ data.produk.categories.satuan.nama_satuan }}</td>
-												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(data.produk.harga[data.produk.harga.length - 1].harga) }}</td>
-												<td class="p-3 text-sm border border-slate-300">{{ data.ukuran }}</td>
+												<td class="p-3 text-sm border border-slate-300">{{ data.sku.produk.nama_produk }}</td>
+												<td class="p-3 text-sm border border-slate-300">{{ data.qty_produk }}{{ data.sku.produk.satuan_produk }}</td>
+												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(data.sku.harga[data.sku.harga.length - 1].harga) }}</td>
+												<!-- <td class="p-3 text-sm border border-slate-300">{{ data.ukuran }}</td>
 												<td class="p-3 text-sm border border-slate-300">{{ data.jenis_bahan }}</td>
 												<td class="p-3 text-sm border border-slate-300">-</td>
-												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(data.produk.harga[data.produk.harga.length - 1].harga * data.qty) }}</td>
+												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(data.produk.harga[data.produk.harga.length - 1].harga * data.qty) }}</td> -->
 											</tr>
 											<tr>
-												<td colspan="7" class="p-1 border border-slate-300">
+												<!-- <td colspan="7" class="p-1 border border-slate-300">
 													<p class="text-xs">Note:</p>
 													<div class="grid grid-cols-2 gap-4">
 														<div class="flex col-span-1 p-3">
@@ -77,12 +77,12 @@
 															<p class="pl-4 text-xs">{{ data.laminasi }}</p>
 														</div>
 													</div>
-												</td>
+												</td> -->
 											</tr>
 										</template>
 										<tr class="text-gray-800 bg-gray-100 font-title">
 											<td colspan="6" class="p-3 text-lg font-semibold border border-slate-300">Total</td>
-											<td class="p-3 font-semibold border border-slate-300">Rp. {{ Intl.NumberFormat().format(transaksi.total_pembayaran) }}</td>
+											<!-- <td class="p-3 font-semibold border border-slate-300">Rp. {{ Intl.NumberFormat().format(transaksi.total_pembayaran) }}</td> -->
 										</tr>
 									</tbody>
 								</table>
@@ -107,26 +107,23 @@
 <script>
 import QrcodeVue from "qrcode.vue";
 export default {
-	auth: false,
 	components: {QrcodeVue},
 	data() {
 		return {
-			transaksi: [],
+			// transaksi: [],
 		};
 	},
-	mounted() {
+	computed: {
+		transaksi() {
+			return this.$store.state.transaksi.detailData;
+		},
+	},
+	created() {
 		this.getData();
 	},
 	methods: {
-		async getData() {
-			this.$axios
-				.get("/api/transaksi/" + this.$route.params.id)
-				.then((response) => {
-					this.transaksi = response.data;
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+		getData() {
+			this.$store.dispatch("transaksi/fetchDetailTransaksi", this.$route.params.id);
 		},
 		generateReport() {
 			this.$refs.html2Pdf.generatePdf();

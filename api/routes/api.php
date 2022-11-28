@@ -31,8 +31,6 @@ Route::get('/katalog', [ProdukController::class, 'katalog']);
 Route::get('/produk', [ProdukController::class, 'index']);
 Route::get('/kategori', [ProdukController::class, 'kategori']);
 
-Route::post('/changeStatus/{id_transaksi}', [TransaksiController::class, 'changeStatus']);
-
 Route::get('/analisis-hpp', [AnalisisHPPController::class, 'index']);
 
 Route::post('/refresh', fn () =>  auth()->refresh());
@@ -59,10 +57,13 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     // TRANSAKSI
     Route::get('/transaksi', [TransaksiController::class, 'index']);
+    Route::get('/transaksi/all', [TransaksiController::class, 'dataTransaksi']);
     Route::get('/transaksi/{id_transaksi}', [TransaksiController::class, 'detailTransaksi']);
     Route::get('/laporanPenjualan', [TransaksiController::class, 'laporanPenjualan']);
 
     Route::post('/transaksi', [TransaksiController::class, 'submitTransaksi']);
+    Route::post('/transaksi/status/{id_transaksi}', [TransaksiController::class, 'changeStatus']);
+
 
     // STOK MASUK
     Route::get('/stok-masuk', [StokMasukController::class, 'index']);

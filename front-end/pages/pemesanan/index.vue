@@ -14,9 +14,7 @@
 				</div>
 				<div class="flex items-center justify-between col-span-12 mb-2 space-x-2 md:justify-end md:mb-0 md:col-span-6">
 					<div class="flex flex-col col-span-6">
-						<span class="mb-2 text-xs font-semibold md:text-right">
-							Items Per Page :
-						</span>
+						<span class="mb-2 text-xs font-semibold md:text-right"> Items Per Page : </span>
 						<select @change="onChangeRecordsPerPage" v-model="show" class="px-2 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300">
 							<option :value="5">5</option>
 							<option :value="10">10</option>
@@ -25,148 +23,118 @@
 						</select>
 					</div>
 					<div class="flex flex-col col-span-6">
-						<span class="mb-2 text-xs font-semibold md:text-right">
-							Status :
-						</span>
+						<span class="mb-2 text-xs font-semibold md:text-right"> Status : </span>
 						<select class="px-2 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" v-model="selectedStatus" @change="onChangeStatus">
 							<option value="">Status Pesanan</option>
-							<option :value="0">Belum Diproses</option>
-							<option :value="1">Sedang Diproses</option>
-							<option :value="2">Sudah Diproses</option>
-							<option :value="3">Selesai</option>
+							<option :value="1">Belum Bayar</option>
+							<option :value="2">Dalam Pengerjaan</option>
+							<option :value="3">Siap Diambil / Dikirim</option>
+							<option :value="4">Selesai</option>
 						</select>
 					</div>
 				</div>
 			</div>
-
-			<div class="overflow-x-auto overflow-y-hidden bg-white rounded-lg shadow">
-				<table class="table table-auto table-produk">
-					<thead class="bg-gray-100">
-						<tr class="text-left text-gray-800 font-title">
-							<th class="p-3">Id Transaksi</th>
-							<th class="p-3">Tgl Transaksi</th>
-							<th class="p-3">Customer</th>
-							<th class="p-3">Jumlah Pesanan</th>
-							<th class="p-3">Total Pesanan</th>
-							<th class="p-3">Status</th>
-							<th class="p-1"></th>
-							<th class="p-1"></th>
-						</tr>
-					</thead>
-
-					<tbody class="divide-y-2 divide-gray-100 divide-dotted" v-if="transaksi.data">
-						<template v-for="(data, index) in transaksi.data">
-							<!-- {{ data }} -->
-							<tr class="text-sm">
-								<td class="w-32 p-3">{{ data.id_transaksi }}</td>
-								<td class="p-3">{{ $moment(data.tgl_transaksi).format("DD MMMM YYYY") }}</td>
-								<td class="p-3">{{ data.nama_pemesan }}</td>
-								<td class="p-3">{{ data.detail_transaksi.length }}</td>
-								<td class="p-3">Rp. {{ Intl.NumberFormat().format(data.total_harga) }}</td>
-								<td class="p-1 whitespace-nowrap">
-									<span class="px-2 py-1 text-xs text-gray-800 border-2 rounded-full" :class="data.status_pesanan == 0 ? 'bg-red-200 border-red-500' : data.status_pesanan == 1 ? 'bg-yellow-200 border-yellow-500' : data.status_pesanan == 2 ? 'bg-green-200 border-green-500' : 'bg-indigo-200 border-indigo-500'">
-										{{ data.status_pesanan == 0 ? "Belum diproses" : data.status_pesanan == 1 ? "Sedang diproses" : data.status_pesanan == 2 ? "Sudah Diproses" : "Selesai" }}
-									</span>
-								</td>
-								<td class="p-3 w-36">
-									<div class="flex flex-wrap gap-2">
-										<button class="btn btn-with-icon btn-sm btn-indigo" @click="changeStatus(data.id_transaksi, index)" v-if="data.status_pesanan !== 3">
-											<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-												<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-											</svg>
-											<span>{{ data.status_pesanan == 0 ? "Proses" : data.status_pesanan == 1 ? "Ubah Status" : "Selesaikan" }}</span>
-										</button>
-										<NuxtLink target="_blank" :to="{name: 'pencatatan-transaksi-id', params: {id: data.id_transaksi}}">
-											<button class="btn btn-sm btn-with-icon btn-teal">
-												<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-													<path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
-												</svg>
-												<span>Print</span>
-											</button>
-										</NuxtLink>
-									</div>
-								</td>
-								<td class="p-1">
-									<button class="p-1 text-blue-400 border border-blue-600 rounded-full focus:bg-blue-100 hover:text-blue-800" @click.prevent="showRow(index)">
-										<svg xmlns="http://www.w3.org/2000/svg" :class="content === index ? 'rotate-90 duration-300' : 'rotate-0 duration-300'" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+			<template v-if="transaksi.data">
+				<div v-for="(data, index) in transaksi.data" class="my-4 bg-white border-2 rounded-md border-slate-200">
+					<div class="flex flex-col justify-between px-6 py-4 border-b-2 md:flex-row border-slate-200">
+						<div class="flex flex-col space-x-8 md:flex-row">
+							<div class="space-y-2">
+								<p class="text-sm font-semibold text-gray-600">No Transaksi</p>
+								<p class="text-xs text-gray-500">{{ data.id_transaksi }}</p>
+							</div>
+							<div class="space-y-2">
+								<p class="text-sm font-semibold text-gray-600">Nama Pelanggan</p>
+								<p class="text-xs text-gray-500 capitalize">{{ data.pelanggan.nama_pelanggan }}</p>
+							</div>
+							<div class="space-y-2">
+								<p class="text-sm font-semibold text-gray-600">Tgl Transaksi</p>
+								<p class="text-xs text-gray-500">{{ $moment(data.tgl_transaksi).format("DD MMMM YYYY") }}</p>
+							</div>
+							<div class="space-y-2">
+								<p class="text-sm font-semibold text-gray-600">Total Transaksi</p>
+								<p class="text-xs text-gray-500">{{ "Rp. " + Intl.NumberFormat().format(data.total_harga) }}</p>
+							</div>
+						</div>
+						<div class="flex items-center space-x-4">
+							<template v-if="data.status_pesanan != 1">
+								<div class="flex items-center gap-2">
+									<button class="btn btn-with-icon btn-sm btn-indigo" @click="changeStatus(data.id_transaksi, index)" v-if="data.status_pesanan !== 4">
+										<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+											<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
 										</svg>
+										<span>{{ data.status_pesanan == 2 ? "Proses" : data.status_pesanan == 3 ? "Ubah Status" : "Selesaikan" }}</span>
 									</button>
-								</td>
-							</tr>
-							<tr>
-								<td class="p-3 bg-sky-50" colspan="8" v-show="content === index">
-									<div class="px-4 pb-2 font-semibold">
-										Detail Transaksi
-									</div>
-									<div class="grid grid-cols-2" v-for="(data, index) in data.detail_transaksi">
-										<div class="col-span-2 md:col-span-1">
-											<div class="border-t border-gray-200">
-												<dl>
-													<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Id Detail Transaksi</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ data.id_detail_transaksi }}</dd>
-													</div>
-													<div class="px-3 py-4 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Nama Produk</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ data.produk.nama_produk }}</dd>
-													</div>
-													<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">QTY</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ data.qty }} {{ data.produk.categories.satuan.nama_satuan }}</dd>
-													</div>
-													<div class="px-3 py-4 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Subtotal</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(data.produk.harga[data.produk.harga.length - 1].harga * data.qty) }}</dd>
-													</div>
-												</dl>
-											</div>
-										</div>
-										<div class="col-span-2 md:col-span-1">
-											<div class="border-t border-gray-200">
-												<dl>
-													<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Ukuran</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ data.ukuran }}</dd>
-													</div>
-													<div class="px-3 py-4 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Jenis Bahan</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ data.jenis_bahan }}</dd>
-													</div>
-													<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Finishing</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ data.finishing }}</dd>
-													</div>
-													<div class="px-3 py-4 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Laminasi</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ data.laminasi }}</dd>
-													</div>
-												</dl>
-											</div>
-										</div>
-									</div>
-								</td>
-							</tr>
-						</template>
-					</tbody>
-					<tbody v-else>
-						<tr>
-							<td colspan="8">
-								<div class="flex items-center justify-center gap-4 py-20 font-semibold text-center">
-									<svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
-										<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-									</svg>
-									<span class="text-2xl">
-										Tidak Ada Data
-									</span>
+									<NuxtLink target="_blank" :to="{name: 'pencatatan-transaksi-id', params: {id: data.id_transaksi}}">
+										<button class="btn btn-sm btn-with-icon btn-teal">
+											<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+												<path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
+											</svg>
+											<span>Print</span>
+										</button>
+									</NuxtLink>
+									<NuxtLink target="_blank" :to="{name: 'pemesanan-id', params: {id: data.id_transaksi}}">
+										<button class="flex items-center justify-center gap-2 px-2 py-1 border-2 rounded-md border-slate-300 hover:bg-slate-100">
+											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+												<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+											</svg>
+											<span class="text-xs">Invoice</span>
+										</button>
+									</NuxtLink>
 								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				<div>
-					<Pagination v-if="transaksi.data && transaksi.per_page < transaksi.total" :total-pages="transaksi.links.length - 2" :per-page="show" :current-page="transaksi.current_page" @pagechanged="onPageChange"></Pagination>
+							</template>
+							<template v-else>
+								<div class="flex items-center px-4 py-1 text-xs font-semibold text-red-500 capitalize border border-red-500 rounded-full">belum bayar</div>
+							</template>
+						</div>
+					</div>
+					<div class="flex px-6 py-4 space-x-8 border-b-2 bg-gray-50 border-slate 200" v-for="detail in data.detail_transaksi">
+						<div class="flex-shrink-0 overflow-hidden border border-gray-200 rounded-md w-36 h-36">
+							<img :src="'http://localhost:8000/storage/image_produk/' + detail.sku.produk.id_produk + '/' + JSON.parse(detail.sku.produk.image_produk)[0].filename" class="object-cover object-center w-full h-full" />
+						</div>
+						<div class="flex flex-col flex-1 ml-4">
+							<div>
+								<div class="flex justify-between text-base font-medium text-gray-900">
+									<div>
+										<p class="font-semibold tracking-wider text-gray-700 whitespace-nowrap">{{ detail.sku.produk.nama_produk }}</p>
+										<p class="text-xs text-gray-600 whitespace-nowrap">{{ detail.sku.bahan_baku.nama_bahan_baku }}</p>
+										<p class="my-2 text-xs tracking-widest text-gray-600 whitespace-nowrap"><span class="font-semibold tracking-normal">Finishing: </span>{{ detail.finishing.nama_finishing }}</p>
+										<p class="my-2 text-xs text-gray-600" v-html="detail.sku.produk.deskripsi_produk.slice(0, 200) + ' ...'"></p>
+									</div>
+									<div>
+										<!-- <p class="px-2 py-1 text-xs font-semibold text-gray-700 whitespace-nowrap" v-if>
+										{{ "Rp. " + Intl.NumberFormat().format(detail.sku.harga[detail.sku.harga.length - 1].harga_produk) }}
+									</p> -->
+									</div>
+								</div>
+							</div>
+							<div class="flex items-end justify-between flex-1">
+								<ul class="text-xs text-gray-500">
+									<template v-if="detail.sku.produk.satuan_produk == 'm2'">
+										<li class="text-xs text-gray-600">Panjang: {{ JSON.parse(detail.ukuran).panjang }} meter, Lebar: {{ JSON.parse(detail.ukuran).lebar }} meter</li>
+										<li class="text-xs text-gray-600">QTY: {{ detail.qty_produk + " pcs" }}</li>
+									</template>
+									<template v-else>
+										<li class="text-xs text-gray-600">QTY: {{ detail.qty_produk + "" + detail.sku.produk.satuan_produk }}</li>
+									</template>
+								</ul>
+								<div class="flex">
+									<p class="font-semibold text-gray-700 whitespace-nowrap" v-text="harga(detail)"></p>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
+			</template>
+			<div v-else class="bg-white border-2 rounded-md h-72 border-slate-200">
+				<div class="flex items-center justify-center w-full h-full space-x-4">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-red-500">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+					</svg>
+					<span class="text-2xl font-semibold text-gray-800">Tidak Ada Data</span>
+				</div>
+			</div>
+			<div>
+				<Pagination v-if="transaksi.data && transaksi.per_page < transaksi.total" :total-pages="transaksi.links.length - 2" :per-page="show" :current-page="transaksi.current_page" @pagechanged="onPageChange"></Pagination>
 			</div>
 		</div>
 	</div>
@@ -177,12 +145,10 @@ import Pagination from "../../components/Pagination.vue";
 export default {
 	name: "KelolaPemesanan",
 	layout: "auth",
-	auth: false,
 	components: {Pagination},
 	data() {
 		return {
 			content: null,
-			transaksi: [],
 
 			search: "",
 			selectedStatus: "",
@@ -190,27 +156,42 @@ export default {
 			page: 1,
 		};
 	},
-	mounted() {
+	created() {
 		this.getDataTransaksi();
 	},
-	computed: {},
-	methods: {
-		showRow(index) {
-			if (this.content !== null) this.content = this.content == index ? null : index;
-			else this.content = index;
+	computed: {
+		transaksi() {
+			return this.$store.state.transaksi.allData;
 		},
+	},
+	methods: {
 		getDataTransaksi() {
-			this.$axios
-				.get("/api/dataTransaksi?page=" + this.page + "&show=" + this.show + "&search=" + this.search + "&status=" + this.selectedStatus)
-				.then((response) => {
-					this.transaksi = response.data;
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+			this.$store.dispatch("transaksi/fetchAllTransaksi", {
+				page: this.page,
+				show: this.show,
+				search: this.search,
+				status: this.selectedStatus,
+			});
+		},
+
+		qty(data) {
+			if (data.sku.produk.satuan_produk == "m2") {
+				let ukuran = JSON.parse(data.ukuran);
+				return ukuran.panjang * ukuran.lebar + " " + data.sku.produk.satuan_produk + " - " + data.qty_produk + " pcs";
+			} else return data.qty_produk + data.sku.produk.satuan_produk;
+		},
+		harga(data) {
+			if (data.sku.produk.satuan_produk == "m2") {
+				let ukuran = JSON.parse(data.ukuran).panjang * JSON.parse(data.ukuran).lebar;
+				let price = data.sku.harga[data.sku.harga.length - 1].harga_produk * ukuran * data.qty_produk;
+				return "Rp. " + Intl.NumberFormat().format(price);
+			} else {
+				let price = data.sku.harga[data.sku.harga.length - 1].harga_produk * data.qty_produk;
+				return "Rp. " + Intl.NumberFormat().format(price);
+			}
 		},
 		async changeStatus(id, index) {
-			let data = this.transaksi[index].status_pesanan;
+			let data = this.transaksi.data[index].status_pesanan;
 			let formData = new FormData();
 
 			formData.append("status_pesanan", data);
@@ -228,16 +209,10 @@ export default {
 				.then((result) => {
 					if (result.isConfirmed) {
 						this.$axios
-							.post("/api/changeStatus/" + id, formData)
-							.then((response) => {
-								this.getAllData();
-							})
-							.then(() => {
-								this.$swal.fire("Success!", "Status Pesanan Berhasil diubah.", "success");
-							})
-							.catch((error) => {
-								console.log(error);
-							});
+							.post("/api/transaksi/status/" + id, formData)
+							.then((response) => this.getDataTransaksi())
+							.then(() => this.$swal.fire("Success!", "Status Pesanan Berhasil diubah.", "success"))
+							.catch((error) => console.log(error));
 					}
 				});
 		},

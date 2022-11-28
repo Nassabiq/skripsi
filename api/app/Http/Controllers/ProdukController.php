@@ -49,17 +49,16 @@ class ProdukController extends Controller
         'nama_produk'   => 'required',
         'id_kategori_produk'   => 'required',
         'satuan_produk'   => 'required',
-        'description'   => 'required',
+        'deskripsi_produk'   => 'required',
         'informasi_pemesanan'   => 'required',
-        'image'   => 'required|max:5',
-        'image.*'   => 'image|mimes:jpeg,png,jpg,gif,svg|max:10000',
+        'image_produk'   => 'required|max:5',
+        'image_produk.*'   => 'image|mimes:jpeg,png,jpg,gif,svg|max:10000',
         'finishing'   => 'required',
         'bahan'   => 'required',
     ];
     // CREATE RECORD INTO DATABASE
     public function addProduk(Request $request)
     {
-        var_dump($request->all());
         $validator = Validator::make($request->all(), $this->rules);
         if ($validator->fails()) return response()->json($validator->errors(), 400);
 
@@ -70,8 +69,8 @@ class ProdukController extends Controller
             // SAVE IMAGE TO STORAGE
             $i = 1;
             $files = [];
-            if ($request->hasFile('image')) {
-                foreach ($request->file('image') as $key => $image) {
+            if ($request->hasFile('image_produk')) {
+                foreach ($request->file('image_produk') as $key => $image) {
                     $filename = "image-" . $id_produk . "-" . $i++ . "." . $image->getClientOriginalExtension();
                     $image->storeAs('image_produk/' . $id_produk, $filename);
 
@@ -86,9 +85,9 @@ class ProdukController extends Controller
                 'id_kategori_produk' => $request->id_kategori_produk,
                 'nama_produk' => $request->nama_produk,
                 'slug_produk' => Str::slug($request->nama_produk),
-                'image' => json_encode($files),
+                'image_produk' => json_encode($files),
                 'satuan_produk' => $request->satuan_produk,
-                'description' => $request->description,
+                'deskripsi_produk' => $request->deskripsi_produk,
                 'informasi_pemesanan' => $request->informasi_pemesanan,
             ]);
 
@@ -126,7 +125,7 @@ class ProdukController extends Controller
             'nama_produk'   => 'required',
             'id_kategori_produk'   => 'required',
             'satuan_produk'   => 'required',
-            'description'   => 'required',
+            'deskripsi_produk'   => 'required',
             'informasi_pemesanan'   => 'required',
         ]);
 
@@ -137,7 +136,7 @@ class ProdukController extends Controller
         $produk->slug_produk =  Str::slug($request->nama_produk);
         $produk->satuan_produk =  $request->satuan_produk;
         $produk->id_kategori_produk =  $request->id_kategori_produk;
-        $produk->description = $request->description;
+        $produk->deskripsi_produk = $request->deskripsi_produk;
         $produk->informasi_pemesanan = $request->informasi_pemesanan;
         $produk->save();
 

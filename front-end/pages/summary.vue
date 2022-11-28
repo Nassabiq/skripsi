@@ -62,7 +62,7 @@
 				<ul role="list" class="px-4 -my-6 bg-white border-2 divide-y divide-gray-200 rounded-md">
 					<li class="flex py-6 border-b-2 border-gray-200" v-for="data in cart">
 						<div class="flex-shrink-0 w-24 h-24 overflow-hidden border border-gray-200 rounded-md">
-							<img :src="'http://localhost:8000/storage/image_produk/' + data.sku.produk.id_produk + '/' + JSON.parse(data.sku.produk.image)[0].filename" alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt." class="object-cover object-center w-full h-full" />
+							<img :src="'http://localhost:8000/storage/image_produk/' + data.sku.produk.id_produk + '/' + JSON.parse(data.sku.produk.image_produk)[0].filename" alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt." class="object-cover object-center w-full h-full" />
 						</div>
 
 						<div class="flex flex-col flex-1 ml-4">
@@ -204,7 +204,7 @@ export default {
 					total: this.total,
 				})
 				.then(() => {
-					this.$router.push("/payment");
+					this.$router.push("/transaksi");
 				})
 				.then(() => {
 					this.$swal.fire({

@@ -4,11 +4,11 @@
 			<div class="grid grid-cols-12 gap-4">
 				<div class="col-span-12 md:col-span-4">
 					<div class="item">
-						<img v-if="product.image" :src="imageUrl + product.id_produk + '/' + currentImage" class="object-cover w-full border-2 aspect-square border-slate-200 h-80" />
+						<img v-if="product.image_produk" :src="imageUrl + product.id_produk + '/' + currentImage" class="object-cover w-full border-2 aspect-square border-slate-200 h-80" />
 						<Skeleton v-else />
 					</div>
 					<div class="grid grid-cols-4 gap-4 mt-4 thumbnails">
-						<div class="col-span-1 cursor-pointer" v-for="(img, index) in product.image" :key="index" @click.prevent="activateImage(index)">
+						<div class="col-span-1 cursor-pointer" v-for="(img, index) in product.image_produk" :key="index" @click.prevent="activateImage(index)">
 							<img :src="imageUrl + product.id_produk + '/' + img.filename" alt="" :class="activeImage == index ? 'outline outline-offset-2 outline-4 outline-sky-500 ring-2 ring-red-300' : ''" class="object-cover w-full rounded-md aspect-square" />
 						</div>
 					</div>
@@ -70,12 +70,12 @@
 					</div>
 					<div class="py-4 border-b-2 border-slate-200">
 						<p class="pb-2 text-xl font-bold text-gray-600 capitalize">Deskripsi</p>
-						<p v-if="product.description" class="text-xs text-justify text-slate-500" v-html="product.description"></p>
+						<p v-if="product.deskripsi_produk" class="text-xs text-justify text-slate-500" v-html="product.deskripsi_produk"></p>
 						<Skeleton :count="5" v-else />
 					</div>
 					<div class="py-4 border-b-2 border-slate-200">
 						<p class="pb-2 text-xl font-bold text-gray-600 capitalize">Informasi Pemesanan</p>
-						<p v-if="product.description" class="text-xs text-justify text-slate-500" v-html="product.informasi_pemesanan"></p>
+						<p v-if="product.informasi_pemesanan" class="text-xs text-justify text-slate-500" v-html="product.informasi_pemesanan"></p>
 						<Skeleton :count="5" v-else />
 					</div>
 				</div>
@@ -112,10 +112,10 @@
 					<div class="mt-1">
 						<section>
 							<client-only>
-								<quill-editor ref="editor" v-model="product.description" :options="editorOption" />
+								<quill-editor ref="editor" v-model="product.deskripsi_produk" :options="editorOption" />
 							</client-only>
 						</section>
-						<p class="mt-2 text-xs text-red-500" v-if="validation.description">{{ validation.description[0] }}</p>
+						<p class="mt-2 text-xs text-red-500" v-if="validation.deskripsi_produk">{{ validation.deskripsi_produk[0] }}</p>
 					</div>
 				</div>
 				<div class="col-span-12">
@@ -223,7 +223,7 @@ export default {
 	},
 	computed: {
 		currentImage() {
-			return this.product.image[this.activeImage].filename;
+			return this.product.image_produk[this.activeImage].filename;
 		},
 	},
 
@@ -237,8 +237,8 @@ export default {
 			const categories = await this.$axios.$get("/api/kategori");
 
 			this.product = product;
-			this.product.image = JSON.parse(this.product.image);
-			this.uploadedImage.allImages = [...this.product.image];
+			this.product.image_produk = JSON.parse(this.product.image_produk);
+			this.uploadedImage.allImages = [...this.product.image_produk];
 
 			this.categories = categories;
 		},
@@ -250,7 +250,7 @@ export default {
 						nama_produk: this.product.nama_produk,
 						satuan_produk: this.product.satuan_produk,
 						id_kategori_produk: this.product.id_kategori_produk,
-						description: this.product.description,
+						deskripsi_produk: this.product.deskripsi_produk,
 						informasi_pemesanan: this.product.informasi_pemesanan,
 					})
 					.then(() => {
@@ -279,7 +279,7 @@ export default {
 			let selectedImage = this.$refs.imageInput.files;
 
 			for (let i = 0; i < selectedImage.length; i++) {
-				let isFileExists = this.product.image.find((file) => file.type === selectedImage[i].type && file.name === selectedImage[i].name && file.size === selectedImage[i].size && file.lastModified === selectedImage[i].lastModified);
+				let isFileExists = this.product.image_produk.find((file) => file.type === selectedImage[i].type && file.name === selectedImage[i].name && file.size === selectedImage[i].size && file.lastModified === selectedImage[i].lastModified);
 
 				if (!isFileExists) {
 					this.uploadedImage.addImage.push(selectedImage[i]);
@@ -303,7 +303,7 @@ export default {
 		},
 
 		removeImage(key) {
-			if (this.product.image[key]) this.uploadedImage.deletedImage.push(this.product.image[key]);
+			if (this.product.image_produk[key]) this.uploadedImage.deletedImage.push(this.product.image[key]);
 			else {
 				let index = this.uploadedImage.addImage.findIndex((image) => image == this.uploadedImage.allImages[key]);
 				this.uploadedImage.addImage.splice(index, 1);
@@ -317,7 +317,7 @@ export default {
 			let deletedimage = this.uploadedImage.deletedImage;
 			let imageData = new FormData();
 
-			image.forEach((img, index) => imageData.append("image[" + index + "]", image[index]));
+			image.forEach((img, index) => imageData.append("image_produk[" + index + "]", image[index]));
 			deletedimage.forEach((img, index) => imageData.append("deletedImage[" + index + "]", JSON.stringify(deletedimage[index])));
 
 			this.isloading = !this.isloading;
