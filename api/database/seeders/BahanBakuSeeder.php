@@ -26,7 +26,7 @@ class BahanBakuSeeder extends Seeder
                 "id_bahan_baku" => $id_bahan_baku,
                 "nama_bahan_baku" => $data,
                 "slug_bahan_baku" => Str::slug($data),
-                "satuan_bahan_baku" => array_rand($satuan_produk),
+                "satuan_bahan_baku" => $satuan_produk[array_rand($satuan_produk)],
             ]);
         }
     }

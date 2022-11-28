@@ -41,7 +41,7 @@
 										</svg>
 									</button>
 								</div>
-								<div class="absolute right-0 z-10 w-48 py-1 mt-2 transition duration-1000 ease-in-out origin-top-right transform bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" :class="{'opacity-0 scale-95': !dropdown, 'opacity-100 scale-100': dropdown}">
+								<div class="absolute right-0 z-10 w-48 py-1 mt-2 transition duration-1000 ease-in-out origin-top-right transform bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" v-show="dropdown">
 									<!-- Active: "bg-gray-100", Not Active: "" -->
 									<template v-if="$auth.loggedIn">
 										<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-0">Profile</a>
@@ -127,12 +127,13 @@ export default {
 
 		async logout() {
 			await this.$auth.logout();
-			// this.$router.push("/login");
+			this.$router.push("/login");
 			this.$swal.fire({
 				icon: "success",
-				showCloseButton: true,
 				showConfirmButton: false,
 				text: "Anda Berhasil Logout!",
+				timer: 2000,
+				timerProgressBar: true,
 			});
 		},
 	},

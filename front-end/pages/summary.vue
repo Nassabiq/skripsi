@@ -31,17 +31,20 @@
 				<div class="px-8 py-6 space-y-4 bg-white border-2 border-gray-200 rounded-md" v-else>
 					<span class="font-semibold text-gray-800"> Data Pelanggan </span>
 
-					<div v-if="pelanggan.length > 0">
+					<div v-if="pelanggan.length > 0" class="flex flex-col items-center lg:flex-row">
 						<!-- Active: "ring-2 ring-indigo-500" -->
-						<label v-for="data in pelanggan" class="relative flex items-center justify-center px-4 py-3 text-sm font-medium text-gray-900 uppercase bg-white border rounded-md shadow-sm cursor-pointer group hover:bg-gray-50 focus:outline-none sm:flex-1 active:ring-2 ring-indigo-500">
-							<input type="radio" name="size-choice" class="sr-only" aria-labelledby="size-choice-3-label" v-model="selectedUser" />
-							<span id="size-choice-3-label">M</span>
-
+						<label v-for="data in pelanggan" :class="selectedUser == data.id_pelanggan ? 'ring ring-indigo-200' : ''" class="relative flex items-center justify-center px-4 py-3 bg-white border rounded-md shadow-sm cursor-pointer group hover:bg-gray-50 focus:outline-none sm:flex-1 active:ring-2 ring-indigo-500">
+							<input type="radio" name="size-choice" class="sr-only" :value="data.id_pelanggan" v-model="selectedUser" />
+							<div class="flex flex-col space-y-2">
+								<span class="text-lg font-semibold text-gray-700 capitalize">{{ data.nama_pelanggan }}</span>
+								<span class="text-sm text-gray-800">{{ data.no_telp }}</span>
+								<span class="text-xs text-gray-800">{{ data.alamat.slice(0, 100) + "..." }}</span>
+							</div>
 							<!--
                             Active: "border", Not Active: "border-2"     
                             Checked: "border-indigo-500", Not Checked: "border-transparent"
 						-->
-							<span class="absolute border-2 border-transparent rounded-md pointer-events-none -inset-px active:border active:border-indigo-500" aria-hidden="true"></span>
+							<span :class="selectedUser == data.id_pelanggan ? 'border border-indigo-500' : 'border-2 border-transparent'" class="absolute border-2 border-transparent rounded-md pointer-events-none -inset-px active:border active:border-indigo-500" aria-hidden="true"></span>
 						</label>
 					</div>
 					<div v-else class="py-12 border-2 border-gray-400 border-dashed rounded-md">
@@ -193,7 +196,7 @@ export default {
 		payment() {
 			this.$axios
 				.post("/api/transaksi", {
-					pelanggan: this.existedPelanggan == true ? null : this.customer,
+					pelanggan: this.existedPelanggan == true ? this.selectedUser : this.customer,
 					user: this.$auth.user.id_user,
 					shipment: this.shipment,
 					catatan: this.catatan,
@@ -201,14 +204,13 @@ export default {
 					total: this.total,
 				})
 				.then(() => {
-					// this.closeModal();
-					// this.getBahanBaku();
+					this.$router.push("/payment");
 				})
 				.then(() => {
 					this.$swal.fire({
 						icon: "success",
 						title: "Success...",
-						text: "Data Berhasil ditambah!",
+						text: "Transaksi Berhasil ditambahkan!",
 						showConfirmButton: false,
 						timer: 1500,
 						timerProgressBar: true,

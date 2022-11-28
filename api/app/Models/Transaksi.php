@@ -16,7 +16,7 @@ class Transaksi extends Model
 
     protected $table = 'transaksi';
 
-    protected $fillable = ['id_transaksi', 'id_pelanggan', 'tgl_transaksi', 'status_pesanan', 'status_pembayaran', 'total_harga', 'no_resi'];
+    protected $fillable = ['id_transaksi', 'id_pelanggan', 'tgl_transaksi', 'status_pesanan', 'status_pembayaran', 'total_harga', 'no_resi', 'catatan', 'pengiriman'];
 
     public function detailTransaksi()
     {
@@ -24,6 +24,6 @@ class Transaksi extends Model
     }
     public function pelanggan()
     {
-        return $this->belongsTo(Pelanggan::class, 'id_pelanggan ');
+        return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id_pelanggan');
     }
 }

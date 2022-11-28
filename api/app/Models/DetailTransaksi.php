@@ -16,14 +16,18 @@ class DetailTransaksi extends Model
 
     protected $table = 'detail_transaksi';
 
-    protected $fillable = ['id_detail_transaksi', 'id_transaksi', 'id_sku', 'qty_produk', 'subtotal', 'ukuran', 'catatan', 'id_finishing'];
+    protected $fillable = ['id_detail_transaksi', 'id_transaksi', 'id_sku', 'qty_produk', 'subtotal', 'ukuran', 'id_finishing'];
 
     public function transaksi()
     {
         return $this->belongsTo(TransaksiPenjualan::class, 'id_transaksi');
     }
-    public function produk()
+    public function sku()
     {
-        return $this->belongsTo(Produk::class, 'id_produk', 'id_produk');
+        return $this->belongsTo(SKU::class, 'id_sku', 'id_sku');
+    }
+    public function finishing()
+    {
+        return $this->belongsTo(Finishing::class, 'id_finishing', 'id_finishing');
     }
 }

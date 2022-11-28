@@ -2,7 +2,7 @@
 	<div class="auth-template">
 		<div class="sm:mx-auto sm:w-full sm:max-w-md">
 			<!-- <div class="w-full"> -->
-			<img src="~/assets/img/logo.png" class="block mx-auto w-36 h-36" alt="" srcset="" />
+			<img src="~/assets/img/logo.png" @click="$router.push('/')" class="block mx-auto cursor-pointer w-36 h-36" alt="" srcset="" />
 			<!-- </div> -->
 
 			<p class="mt-6 font-serif text-4xl font-extrabold leading-9 tracking-wide text-center text-gray-900 uppercase">Login Page</p>

@@ -15,31 +15,25 @@ use Illuminate\Support\Facades\Validator;
 
 class TransaksiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // $produk = Product::with('material', 'categories.satuan', 'harga')->get();
-        // return response()->json($produk, 200);
-    }
+        $id_user = $request->user;
+        $status_pembayaran = '%' . $request->pembayaran . '%';
+        $status_pesanan = '%' . $request->pesanan . '%';
 
-    public function dataTransaksi(Request $request)
-    {
-        $search = '%' . $request->search . '%';
-        $status = '%' . $request->status . '%';
-        if ($request->show == null) {
-            $data = Transaksi::with('detailTransaksi.produk.harga', 'detailTransaksi.produk.categories.satuan')->orderBy('tgl_transaksi', 'desc')->get();
-        } else {
-            $data = TransakTransaksisiPenjualan::with('detailTransaksi.produk.harga', 'detailTransaksi.produk.categories.satuan')
-                ->where(function ($q) use ($search) {
-                    $q->where('id_transaksi', 'like', $search)
-                        ->orWhere('nama_pemesan', 'like', $search);
-                })
-                ->where('status_pesanan', 'like', $status)
-                ->orderBy('tgl_transaksi', 'desc')
-                ->paginate($request->show);
-        }
+        $data = Transaksi::whereHas('pelanggan', function ($q) use ($id_user) {
+            $q->where('id_user', $id_user);
+        })->where('status_pesanan', 'like', $status_pesanan)
+            ->with([
+                'detailTransaksi.sku.harga',
+                'detailTransaksi.sku.produk',
+                'detailTransaksi.sku.bahanBaku',
+                'detailTransaksi.finishing',
+                'pelanggan'
+            ])->orderBy('tgl_transaksi', 'desc')->get();
+
         return response()->json($data, 200);
     }
-
 
     public function laporanPenjualan(Request $request)
     {
@@ -90,10 +84,11 @@ class TransaksiController extends Controller
                 'id_transaksi' => $id_transaksi,
                 'id_pelanggan' => $existedPelanggan ? $pelanggan->id_pelanggan : $request->pelanggan,
                 'tgl_transaksi' => Carbon::now(),
-                'status_pesanan' => 0,
+                'status_pesanan' => $request->shipment == 0 ? 1 : 2,
                 'status_pembayaran' => 0,
                 'total_harga' => $request->total,
                 'catatan' => $request->catatan,
+                'pengiriman' => $request->shipment,
             ]);
 
             foreach (json_decode($request->transaksi) as $data) {

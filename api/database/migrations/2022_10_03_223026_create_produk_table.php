@@ -21,8 +21,8 @@ class CreateProdukTable extends Migration
 
             $table->string('nama_produk');
             $table->string('slug_produk');
-            $table->longText('image');
-            $table->longText('description');
+            $table->longText('image_produk');
+            $table->longText('deskripsi_produk');
             $table->longText('informasi_pemesanan');
             $table->string('satuan_produk');
         });
