@@ -15,7 +15,7 @@
 								<NuxtLink to="/katalog">
 									<a href="#" class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-green-700 hover:text-white">Katalog</a>
 								</NuxtLink>
-								<NuxtLink to="/transaksi">
+								<NuxtLink to="/transaksi" v-if="$auth.loggedIn">
 									<a href="#" class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-green-700 hover:text-white">Transaksi</a>
 								</NuxtLink>
 							</div>

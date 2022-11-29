@@ -62,9 +62,9 @@ export default {
 		credentials: true,
 	},
 	// proxy: {
-	// 	"/api": {
+	// 	"/laravel": {
 	// 		target: "https://127.0.0.1:8000",
-	// 		pathRewrite: {"^/api": "/"},
+	// 		pathRewrite: {"^/laravel": "/"},
 	// 	},
 	// },
 	auth: {

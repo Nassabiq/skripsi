@@ -81,7 +81,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::delete('/pengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'deletePengadaan']);
 
     // USER
-    Route::get('/user', fn () => auth()->user()->load('roles', 'pelanggan'));
+    Route::get('/user', fn () => auth()->user()->load('role', 'pelanggan'));
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 

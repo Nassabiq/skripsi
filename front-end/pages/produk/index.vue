@@ -220,7 +220,7 @@ export default {
 		number,
 	},
 	layout: "auth",
-	auth: false,
+	middleware: "role/pelanggan",
 	data() {
 		return {
 			products: [],
@@ -293,7 +293,7 @@ export default {
 
 			imageData.append("nama_produk", this.produk.nama_produk);
 			imageData.append("id_kategori_produk", this.produk.id_kategori_produk);
-			imageData.append("deskripsi_produk", this.produk.description);
+			imageData.append("deskripsi_produk", this.produk.deskripsi_produk);
 			imageData.append("informasi_pemesanan", this.produk.informasi_pemesanan);
 			imageData.append("satuan_produk", this.produk.satuan_produk);
 			finishing.forEach((element, index) => imageData.append("finishing[" + index + "]", finishing[index].data));

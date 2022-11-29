@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
 {
@@ -19,8 +20,8 @@ class RoleSeeder extends Seeder
 
         foreach ($role as $data) {
             Role::create([
-                'name' => $data,
-                'guard_name' => 'api'
+                'id_role' => IdGenerator::generate(['table' => 'role', 'field' => 'id_role', 'length' => 7, 'prefix' => 'role-']),
+                'nama_role' => $data
             ]);
         }
     }

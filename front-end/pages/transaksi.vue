@@ -156,7 +156,6 @@ import Modal from "../components/ModalComponent.vue";
 export default {
 	name: "Transaksi",
 	layout: "user",
-	auth: false,
 	components: {Modal},
 	data() {
 		return {

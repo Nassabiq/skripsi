@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use App\Models\User;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Database\Seeder;
@@ -16,17 +17,17 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $role = ['Manager Inventory', 'Manager Penjualan', 'Manager IT', 'Operator Inventory', 'Operator Produksi', 'Operator Finishing', 'Marketing', 'Pelanggan'];
-        // $id_user = IdGenerator::generate(['table' => 'users', 'field' => 'id_user', 'length' => 10, 'prefix' => 'user-']);
+        // $role = ['Manager Inventory', 'Manager Penjualan', 'Manager IT', 'Operator Inventory', 'Operator Produksi', 'Operator Finishing', 'Marketing', 'Pelanggan'];
+        $role = Role::get();
 
         foreach ($role as $data) {
             $user = User::create([
                 'id_user' => IdGenerator::generate(['table' => 'users', 'field' => 'id_user', 'length' => 10, 'prefix' => 'user-']),
-                'name' => $data,
-                'email' => Str::slug($data) . '@app.com',
+                'id_role' => $data->id_role,
+                'name' => $data->nama_role,
+                'email' => Str::slug($data->nama_role) . '@app.com',
                 'password' => bcrypt('user1234'),
             ]);
-            $user->assignRole($data);
         }
     }
 }
