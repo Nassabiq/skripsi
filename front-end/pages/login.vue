@@ -58,13 +58,22 @@ export default {
 	methods: {
 		async login() {
 			try {
-				await this.$auth.loginWith("laravelJWT", {
-					data: {
-						email: this.form.email,
-						password: this.form.password,
-					},
+				await this.$auth
+					.loginWith("laravelJWT", {
+						data: {
+							email: this.form.email,
+							password: this.form.password,
+						},
+					})
+					.then((response) => (response.data.role == "Pelanggan" ? this.$router.push("/") : this.$router.push("/dashboard")));
+
+				this.$swal.fire({
+					icon: "success",
+					showConfirmButton: false,
+					text: "Welcome",
+					timer: 2000,
+					timerProgressBar: true,
 				});
-				this.$router.back();
 			} catch (error) {
 				this.validation = error.response.data;
 			}

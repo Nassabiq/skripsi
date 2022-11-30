@@ -58,16 +58,9 @@
 				<div class="col-span-12 md:col-span-6">
 					<div class="grid grid-cols-12 gap-4">
 						<div class="col-span-12 md:col-span-6">
-							<label class="label">Jenis Bahan</label>
-							<select class="form-input form-input-lg" v-model="cart.bahan_baku">
-								<option value="">Pilih Bahan</option>
-								<option :value="{id: data.id_sku, price: data.harga[data.harga.length - 1].harga_produk}" v-for="data in modalData.stok">
-									{{ data.bahan_baku.nama_bahan_baku }}
-								</option>
-							</select>
-							<p class="mt-2 text-xs text-red-500" v-if="validation.id_sku">{{ validation.id_sku[0] }}</p>
-
-							<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.id_kategori_produk">{{ validation.id_kategori_produk[0] }}</p> -->
+							<label class="text-xs font-semibold text-gray-700">Harga</label>
+							<p class="text-lg text-gray-700" v-if="cart.bahan_baku.price">Rp. {{ Intl.NumberFormat().format(cart.bahan_baku.price) }}</p>
+							<p class="text-lg text-gray-700" v-else>-</p>
 						</div>
 						<div class="col-span-12 md:col-span-6">
 							<label class="label">Jumlah Order (Dalam Pcs)</label>
@@ -85,11 +78,27 @@
 								</button>
 							</div>
 							<p class="mt-2 text-xs text-red-500" v-if="validation.qty_produk">{{ validation.qty_produk[0] }}</p>
-
 							<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.nama_produk">{{ validation.nama_produk[0] }}</p> -->
 						</div>
+						<div class="col-span-12">
+							<label class="label">Jenis Bahan</label>
+							<div class="flex items-center gap-4 px-2 py-6 overflow-x-scroll">
+								<label v-for="data in modalData.stok" class="relative flex items-center justify-center px-4 py-3 mt-2 text-xs font-medium text-gray-900 bg-white border rounded-md shadow-sm cursor-pointer group hover:bg-gray-50 focus:outline-none" :class="[cart.bahan_baku.id == data.id_sku ? 'ring-2 ring-blue-500' : '', data.jml_stok < 1 ? 'ring-2 ring-red-500' : '']">
+									<input type="radio" v-model="cart.bahan_baku" :value="{id: data.id_sku, price: data.harga[data.harga.length - 1].harga_produk}" class="sr-only" aria-labelledby="size-choice-0-label" :disabled="data.jml_stok < 1" />
+									<span id="size-choice-0-label" class="whitespace-nowrap" v-text="data.bahan_baku.nama_bahan_baku"></span>
 
-						<div class="col-span-12 md:col-span-8" v-if="modalData.satuan_produk == 'm2'">
+									<span v-if="data.jml_stok < 1" aria-hidden="true" class="absolute border-2 border-gray-200 rounded-md pointer-events-none -inset-px">
+										<svg class="absolute inset-0 w-full h-full text-red-500 stroke-2" viewBox="0 0 100 100" preserveAspectRatio="none" stroke="currentColor">
+											<line x1="0" y1="100" x2="100" y2="0" vector-effect="non-scaling-stroke" />
+										</svg>
+									</span>
+								</label>
+							</div>
+							<p class="mt-2 text-xs text-red-500" v-if="validation.id_sku">{{ validation.id_sku[0] }}</p>
+							<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.id_kategori_produk">{{ validation.id_kategori_produk[0] }}</p> -->
+						</div>
+
+						<div class="col-span-12" v-if="modalData.satuan_produk == 'm2'">
 							<label class="text-xs font-semibold text-gray-700">Ukuran Pesanan</label>
 							<div class="flex justify-between gap-4">
 								<div>
@@ -102,10 +111,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-span-12 md:col-span-4 place-self-center" v-if="cart.bahan_baku.price">
-							<label class="text-xs font-semibold text-gray-700">Harga</label>
-							<p class="text-lg text-gray-700">Rp. {{ Intl.NumberFormat().format(cart.bahan_baku.price) }}</p>
-						</div>
+
 						<div class="col-span-12">
 							<div>
 								<label class="label">Finishing</label>
