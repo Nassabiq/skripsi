@@ -17,10 +17,10 @@
 						<label class="label">Rentang Tanggal</label>
 						<div class="grid grid-cols-2 gap-4">
 							<div class="col-span-1">
-								<client-only><date-picker placeholder="Start Date" style="width: 100%;" :format="'DD-MM-YYYY'" valueType="format" v-model="start_date" /></client-only>
+								<client-only><date-picker placeholder="Start Date" style="width: 100%" :format="'DD-MM-YYYY'" valueType="format" v-model="start_date" /></client-only>
 							</div>
 							<div class="col-span-1">
-								<client-only><date-picker placeholder="End Date" style="width: 100%;" :format="'DD-MM-YYYY'" valueType="format" v-model="end_date" /></client-only>
+								<client-only><date-picker placeholder="End Date" style="width: 100%" :format="'DD-MM-YYYY'" valueType="format" v-model="end_date" /></client-only>
 							</div>
 						</div>
 					</div>
@@ -50,9 +50,7 @@
 							</div>
 						</template>
 						<template #submit>
-							<button class="btn btn-lg btn-green" @click="updateHarga">
-								Submit
-							</button>
+							<button class="btn btn-lg btn-green" @click="updateHarga">Submit</button>
 						</template>
 					</Modal>
 
@@ -92,7 +90,6 @@ import {number} from "@coders-tm/vue-number-format";
 export default {
 	name: "KelolaHargaJual",
 	layout: "auth",
-	auth: false,
 	components: {number},
 	data() {
 		return {

@@ -199,7 +199,6 @@ export default {
 	name: "PengadaanBarang",
 	layout: "auth",
 	components: {number, Pagination},
-	auth: false,
 	data() {
 		return {
 			updateMode: false,

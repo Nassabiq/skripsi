@@ -199,7 +199,6 @@ export default {
 	name: "KelolaStokMasuk",
 	layout: "auth",
 	components: {number, Pagination},
-	auth: false,
 	data() {
 		return {
 			content: null,

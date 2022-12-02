@@ -191,14 +191,13 @@ export default {
 			} else return data.qty_produk + data.sku.produk.satuan_produk;
 		},
 		harga(data) {
-			if (data.sku.produk.satuan_produk == "m2") {
-				let ukuran = JSON.parse(data.ukuran).panjang * JSON.parse(data.ukuran).lebar;
-				let price = data.sku.harga[data.sku.harga.length - 1].harga_produk * ukuran * data.qty_produk;
-				return "Rp. " + Intl.NumberFormat().format(price);
-			} else {
-				let price = data.sku.harga[data.sku.harga.length - 1].harga_produk * data.qty_produk;
-				return "Rp. " + Intl.NumberFormat().format(price);
-			}
+			let price = data.sku.harga[data.sku.harga.length - 1].harga_produk;
+			let satuanMeterPersegi = data.sku.produk.satuan_produk == "m2";
+			let ukuran = satuanMeterPersegi ? JSON.parse(data.ukuran).panjang * JSON.parse(data.ukuran).lebar : null;
+			let totalPrice = satuanMeterPersegi ? price * ukuran : price;
+
+			let result = totalPrice * data.qty_produk;
+			return "Rp. " + Intl.NumberFormat().format(result);
 		},
 
 		openModal(data) {

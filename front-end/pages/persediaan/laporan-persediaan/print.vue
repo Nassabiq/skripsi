@@ -70,7 +70,6 @@
 <script>
 export default {
 	name: "printLaporan",
-	auth: false,
 	data() {
 		return {
 			// content: false,

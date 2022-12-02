@@ -1,11 +1,11 @@
 <template>
 	<div class="auth">
 		<div class="grid grid-cols-5 gap-4">
-			<div class="col-span-5 space-y-4 md:col-span-2 lg:col-span-1 card">
+			<div class="col-span-5 space-y-4 md:col-span-2 lg:col-span-1">
 				<p class="text-2xl font-semibold text-gray-800">Katalog</p>
 				<ul class="space-y-1">
-					<li @click.prevent="clear" :class="{'bg-green-600 text-white': id_kategori == ''}" class="px-4 py-2 text-sm font-medium text-gray-800 rounded-md cursor-pointer hover:bg-green-600 hover:text-white">All Data</li>
-					<li @click.prevent="getKatalog(data.id_kategori_produk)" :class="{'bg-green-600 text-white': id_kategori == data.id_kategori_produk}" class="px-4 py-2 text-sm font-medium text-gray-800 rounded-md cursor-pointer hover:bg-green-600 hover:text-white" v-for="(data, index) in categories">{{ data.nama_kategori }}</li>
+					<li @click.prevent="clear" :class="{'bg-green-600 text-white': id_kategori == ''}" class="px-4 py-2 text-xs font-medium text-gray-800 rounded-md cursor-pointer hover:bg-green-600 hover:text-white">All Data</li>
+					<li @click.prevent="getKatalog(data.id_kategori_produk)" :class="{'bg-green-600 text-white': id_kategori == data.id_kategori_produk}" class="px-4 py-2 text-xs font-medium text-gray-800 rounded-md cursor-pointer hover:bg-green-600 hover:text-white" v-for="(data, index) in categories">{{ data.nama_kategori }}</li>
 				</ul>
 			</div>
 			<div class="col-span-5 md:col-span-3 lg:col-span-4">

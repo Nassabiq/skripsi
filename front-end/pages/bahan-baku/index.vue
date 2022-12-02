@@ -96,7 +96,6 @@ export default {
 	layout: "auth",
 	name: "bahan-baku",
 	components: {Spinner, Modal, Pagination},
-	auth: false,
 	data() {
 		return {
 			modalBahanBaku: false,

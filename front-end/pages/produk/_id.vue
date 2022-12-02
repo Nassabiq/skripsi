@@ -184,7 +184,6 @@ import {Skeleton} from "vue-loading-skeleton";
 import {number} from "@coders-tm/vue-number-format";
 
 export default {
-	auth: false,
 	layout: "auth",
 	components: {Spinner, Skeleton, number},
 	data() {

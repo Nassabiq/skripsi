@@ -173,7 +173,6 @@
 export default {
 	name: "LaporanPenjualan",
 	layout: "auth",
-	auth: false,
 	data() {
 		return {
 			content: false,

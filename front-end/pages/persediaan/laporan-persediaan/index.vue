@@ -149,7 +149,6 @@
 export default {
 	name: "LaporanPersediaan",
 	layout: "auth",
-	auth: false,
 	data() {
 		return {
 			content: false,

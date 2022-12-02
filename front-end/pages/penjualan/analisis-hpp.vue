@@ -163,7 +163,6 @@
 export default {
 	name: "AnalisisHPP",
 	layout: "auth",
-	auth: false,
 	// components: {number},
 	data() {
 		return {
