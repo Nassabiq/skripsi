@@ -105,6 +105,21 @@
 						</a>
 					</NuxtLink>
 				</li>
+				<li>
+					<span class="w-full px-4 py-1 mt-2 text-xs font-medium text-white">-</span>
+				</li>
+
+				<li>
+					<NuxtLink to="/">
+						<a href="#" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon-size">
+								<path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-4.28 9.22a.75.75 0 000 1.06l3 3a.75.75 0 101.06-1.06l-1.72-1.72h5.69a.75.75 0 000-1.5h-5.69l1.72-1.72a.75.75 0 00-1.06-1.06l-3 3z" clip-rule="evenodd" />
+							</svg>
+
+							<span class="font-font-light">Back To Home</span>
+						</a>
+					</NuxtLink>
+				</li>
 			</ul>
 		</nav>
 	</div>

@@ -100,7 +100,7 @@ class ProdukController extends Controller
                 $id_sku = IdGenerator::generate(['table' => 'sku', 'field' => 'id_sku', 'length' => 12, 'prefix' => 'SKU-']);
                 $id_harga_jual = IdGenerator::generate(['table' => 'harga_jual_produk', 'field' => 'id_harga_jual', 'length' => 12, 'prefix' => 'HP-']);
 
-                SKU::create(['id_sku' => $id_sku, 'id_produk' => $id_produk, 'id_bahan_baku' => $data->id, 'jml_stok' => 0]);
+                SKU::create(['id_sku' => $id_sku, 'id_produk' => $id_produk, 'id_bahan_baku' => $data->id]);
                 HargaJualProduk::create([
                     'id_harga_jual' => $id_harga_jual,
                     'id_sku' => $id_sku,

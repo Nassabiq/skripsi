@@ -16,7 +16,7 @@ class PengadaanPersediaan extends Model
 
     protected $table = 'pengadaan_persediaan';
 
-    protected $fillable = ['id_pengadaan', 'nama_pengadaan', 'status_pengadaan', 'tgl_dibuat', 'tgl_disetujui'];
+    protected $fillable = ['id_pengadaan', 'id_user', 'nama_pengadaan', 'status_pengadaan', 'tgl_dibuat', 'tgl_disetujui'];
 
     public function detailPengadaan()
     {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BahanBaku;
 use App\Models\DetailStokMasuk;
 use App\Models\PengadaanPersediaan;
 use App\Models\SKU;
@@ -44,12 +45,14 @@ class StokMasukController extends Controller
             $id_stok_masuk = IdGenerator::generate(['table' => 'stok_masuk', 'field' => 'id_stok_masuk', 'length' => 17, 'prefix' => 'Stok-' . date('dmY')]);
             $stok_masuk = StokMasuk::create([
                 'id_stok_masuk' => $id_stok_masuk,
+                'id_user' => $request->user,
                 'tgl_stok_masuk' => Carbon::now(),
                 'total_harga_beli' => $request->total,
             ]);
 
             foreach ($request->stok as $data) {
                 $id_detail = IdGenerator::generate(['table' => 'detail_stok_masuk', 'field' => 'id_detail_stok_masuk', 'length' => 10, 'prefix' => 'DStok-']);
+
                 DetailStokMasuk::create([
                     'id_detail_stok_masuk' => $id_detail,
                     'id_bahan_baku' => $data['id_bahan_baku'],
@@ -58,11 +61,9 @@ class StokMasukController extends Controller
                     'harga_beli' => $data['harga'],
                 ]);
 
-                $stok = SKU::where('id_bahan_baku', $data['id_bahan_baku'])->get();
-                foreach ($stok as $item) {
-                    $item->jml_stok += $data['qty'];
-                    $item->save();
-                }
+                $stok = BahanBaku::where('id_bahan_baku', $data['id_bahan_baku'])->first();
+                $stok->jml_stok += $data['qty'];
+                $stok->save();
             }
 
             DB::commit();
@@ -74,12 +75,12 @@ class StokMasukController extends Controller
         }
     }
 
-    public function laporanBarangMasuk(Request $request)
+    public function laporanStokMasuk(Request $request)
     {
         $from = Carbon::parse($request->from);
         $to = Carbon::parse($request->to);
 
-        $data = BarangMasuk::with('detailBarang.bahanBaku')->orderBy('tgl_barang_masuk', 'asc')->whereBetween('tgl_barang_masuk', [$from, $to])->get();
+        $data = StokMasuk::with('detailStok.bahanBaku', 'user')->orderBy('tgl_stok_masuk', 'asc')->whereBetween('tgl_stok_masuk', [$from, $to])->get();
         return response()->json($data, 200);
     }
 }

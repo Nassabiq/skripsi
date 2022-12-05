@@ -33,7 +33,6 @@
 										<tr class="text-left text-gray-800 font-title">
 											<th class="p-3 text-sm border border-slate-300">Id Transaksi</th>
 											<th class="p-3 text-sm border border-slate-300">Tgl Transaksi</th>
-											<th class="p-3 text-sm border border-slate-300">Kasir</th>
 											<th class="p-3 text-sm border border-slate-300">Customer</th>
 											<th class="p-3 text-sm border border-slate-300">Nama Barang</th>
 											<th class="p-3 text-sm border border-slate-300">Qty</th>
@@ -45,17 +44,14 @@
 											<tr class="text-gray-800 font-title" v-for="item in data.detail_transaksi">
 												<td class="p-3 text-sm border border-slate-300">{{ data.id_transaksi }}</td>
 												<td class="p-3 text-sm border border-slate-300">{{ $moment(data.tgl_transaksi).format("DD MMMM YYYY") }}</td>
-												<td class="p-3 text-sm border border-slate-300">-</td>
-												<td class="p-3 text-sm border border-slate-300">{{ data.nama_pemesan }}</td>
-												<td class="p-3 text-sm border border-slate-300">{{ item.produk.nama_produk }}</td>
-												<td class="p-3 text-sm border border-slate-300">
-													{{ item.qty }}<sup>{{ item.produk.categories.satuan.nama_satuan }}</sup>
-												</td>
+												<td class="p-3 text-sm border border-slate-300">{{ data.pelanggan.nama_pelanggan }}</td>
+												<td class="p-3 text-sm border border-slate-300">{{ item.sku.produk.nama_produk }}</td>
+												<td class="p-3 text-sm border border-slate-300" v-text="qty(item)"></td>
 												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(item.subtotal) }}</td>
 											</tr>
 										</template>
 										<tr>
-											<td colspan="6" class="p-4 font-semibold border border-slate-300">Total</td>
+											<td colspan="5" class="p-4 font-semibold border border-slate-300">Total</td>
 											<td class="p-4 font-semibold border border-slate-300">Rp. {{ Intl.NumberFormat().format(revenue) }}</td>
 										</tr>
 									</tbody>
@@ -97,23 +93,20 @@ export default {
 	},
 	methods: {
 		async getDataPenjualan() {
-			this.$axios
-				.get("/api/laporanPenjualan?from=" + this.dateStart + "&to=" + this.dateEnd)
-				.then((response) => {
-					this.penjualan = response.data;
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+			const penjualan = await this.$axios.$get("/api/penjualan/laporan?from=" + this.dateStart + "&to=" + this.dateEnd);
+			this.penjualan = penjualan;
 		},
 
 		generateReport() {
 			this.$refs.html2Pdf.generatePdf();
 		},
-		// async logout(){
-		//   await this.$auth.logout();
-		//   this.$router.push('/login');
-		// }
+
+		qty(data) {
+			if (data.sku.produk.satuan_produk == "m2") {
+				let ukuran = JSON.parse(data.ukuran);
+				return ukuran.panjang * ukuran.lebar + " " + data.sku.produk.satuan_produk + " - " + data.qty_produk + " pcs";
+			} else return data.qty_produk + data.sku.produk.satuan_produk;
+		},
 	},
 };
 </script>

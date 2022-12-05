@@ -20,6 +20,7 @@ class CreateBahanBakuTable extends Migration
             $table->string('nama_bahan_baku');
             $table->string('slug_bahan_baku');
             $table->string('satuan_bahan_baku');
+            $table->integer('jml_stok');
         });
     }
 

@@ -18,7 +18,7 @@ class TransaksiController extends Controller
     public function index(Request $request)
     {
         $id_user = $request->user;
-        $status_pesanan = '%' . $request->pesanan . '%';
+        $status_pesanan = '%' . $request->status_pesanan . '%';
 
         $data = Transaksi::whereHas('pelanggan', function ($q) use ($id_user) {
             $q->where('id_user', $id_user);
@@ -35,9 +35,7 @@ class TransaksiController extends Controller
     public function dataTransaksi(Request $request)
     {
         $search = '%' . $request->search . '%';
-        $status = '%' . $request->selectedStatus . '%';
-        // $produk = $request->show == null;
-
+        $status = '%' . $request->status_pesanan . '%';
 
         $data = Transaksi::where('id_transaksi', 'like', $search)
             ->where('status_pesanan', 'like', $status)
@@ -56,9 +54,16 @@ class TransaksiController extends Controller
         $from = Carbon::parse($request->from);
         $to = Carbon::parse($request->to);
 
-        $data = Transaksi::with('detailTransaksi.produk.harga', 'detailTransaksi.produk.categories.satuan')
+        $data = Transaksi::with(
+            'detailTransaksi.sku.harga',
+            'detailTransaksi.sku.produk',
+            'detailTransaksi.sku.bahanBaku',
+            'detailTransaksi.finishing',
+            'pelanggan'
+        )
             ->orderBy('tgl_transaksi', 'asc')
             ->whereBetween('tgl_transaksi', [$from, $to])
+            ->where('status_pesanan', 4)
             ->get();
 
         return response()->json($data, 200);

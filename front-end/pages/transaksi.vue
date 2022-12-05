@@ -212,48 +212,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.pills {
-	@apply px-2 py-1 text-xs tracking-wider border rounded-full whitespace-nowrap;
-}
-
-.pills-red {
-	@apply text-red-500 border-red-500;
-}
-.pills-red:hover {
-	@apply text-white bg-red-500 font-semibold;
-}
-.pills-red:focus {
-	@apply text-white bg-red-500 border-red-500 font-semibold;
-}
-
-.pills-blue {
-	@apply text-blue-500 border-blue-500;
-}
-.pills-blue:hover {
-	@apply text-white bg-blue-500 font-semibold;
-}
-.pills-blue:focus {
-	@apply text-white bg-blue-500 border-blue-500 font-semibold;
-}
-
-.pills-green {
-	@apply text-green-500 border-green-500;
-}
-.pills-green:hover {
-	@apply text-white bg-green-500 font-semibold;
-}
-.pills-green:focus {
-	@apply text-white bg-green-500 border-green-500 font-semibold;
-}
-
-.pills-yellow {
-	@apply text-yellow-500 border-yellow-500;
-}
-.pills-yellow:hover {
-	@apply text-white bg-yellow-500 font-semibold;
-}
-.pills-yellow:focus {
-	@apply text-white bg-yellow-500 border-yellow-500 font-semibold;
-}
-</style>
+<style scoped></style>

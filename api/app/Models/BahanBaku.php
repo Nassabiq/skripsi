@@ -16,7 +16,7 @@ class BahanBaku extends Model
 
     protected $table = 'bahan_baku';
 
-    protected $fillable = ['id_bahan_baku', 'nama_bahan_baku', 'slug_bahan_baku', 'satuan_bahan_baku'];
+    protected $fillable = ['id_bahan_baku', 'nama_bahan_baku', 'slug_bahan_baku', 'satuan_bahan_baku', 'jml_stok'];
 
     public function stok()
     {

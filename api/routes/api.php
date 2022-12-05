@@ -8,6 +8,7 @@ use App\Http\Controllers\PengadaanPersediaanController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\StokMasukController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,7 +32,6 @@ Route::get('/katalog', [ProdukController::class, 'katalog']);
 Route::get('/produk', [ProdukController::class, 'index']);
 Route::get('/kategori', [ProdukController::class, 'kategori']);
 
-Route::get('/analisis-hpp', [AnalisisHPPController::class, 'index']);
 
 Route::post('/refresh', fn () =>  auth()->refresh());
 Route::group(['middleware' => ['auth:api']], function () {
@@ -59,7 +59,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/transaksi', [TransaksiController::class, 'index']);
     Route::get('/transaksi/all', [TransaksiController::class, 'dataTransaksi']);
     Route::get('/transaksi/{id_transaksi}', [TransaksiController::class, 'detailTransaksi']);
-    Route::get('/laporanPenjualan', [TransaksiController::class, 'laporanPenjualan']);
+    Route::get('/penjualan/laporan', [TransaksiController::class, 'laporanPenjualan']);
 
     Route::post('/transaksi', [TransaksiController::class, 'submitTransaksi']);
     Route::post('/transaksi/status/{id_transaksi}', [TransaksiController::class, 'changeStatus']);
@@ -67,9 +67,10 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     // STOK MASUK
     Route::get('/stok-masuk', [StokMasukController::class, 'index']);
+    Route::get('/stok-masuk/laporan', [StokMasukController::class, 'laporanStokMasuk']);
+
     Route::post('/stok-masuk', [StokMasukController::class, 'addStok']);
 
-    Route::get('/laporan-stok-masuk', [StokMasukController::class, 'laporanBarangMasuk']);
 
     // PENGADAAN PERSEDIAAN
     Route::get('/pengadaan', [PengadaanPersediaanController::class, 'index']);
@@ -82,6 +83,18 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     // USER
     Route::get('/user', fn () => auth()->user()->load('role', 'pelanggan'));
+    Route::get('/all-user', [UserController::class, 'index']);
+    Route::get('/role', [UserController::class, 'role']);
+
+    Route::post('/user', [UserController::class, 'addUser']);
+    Route::patch('/user/{id_user}', [UserController::class, 'updateUser']);
+    Route::delete('/user/{id_user}  ', [UserController::class, 'deleteUser']);
+
+
+
+    // ANALISIS
+    Route::get('/analisis-hpp', [AnalisisHPPController::class, 'index']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 

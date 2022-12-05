@@ -19,8 +19,6 @@ class CreateSkuTable extends Migration
 
             $table->string('id_produk')->references('id_produk')->on('produk');
             $table->string('id_bahan_baku')->references('id_bahan_baku')->on('bahan_baku');
-
-            $table->integer('jml_stok');
         });
     }
 

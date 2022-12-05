@@ -318,6 +318,7 @@ export default {
 					total: this.getSubtotal,
 					stok: this.stok,
 					id_pengadaan: this.id_pengadaan,
+					user: this.$auth.user.id_user,
 				})
 				.then((response) => {
 					console.log(response.data);

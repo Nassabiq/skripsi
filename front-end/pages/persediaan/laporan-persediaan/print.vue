@@ -12,7 +12,7 @@
 				<section slot="pdf-content" class="bg-white">
 					<div class="grid grid-cols-12 p-4">
 						<div class="col-span-12">
-							<p class="flex justify-center my-4 text-2xl font-semibold text-cemter">Laporan Barang Masuk</p>
+							<p class="flex justify-center my-4 text-2xl font-semibold text-cemter">Laporan Stok Masuk</p>
 						</div>
 						<div class="col-span-6">
 							<div class="px-2 py-3 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -31,9 +31,9 @@
 								<table class="table table-auto table-produk">
 									<thead class="bg-gray-100">
 										<tr class="text-left text-gray-800 font-title">
-											<th class="p-3 text-sm border border-slate-300">Id Barang Masuk</th>
+											<th class="p-3 text-sm border border-slate-300">Id Stok Masuk</th>
 											<th class="p-3 text-sm border border-slate-300">Tgl Transaksi</th>
-											<th class="p-3 text-sm border border-slate-300">Kasir</th>
+											<th class="p-3 text-sm border border-slate-300">User</th>
 											<th class="p-3 text-sm border border-slate-300">Nama Bahan Baku</th>
 											<th class="p-3 text-sm border border-slate-300">Qty</th>
 											<th class="p-3 text-sm border border-slate-300">Harga</th>
@@ -42,14 +42,14 @@
 									</thead>
 									<tbody>
 										<template v-for="(data, index) in persediaan">
-											<tr class="text-gray-800 font-title" v-for="item in data.detail_barang">
-												<td class="p-3 text-sm border border-slate-300">{{ data.id_barang_masuk }}</td>
-												<td class="p-3 text-sm border border-slate-300">{{ $moment(data.tgl_barang_masuk).format("DD MMMM YYYY") }}</td>
+											<tr class="text-gray-800 font-title" v-for="item in data.detail_stok">
+												<td class="p-3 text-sm border border-slate-300">{{ data.id_stok_masuk }}</td>
+												<td class="p-3 text-sm border border-slate-300">{{ $moment(data.tgl_stok_masuk).format("DD MMMM YYYY") }}</td>
 												<td class="p-3 text-sm border border-slate-300">-</td>
 												<td class="p-3 text-sm border border-slate-300">{{ item.bahan_baku.nama_bahan_baku }}</td>
-												<td class="p-3 text-sm border border-slate-300">{{ item.qty }}</td>
-												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(item.harga) }}</td>
-												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(item.harga * item.qty) }}</td>
+												<td class="p-3 text-sm border border-slate-300">{{ item.qty_stok }}</td>
+												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(item.harga_beli) }}</td>
+												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(item.harga_beli * item.qty_stok) }}</td>
 											</tr>
 										</template>
 										<tr>
@@ -77,7 +77,7 @@ export default {
 			dateStart: this.$route.query.dateStart,
 			dateEnd: this.$route.query.dateEnd,
 
-			filename: "Laporan-Barang-Masuk-Bulan-" + this.$moment(this.dateEnd).format("MMMM-YYYY"),
+			filename: "Laporan-Stok-Masuk-Bulan-" + this.$moment(this.dateEnd).format("MMMM-YYYY"),
 			// user : this.$auth.user
 		};
 	},
@@ -96,7 +96,7 @@ export default {
 	methods: {
 		async getDataPersediaan() {
 			this.$axios
-				.get("/api/laporanBarangMasuk?from=" + this.dateStart + "&to=" + this.dateEnd)
+				.get("/api/stok-masuk/laporan?from=" + this.dateStart + "&to=" + this.dateEnd)
 				.then((response) => {
 					this.persediaan = response.data;
 				})

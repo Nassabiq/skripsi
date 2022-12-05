@@ -83,11 +83,11 @@
 						<div class="col-span-12">
 							<label class="label">Jenis Bahan</label>
 							<div class="flex items-center gap-4 px-2 py-6 overflow-x-scroll">
-								<label v-for="data in modalData.stok" class="relative flex items-center justify-center px-4 py-3 mt-2 text-xs font-medium text-gray-900 bg-white border rounded-md shadow-sm cursor-pointer group hover:bg-gray-50 focus:outline-none" :class="[cart.bahan_baku.id == data.id_sku ? 'ring-2 ring-blue-500' : '', data.jml_stok < 1 ? 'ring-2 ring-red-500' : '']">
+								<label v-for="data in modalData.stok" class="relative flex items-center justify-center px-4 py-3 mt-2 text-xs font-medium text-gray-900 bg-white border rounded-md shadow-sm cursor-pointer group hover:bg-gray-50 focus:outline-none" :class="[cart.bahan_baku.id == data.id_sku ? 'ring-2 ring-blue-500' : '', data.bahan_baku.jml_stok < 1 ? 'ring-2 ring-red-500' : '']">
 									<input type="radio" v-model="cart.bahan_baku" :value="{id: data.id_sku, price: data.harga[data.harga.length - 1].harga_produk}" class="sr-only" aria-labelledby="size-choice-0-label" :disabled="data.jml_stok < 1" />
 									<span id="size-choice-0-label" class="whitespace-nowrap" v-text="data.bahan_baku.nama_bahan_baku"></span>
 
-									<span v-if="data.jml_stok < 1" aria-hidden="true" class="absolute border-2 border-gray-200 rounded-md pointer-events-none -inset-px">
+									<span v-if="data.bahan_baku.jml_stok < 1" aria-hidden="true" class="absolute border-2 border-gray-200 rounded-md pointer-events-none -inset-px">
 										<svg class="absolute inset-0 w-full h-full text-red-500 stroke-2" viewBox="0 0 100 100" preserveAspectRatio="none" stroke="currentColor">
 											<line x1="0" y1="100" x2="100" y2="0" vector-effect="non-scaling-stroke" />
 										</svg>

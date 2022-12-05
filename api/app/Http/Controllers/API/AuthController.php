@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Carbon\Carbon;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,10 +28,10 @@ class AuthController extends Controller
             'id_user' => $id_user,
             'name' => $request->name,
             'email' => $request->email,
+            'id_role' => 'role-08',
+            'tgl_register' => Carbon::now(),
             'password' => Hash::make($request->password)
         ]);
-        $user->assignRole('Pelanggan');
-
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([

@@ -157,7 +157,7 @@
 						<select class="form-input form-input-lg" v-model="pengadaan[index].id_bahan_baku">
 							<!-- <option v-if="updateMode" :value="pengadaan[index].id_material">{{ pengadaan[index].id_material }}</option> -->
 							<option value="">Pilih Bahan Baku</option>
-							<option :value="data.id_bahan_baku" v-for="data in bahan_baku">{{ data.nama_bahan_baku }}</option>
+							<option :hidden="pengadaan.find((item) => item.id_bahan_baku == data.id_bahan_baku)" :value="data.id_bahan_baku" v-for="data in bahan_baku">{{ data.nama_bahan_baku }}</option>
 						</select>
 					</div>
 					<div class="col-span-12 sm:col-span-4">
@@ -300,6 +300,7 @@ export default {
 				.post("/api/pengadaan", {
 					nama_pengadaan: this.nama_pengadaan,
 					pengadaan: this.pengadaan,
+					user: this.$auth.user.id_user,
 				})
 				.then((response) => {
 					this.closeModal();

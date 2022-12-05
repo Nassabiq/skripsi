@@ -16,10 +16,15 @@ class StokMasuk extends Model
 
     protected $table = 'stok_masuk';
 
-    protected $fillable = ['id_stok_masuk', 'tgl_stok_masuk', 'total_harga_beli'];
+    protected $fillable = ['id_stok_masuk', 'id_user', 'tgl_stok_masuk', 'total_harga_beli'];
 
     public function detailStok()
     {
         return $this->hasMany(DetailStokMasuk::class, 'id_stok_masuk');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user');
     }
 }

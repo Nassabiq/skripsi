@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Role;
 use App\Models\User;
+use Carbon\Carbon;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -24,9 +25,10 @@ class UserSeeder extends Seeder
             $user = User::create([
                 'id_user' => IdGenerator::generate(['table' => 'users', 'field' => 'id_user', 'length' => 10, 'prefix' => 'user-']),
                 'id_role' => $data->id_role,
-                'name' => $data->nama_role,
+                'nama_user' => $data->nama_role,
                 'email' => Str::slug($data->nama_role) . '@app.com',
                 'password' => bcrypt('user1234'),
+                'tgl_register' => Carbon::now(),
             ]);
         }
     }

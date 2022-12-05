@@ -21,6 +21,7 @@
 						<tr class="text-left text-gray-800 font-title">
 							<th class="p-3">Nama Bahan Baku</th>
 							<th class="p-3">Satuan</th>
+							<th class="p-3">Stok</th>
 							<th class="p-3"></th>
 						</tr>
 					</thead>
@@ -29,6 +30,7 @@
 							<tr class="text-sm" v-for="item in bahanBaku.data">
 								<td class="p-3">{{ item.nama_bahan_baku }}</td>
 								<td class="p-3">{{ item.satuan_bahan_baku }}</td>
+								<td class="p-3">{{ item.jml_stok }}</td>
 								<td class="p-2">
 									<button class="btn btn-sm btn-indigo" @click.prevent="editBahanBaku(item)">
 										<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
@@ -43,9 +45,6 @@
 								</td>
 							</tr>
 						</tbody>
-						<div class="py-2 mt-2 mb-6">
-							<Pagination v-if="bahanBaku.data && bahanBaku.per_page < bahanBaku.total" :total-pages="bahanBaku.links.length - 2" :per-page="size" :current-page="bahanBaku.current_page" @pagechanged="onPageChange"></Pagination>
-						</div>
 					</template>
 
 					<template v-else>
@@ -63,6 +62,9 @@
 						</tbody>
 					</template>
 				</table>
+				<div class="py-2 mt-2 mb-6">
+					<Pagination v-if="bahanBaku.data && bahanBaku.per_page < bahanBaku.total" :total-pages="bahanBaku.links.length - 2" :per-page="size" :current-page="bahanBaku.current_page" @pagechanged="onPageChange"></Pagination>
+				</div>
 			</div>
 		</div>
 		<Modal size="max-w-xl" :title="updateMode ? 'Edit Bahan Baku' : 'Tambah Bahan Baku'" @close-modal="closeModal" v-show="modalBahanBaku">

@@ -28,10 +28,10 @@
 				<table class="table table-auto table-produk">
 					<thead class="bg-gray-100">
 						<tr class="text-left text-gray-800 font-title">
-							<th class="p-3">Jumlah Pesanan</th>
-							<th class="p-3">Id Barang Masuk</th>
+							<th class="p-3">Id Stok Masuk</th>
 							<th class="p-3">Tgl Transaksi</th>
 							<th class="p-3">User</th>
+							<th class="p-3">Jumlah Pesanan</th>
 							<th class="p-3">Total Pesanan</th>
 							<th class="p-1"></th>
 						</tr>
@@ -39,10 +39,10 @@
 					<tbody class="divide-y-2 divide-gray-100 divide-dotted" v-if="persediaan.length > 0">
 						<template v-for="(data, index) in persediaan">
 							<tr class="text-sm">
-								<td class="w-32 p-3">{{ data.id_barang_masuk }}</td>
-								<td class="p-3">{{ $moment(data.tgl_barang_masuk).format("DD MMMM YYYY") }}</td>
-								<td class="p-3">-</td>
-								<td class="p-3">{{ data.detail_barang.length }}</td>
+								<td class="w-32 p-3">{{ data.id_stok_masuk }}</td>
+								<td class="p-3">{{ $moment(data.tgl_stok_masuk).format("DD MMMM YYYY") }}</td>
+								<td class="p-3">{{ data.user.nama_user }}</td>
+								<td class="p-3">{{ data.detail_stok.length }}</td>
 								<td class="p-3">Rp. {{ Intl.NumberFormat().format(data.total_harga_beli) }}</td>
 								<td class="p-2">
 									<button class="p-1 text-blue-400 border border-blue-600 rounded-full focus:bg-blue-100 hover:text-blue-800" @click.prevent="showRow(index)">
@@ -54,20 +54,20 @@
 							</tr>
 							<tr>
 								<td class="p-3 bg-slate-50" colspan="6" v-show="content === index">
-									<div class="px-4 pb-2 font-semibold">
-										Detail Barang Masuk
-									</div>
-									<div class="grid grid-cols-2" v-for="item in data.detail_barang">
+									<div class="px-4 pb-2 font-semibold">Detail Barang Masuk</div>
+									<div class="grid grid-cols-2" v-for="item in data.detail_stok">
 										<div class="col-span-2 md:col-span-1">
 											<div class="border-t border-gray-200">
 												<dl>
 													<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Id Detail Barang Masuk</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ item.id_detail_barang_masuk }}</dd>
+														<dt class="text-xs font-semibold">Id Detail Stok Masuk</dt>
+														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ item.id_detail_stok_masuk }}</dd>
 													</div>
 													<div class="px-3 py-4 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4">
 														<dt class="text-xs font-semibold">Nama Bahan Baku</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ item.bahan_baku.nama_bahan_baku }}</dd>
+														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">
+															{{ item.bahan_baku.nama_bahan_baku }}
+														</dd>
 													</div>
 												</dl>
 											</div>
@@ -77,18 +77,20 @@
 												<dl>
 													<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
 														<dt class="text-xs font-semibold">QTY</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ item.qty }}</dd>
+														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">
+															{{ item.qty_stok + " / " + item.bahan_baku.satuan_bahan_baku }}
+														</dd>
 													</div>
 													<div class="px-3 py-4 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4">
 														<dt class="text-xs font-semibold">Harga</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(item.harga) }}</dd>
+														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(item.harga_beli) }}</dd>
 													</div>
 												</dl>
 											</div>
 										</div>
 										<div class="flex flex-col justify-between col-span-2 px-5 py-6 bg-sky-100 md:flex-row">
 											<dt class="text-sm font-semibold">Subtotal</dt>
-											<dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(item.qty * item.harga) }}</dd>
+											<dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(item.qty_stok * item.harga_beli) }}</dd>
 										</div>
 									</div>
 								</td>
@@ -102,9 +104,7 @@
 									<svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
 										<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
 									</svg>
-									<span class="text-2xl">
-										Choose Data First
-									</span>
+									<span class="text-2xl"> Choose Data First </span>
 								</div>
 							</td>
 						</tr>
@@ -116,9 +116,7 @@
 									<svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-red-500" viewBox="0 0 20 20" fill="currentColor">
 										<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
 									</svg>
-									<span class="text-2xl">
-										Tidak Ada
-									</span>
+									<span class="text-2xl"> Tidak Ada </span>
 								</div>
 							</td>
 						</tr>
@@ -179,14 +177,8 @@ export default {
 		},
 
 		async getDataPersediaan() {
-			this.$axios
-				.get("/api/laporanBarangMasuk?from=" + this.dateStart + "&to=" + this.dateEnd)
-				.then((response) => {
-					this.persediaan = response.data;
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+			let data = await this.$axios.$get("/api/stok-masuk/laporan?from=" + this.dateStart + "&to=" + this.dateEnd);
+			this.persediaan = data;
 		},
 
 		getDataInRange() {

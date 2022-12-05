@@ -32,6 +32,7 @@ class BahanBakuController extends Controller
             'nama_bahan_baku' => $request->nama_bahan_baku,
             'slug_bahan_baku' => Str::slug($request->nama_bahan_baku),
             'satuan_bahan_baku' => $request->satuan_bahan_baku,
+            'jml_stok' => 0,
         ]);
         return response()->json(["message" => "Data Berhasil disimpan"], 200);
     }

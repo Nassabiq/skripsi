@@ -15,7 +15,7 @@ class SKU extends Model
     public $timestamps = false;
 
     protected $table = 'sku';
-    protected $fillable = ['id_sku', 'id_produk', 'id_bahan_baku', 'jml_stok'];
+    protected $fillable = ['id_sku', 'id_produk', 'id_bahan_baku'];
 
     public function produk()
     {

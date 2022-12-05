@@ -19,12 +19,12 @@ class CreateUsersTable extends Migration
 
             $table->string('id_role')->references('id_role')->on('role');
 
-            $table->string('name');
+            $table->string('nama_user');
             $table->string('email')->unique();
+            $table->dateTime('tgl_register');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->timestamps();
         });
     }
 

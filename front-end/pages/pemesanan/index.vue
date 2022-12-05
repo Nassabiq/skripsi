@@ -34,7 +34,7 @@
 					</div>
 				</div>
 			</div>
-			<template v-if="transaksi.data">
+			<template v-if="transaksi.data && transaksi.data.length > 0">
 				<div v-for="(data, index) in transaksi.data" class="my-4 bg-white border-2 rounded-md border-slate-200">
 					<div class="flex flex-col justify-between px-6 py-4 border-b-2 md:flex-row border-slate-200">
 						<div class="flex flex-col space-x-8 md:flex-row">
@@ -57,29 +57,48 @@
 						</div>
 						<div class="flex items-center space-x-4">
 							<template v-if="data.status_pesanan != 1">
-								<div class="flex items-center gap-2">
-									<button class="btn btn-with-icon btn-sm btn-indigo" @click="changeStatus(data.id_transaksi, index)" v-if="data.status_pesanan !== 4">
-										<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-											<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-										</svg>
-										<span>{{ data.status_pesanan == 2 ? "Proses" : data.status_pesanan == 3 ? "Ubah Status" : "Selesaikan" }}</span>
-									</button>
-									<NuxtLink target="_blank" :to="{name: 'pencatatan-transaksi-id', params: {id: data.id_transaksi}}">
-										<button class="btn btn-sm btn-with-icon btn-teal">
+								<div class="flex flex-col gap-4">
+									<div>
+										<div v-if="data.status_pesanan == 2" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-blue-500 capitalize border border-blue-500 rounded-full">
+											<span class="flex justify-center">Dalam Pengerjaan</span>
+										</div>
+										<div v-if="data.status_pesanan == 3" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-yellow-500 capitalize border border-yellow-500 rounded-full">
+											<span class="flex justify-center">Siap Diambil / Dikirim</span>
+										</div>
+										<div v-if="data.status_pesanan == 4" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-green-500 capitalize border border-green-500 rounded-full">
+											<span class="flex justify-center">Selesai</span>
+										</div>
+									</div>
+									<div class="flex items-center gap-2">
+										<button class="btn btn-with-icon btn-sm btn-indigo" @click="changeStatus(data.id_transaksi, index)" v-if="data.status_pesanan == 2 && data.pengiriman == 0">
 											<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-												<path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
+												<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
 											</svg>
-											<span>Print</span>
+											<span>Input No Resi</span>
 										</button>
-									</NuxtLink>
-									<NuxtLink target="_blank" :to="{name: 'pemesanan-id', params: {id: data.id_transaksi}}">
-										<button class="flex items-center justify-center gap-2 px-2 py-1 border-2 rounded-md border-slate-300 hover:bg-slate-100">
-											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-												<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+										<button class="btn btn-with-icon btn-sm btn-indigo" @click="changeStatus(data.id_transaksi, index)" v-if="data.status_pesanan !== 4">
+											<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+												<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
 											</svg>
-											<span class="text-xs">Invoice</span>
+											<span>{{ data.status_pesanan == 2 ? "Proses" : data.status_pesanan == 3 ? "Ubah Status" : "Selesaikan" }}</span>
 										</button>
-									</NuxtLink>
+										<NuxtLink target="_blank" :to="{name: 'pencatatan-transaksi-id', params: {id: data.id_transaksi}}">
+											<button class="btn btn-sm btn-with-icon btn-teal">
+												<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+													<path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
+												</svg>
+												<span>Print</span>
+											</button>
+										</NuxtLink>
+										<NuxtLink target="_blank" :to="{name: 'pemesanan-id', params: {id: data.id_transaksi}}">
+											<button class="flex items-center justify-center gap-2 px-2 py-1 border-2 rounded-md border-slate-300 hover:bg-slate-100">
+												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+													<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+												</svg>
+												<span class="text-xs">Invoice</span>
+											</button>
+										</NuxtLink>
+									</div>
 								</div>
 							</template>
 							<template v-else>
@@ -124,18 +143,20 @@
 						</div>
 					</div>
 				</div>
-			</template>
-			<div v-else class="bg-white border-2 rounded-md h-72 border-slate-200">
-				<div class="flex items-center justify-center w-full h-full space-x-4">
-					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-red-500">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-					</svg>
-					<span class="text-2xl font-semibold text-gray-800">Tidak Ada Data</span>
+				<div>
+					<Pagination v-if="transaksi.data && transaksi.per_page < transaksi.total" :total-pages="transaksi.links.length - 2" :per-page="show" :current-page="transaksi.current_page" @pagechanged="onPageChange"></Pagination>
 				</div>
-			</div>
-			<div>
-				<Pagination v-if="transaksi.data && transaksi.per_page < transaksi.total" :total-pages="transaksi.links.length - 2" :per-page="show" :current-page="transaksi.current_page" @pagechanged="onPageChange"></Pagination>
-			</div>
+			</template>
+			<template v-else>
+				<div class="my-4 bg-white border-2 rounded-md h-72 border-slate-200">
+					<div class="flex items-center justify-center w-full h-full space-x-4">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-red-500">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+						</svg>
+						<span class="text-2xl font-semibold text-gray-800">Tidak Ada Data</span>
+					</div>
+				</div>
+			</template>
 		</div>
 	</div>
 </template>
@@ -156,7 +177,7 @@ export default {
 			page: 1,
 		};
 	},
-	created() {
+	mounted() {
 		this.getDataTransaksi();
 	},
 	computed: {
@@ -170,7 +191,7 @@ export default {
 				page: this.page,
 				show: this.show,
 				search: this.search,
-				status: this.selectedStatus,
+				status_pesanan: this.selectedStatus,
 			});
 		},
 
