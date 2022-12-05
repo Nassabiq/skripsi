@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePengadaanPersediaanTable extends Migration
+class CreatePengadaanTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePengadaanPersediaanTable extends Migration
      */
     public function up()
     {
-        Schema::create('pengadaan_persediaan', function (Blueprint $table) {
+        Schema::create('pengadaan', function (Blueprint $table) {
             $table->string('id_pengadaan')->unique();
             $table->primary('id_pengadaan');
 
@@ -33,6 +33,6 @@ class CreatePengadaanPersediaanTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pengadaan_persediaan');
+        Schema::dropIfExists('pengadaan');
     }
 }

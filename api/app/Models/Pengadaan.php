@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PengadaanPersediaan extends Model
+class Pengadaan extends Model
 {
     use HasFactory;
 
@@ -14,7 +14,7 @@ class PengadaanPersediaan extends Model
     protected $keyType = 'string';
     public $timestamps = false;
 
-    protected $table = 'pengadaan_persediaan';
+    protected $table = 'pengadaan';
 
     protected $fillable = ['id_pengadaan', 'id_user', 'nama_pengadaan', 'status_pengadaan', 'tgl_dibuat', 'tgl_disetujui'];
 

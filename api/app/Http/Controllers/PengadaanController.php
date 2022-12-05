@@ -3,29 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetailPengadaan;
-use App\Models\PengadaanPersediaan;
+use App\Models\Pengadaan;
 use Carbon\Carbon;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class PengadaanPersediaanController extends Controller
+class PengadaanController extends Controller
 {
     public function index(Request $request)
     {
         $search = '%' . $request->search . '%';
         $status = '%' . $request->status . '%';
 
-        if ($request->show == null) $pengadaan = PengadaanPersediaan::with('detailPengadaan.bahanBaku')->get();
-        else $pengadaan = PengadaanPersediaan::with('detailPengadaan.bahanBaku')->where('nama_pengadaan', 'like', $search)->where('status_pengadaan', 'like', $status)->paginate($request->show);
+        if ($request->show == null) $pengadaan = Pengadaan::with('detailPengadaan.bahanBaku')->get();
+        else $pengadaan = Pengadaan::with('detailPengadaan.bahanBaku')->where('nama_pengadaan', 'like', $search)->where('status_pengadaan', 'like', $status)->paginate($request->show);
 
         return response()->json($pengadaan, 200);
     }
 
     public function details($id)
     {
-        $pengadaan = PengadaanPersediaan::with('detailPengadaan.bahanBaku')->findOrFail($id);
+        $pengadaan = Pengadaan::with('detailPengadaan.bahanBaku')->findOrFail($id);
         return response()->json($pengadaan, 200);
     }
 
@@ -49,7 +49,7 @@ class PengadaanPersediaanController extends Controller
         DB::beginTransaction();
         try {
             $id_pengadaan = IdGenerator::generate(['table' => 'pengadaan_persediaan', 'field' => 'id_pengadaan', 'length' => 17, 'prefix' => 'PP-' . date('dmY')]);
-            $pengadaan = PengadaanPersediaan::create([
+            $pengadaan = Pengadaan::create([
                 'id_pengadaan' => $id_pengadaan,
                 'id_user' => $request->user,
                 'nama_pengadaan' => $request->nama_pengadaan,
@@ -81,7 +81,7 @@ class PengadaanPersediaanController extends Controller
         $validator = Validator::make($request->all(), $this->rules, $this->messages);
         if ($validator->fails()) return response()->json($validator->messages(), 400);
 
-        PengadaanPersediaan::where('id_pengadaan', $id)->update([
+        Pengadaan::where('id_pengadaan', $id)->update([
             'nama_pengadaan' => $request->nama_pengadaan
         ]);
 
@@ -96,7 +96,7 @@ class PengadaanPersediaanController extends Controller
 
     public function validasiPengadaan($id)
     {
-        $pengadaan = PengadaanPersediaan::findOrFail($id);
+        $pengadaan = Pengadaan::findOrFail($id);
         $pengadaan->status_pengadaan = 1;
         $pengadaan->tgl_disetujui = Carbon::now()->locale('id');
         $pengadaan->save();
@@ -106,7 +106,7 @@ class PengadaanPersediaanController extends Controller
 
     public function deletePengadaan($id)
     {
-        $pengadaan = PengadaanPersediaan::find($id);
+        $pengadaan = Pengadaan::find($id);
         $detail = DetailPengadaan::where('id_pengadaan', $id)->delete();
         $pengadaan->delete();
 

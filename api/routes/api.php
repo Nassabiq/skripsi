@@ -4,7 +4,7 @@ use App\Http\Controllers\AnalisisHPPController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\BahanBakuController;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\PengadaanPersediaanController;
+use App\Http\Controllers\PengadaanController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\StokMasukController;
 use App\Http\Controllers\TransaksiController;
@@ -27,10 +27,9 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 // Produk
-Route::get('/katalog', [ProdukController::class, 'katalog']);
-
 Route::get('/produk', [ProdukController::class, 'index']);
 Route::get('/kategori', [ProdukController::class, 'kategori']);
+Route::get('/katalog', [ProdukController::class, 'katalog']);
 
 
 Route::post('/refresh', fn () =>  auth()->refresh());
@@ -73,13 +72,13 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 
     // PENGADAAN PERSEDIAAN
-    Route::get('/pengadaan', [PengadaanPersediaanController::class, 'index']);
-    Route::get('/pengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'details']);
+    Route::get('/pengadaan', [PengadaanController::class, 'index']);
+    Route::get('/pengadaan/{id_pengadaan}', [PengadaanController::class, 'details']);
 
-    Route::post('/pengadaan', [PengadaanPersediaanController::class, 'addPengadaan']);
-    Route::patch('/pengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'updatePengadaan']);
-    Route::patch('/pengadaan/validasi/{id_pengadaan}', [PengadaanPersediaanController::class, 'validasiPengadaan']);
-    Route::delete('/pengadaan/{id_pengadaan}', [PengadaanPersediaanController::class, 'deletePengadaan']);
+    Route::post('/pengadaan', [PengadaanController::class, 'addPengadaan']);
+    Route::patch('/pengadaan/{id_pengadaan}', [PengadaanController::class, 'updatePengadaan']);
+    Route::patch('/pengadaan/validasi/{id_pengadaan}', [PengadaanController::class, 'validasiPengadaan']);
+    Route::delete('/pengadaan/{id_pengadaan}', [PengadaanController::class, 'deletePengadaan']);
 
     // USER
     Route::get('/user', fn () => auth()->user()->load('role', 'pelanggan'));
