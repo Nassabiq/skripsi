@@ -27,9 +27,11 @@
 						<select class="px-2 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" v-model="selectedStatus" @change="onChangeStatus">
 							<option value="">Status Pesanan</option>
 							<option :value="1">Belum Bayar</option>
-							<option :value="2">Dalam Pengerjaan</option>
-							<option :value="3">Siap Diambil / Dikirim</option>
-							<option :value="4">Selesai</option>
+							<option :value="2">Sudah Bayar</option>
+							<option :value="3">Dalam Pengerjaan</option>
+							<option :value="4">Proses Pengecekan</option>
+							<option :value="5">Siap Diambil / Dikirim</option>
+							<option :value="6">Selesai</option>
 						</select>
 					</div>
 				</div>
@@ -59,13 +61,13 @@
 							<template v-if="data.status_pesanan != 1">
 								<div class="flex flex-col gap-4">
 									<div>
-										<div v-if="data.status_pesanan == 2" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-blue-500 capitalize border border-blue-500 rounded-full">
+										<div v-if="data.status_pesanan == 3" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-blue-500 capitalize border border-blue-500 rounded-full">
 											<span class="flex justify-center">Dalam Pengerjaan</span>
 										</div>
-										<div v-if="data.status_pesanan == 3" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-yellow-500 capitalize border border-yellow-500 rounded-full">
+										<div v-if="data.status_pesanan == 5" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-yellow-500 capitalize border border-yellow-500 rounded-full">
 											<span class="flex justify-center">Siap Diambil / Dikirim</span>
 										</div>
-										<div v-if="data.status_pesanan == 4" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-green-500 capitalize border border-green-500 rounded-full">
+										<div v-if="data.status_pesanan == 6" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-green-500 capitalize border border-green-500 rounded-full">
 											<span class="flex justify-center">Selesai</span>
 										</div>
 									</div>
