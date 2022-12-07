@@ -92,13 +92,13 @@ class ProdukController extends Controller
             ]);
 
             foreach ($request->finishing as $item) {
-                $id_finishing = IdGenerator::generate(['table' => 'finishing', 'field' => 'id_finishing', 'length' => 12, 'prefix' => 'FP-']);
+                $id_finishing = IdGenerator::generate(['table' => 'finishing', 'field' => 'id_finishing', 'length' => 8, 'prefix' => 'FP-']);
                 Finishing::create(['id_finishing' => $id_finishing, 'id_produk' => $id_produk, 'nama_finishing' => $item]);
             }
             foreach ($request->bahan as $item) {
                 $data = json_decode($item);
-                $id_sku = IdGenerator::generate(['table' => 'sku', 'field' => 'id_sku', 'length' => 12, 'prefix' => 'SKU-']);
-                $id_harga_jual = IdGenerator::generate(['table' => 'harga_jual_produk', 'field' => 'id_harga_jual', 'length' => 12, 'prefix' => 'HP-']);
+                $id_sku = IdGenerator::generate(['table' => 'sku', 'field' => 'id_sku', 'length' => 9, 'prefix' => 'SKU-']);
+                $id_harga_jual = IdGenerator::generate(['table' => 'harga_jual_produk', 'field' => 'id_harga_jual', 'length' => 8, 'prefix' => 'HP-']);
 
                 SKU::create(['id_sku' => $id_sku, 'id_produk' => $id_produk, 'id_bahan_baku' => $data->id]);
                 HargaJualProduk::create([

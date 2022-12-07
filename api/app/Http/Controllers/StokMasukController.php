@@ -42,7 +42,7 @@ class StokMasukController extends Controller
             $pengadaan->status_pengadaan = 2;
             $pengadaan->save();
 
-            $id_stok_masuk = IdGenerator::generate(['table' => 'stok_masuk', 'field' => 'id_stok_masuk', 'length' => 17, 'prefix' => 'Stok-' . date('dmY')]);
+            $id_stok_masuk = IdGenerator::generate(['table' => 'stok_masuk', 'field' => 'id_stok_masuk', 'length' => 19, 'prefix' => 'Stok-' . date('dmY')]);
             $stok_masuk = StokMasuk::create([
                 'id_stok_masuk' => $id_stok_masuk,
                 'id_user' => $request->user,
@@ -51,7 +51,7 @@ class StokMasukController extends Controller
             ]);
 
             foreach ($request->stok as $data) {
-                $id_detail = IdGenerator::generate(['table' => 'detail_stok_masuk', 'field' => 'id_detail_stok_masuk', 'length' => 10, 'prefix' => 'DStok-']);
+                $id_detail = IdGenerator::generate(['table' => 'detail_stok_masuk', 'field' => 'id_detail_stok_masuk', 'length' => 11, 'prefix' => 'DStok-']);
 
                 DetailStokMasuk::create([
                     'id_detail_stok_masuk' => $id_detail,

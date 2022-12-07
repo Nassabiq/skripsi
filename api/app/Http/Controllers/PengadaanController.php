@@ -58,7 +58,7 @@ class PengadaanController extends Controller
             ]);
 
             foreach ($request->pengadaan as $data) {
-                $id_detail = IdGenerator::generate(['table' => 'detail_pengadaan', 'field' => 'id_detail_pengadaan', 'length' => 12, 'prefix' => 'DPP-']);
+                $id_detail = IdGenerator::generate(['table' => 'detail_pengadaan', 'field' => 'id_detail_pengadaan', 'length' => 8, 'prefix' => 'DPP-']);
 
                 DetailPengadaan::create([
                     'id_detail_pengadaan' => $id_detail,

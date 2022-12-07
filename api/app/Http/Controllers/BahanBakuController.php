@@ -26,7 +26,7 @@ class BahanBakuController extends Controller
         ]);
 
         if ($validator->fails()) return response()->json($validator->errors(), 400);
-        $id_bahan_baku = IdGenerator::generate(['table' => 'bahan_baku', 'field' => 'id_bahan_baku', 'length' => 10, 'prefix' => 'BB-']);
+        $id_bahan_baku = IdGenerator::generate(['table' => 'bahan_baku', 'field' => 'id_bahan_baku', 'length' => 8, 'prefix' => 'BB-']);
         BahanBaku::create([
             'id_bahan_baku' => $id_bahan_baku,
             'nama_bahan_baku' => $request->nama_bahan_baku,
