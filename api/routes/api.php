@@ -62,6 +62,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::post('/transaksi', [TransaksiController::class, 'submitTransaksi']);
     Route::post('/transaksi/status/{id_transaksi}', [TransaksiController::class, 'changeStatus']);
+    Route::post('/transaksi/resi/{id_transaksi}', [TransaksiController::class, 'inputResi']);
 
 
     // STOK MASUK
@@ -92,7 +93,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 
     // ANALISIS
-    Route::get('/analisis-hpp', [AnalisisHPPController::class, 'index']);
+    Route::get('/sku/bahan-baku', [AnalisisHPPController::class, 'getBahanBaku']);
+    Route::get('/analisis-hpp', [AnalisisHPPController::class, 'analisis']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
 });

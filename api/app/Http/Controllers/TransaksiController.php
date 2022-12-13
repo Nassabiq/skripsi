@@ -63,7 +63,7 @@ class TransaksiController extends Controller
         )
             ->orderBy('tgl_transaksi', 'asc')
             ->whereBetween('tgl_transaksi', [$from, $to])
-            ->where('status_pesanan', 4)
+            ->where('status_pesanan', 6)
             ->get();
 
         return response()->json($data, 200);
@@ -127,14 +127,14 @@ class TransaksiController extends Controller
                 $resultUkuran = $satuanMeterPersegi ? $ukuran->panjang  * $ukuran->lebar : null;
                 $totalPrice = $satuanMeterPersegi ? $price * $resultUkuran : $price;
 
-                $result = $totalPrice * $data->qty_produk;
+                $result = $totalPrice * $data->qty_cart;
 
                 $id_detail = IdGenerator::generate(['table' => 'detail_transaksi', 'field' => 'id_detail_transaksi', 'length' => 17, 'prefix' => 'DtlOrder-']);
                 DetailTransaksi::create([
                     'id_detail_transaksi' => $id_detail,
                     'id_transaksi' => $transaksi->id_transaksi,
                     'id_sku' => $data->id_sku,
-                    'qty_produk' => $data->qty_produk,
+                    'qty_produk' => $data->qty_cart,
                     'ukuran' => $data->ukuran,
                     'id_finishing' => $data->id_finishing,
 
@@ -156,6 +156,22 @@ class TransaksiController extends Controller
     {
         $data = Transaksi::findOrFail($id);
         $data->status_pesanan = $request->status_pesanan + 1;
+        $data->save();
+
+        return response()->json($data, 200);
+    }
+
+    public function inputResi(Request $request, $id)
+    {
+        $validate = Validator::make($request->all(), [
+            'resi'   => 'required',
+        ], [
+            'required' => 'form ini harus diisi'
+        ]);
+        if ($validate->fails()) return response()->json($validate->errors(), 400);
+
+        $data = Transaksi::findOrFail($id);
+        $data->no_resi = $request->resi;
         $data->save();
 
         return response()->json($data, 200);

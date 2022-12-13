@@ -325,6 +325,7 @@ export default {
 					this.closeModal();
 					this.getBahanBaku();
 					this.getStokMasuk();
+					this.getPengadaan();
 				})
 				.then(() => {
 					this.$swal.fire({

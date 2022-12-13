@@ -22,4 +22,8 @@ class BahanBaku extends Model
     {
         return $this->hasMany(SKU::class, 'id_bahan_baku', 'id_bahan_baku');
     }
+    public function stok_masuk()
+    {
+        return $this->hasMany(DetailStokMasuk::class, 'id_bahan_baku', 'id_bahan_baku');
+    }
 }

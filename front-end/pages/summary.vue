@@ -84,10 +84,10 @@
 								<ul>
 									<template v-if="data.sku.produk.satuan_produk == 'm2'">
 										<li class="text-xs text-gray-600">Panjang: {{ JSON.parse(data.ukuran).panjang }} meter, Lebar: {{ JSON.parse(data.ukuran).lebar }} meter</li>
-										<li class="text-xs text-gray-600">QTY: {{ data.qty_produk + " pcs" }}</li>
+										<li class="text-xs text-gray-600">QTY: {{ data.qty_cart + " pcs" }}</li>
 									</template>
 									<template v-else>
-										<li class="text-xs text-gray-600">QTY: {{ data.qty_produk + "" + data.sku.produk.satuan_produk }}</li>
+										<li class="text-xs text-gray-600">QTY: {{ data.qty_cart + "" + data.sku.produk.satuan_produk }}</li>
 									</template>
 								</ul>
 								<p class="ml-4 text-sm font-semibold text-gray-800" v-text="harga(data)"></p>
@@ -171,7 +171,7 @@ export default {
 
 				let totalPrice = satuanMeterPersegi ? price * ukuran : price;
 				// let sumCart = ;
-				return accumulator + totalPrice * currentValue.qty_produk;
+				return accumulator + totalPrice * currentValue.qty_cart;
 			}, 0);
 			// return "Rp. " + Intl.NumberFormat().format(result);
 			return result;
@@ -187,7 +187,7 @@ export default {
 			let ukuran = satuanMeterPersegi ? JSON.parse(data.ukuran).panjang * JSON.parse(data.ukuran).lebar : null;
 			let totalPrice = satuanMeterPersegi ? price * ukuran : price;
 
-			let result = totalPrice * data.qty_produk;
+			let result = totalPrice * data.qty_cart;
 			return "Rp. " + Intl.NumberFormat().format(result);
 		},
 		fetch() {

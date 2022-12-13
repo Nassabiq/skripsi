@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BahanBaku;
 use App\Models\DetailStokMasuk;
-use App\Models\PengadaanPersediaan;
+use App\Models\Pengadaan;
 use App\Models\SKU;
 use App\Models\StokMasuk;
 use Carbon\Carbon;
@@ -38,7 +38,7 @@ class StokMasukController extends Controller
 
         DB::beginTransaction();
         try {
-            $pengadaan = PengadaanPersediaan::findOrFail($request->id_pengadaan);
+            $pengadaan = Pengadaan::findOrFail($request->id_pengadaan);
             $pengadaan->status_pengadaan = 2;
             $pengadaan->save();
 

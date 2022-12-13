@@ -48,7 +48,7 @@ class PengadaanController extends Controller
 
         DB::beginTransaction();
         try {
-            $id_pengadaan = IdGenerator::generate(['table' => 'pengadaan_persediaan', 'field' => 'id_pengadaan', 'length' => 17, 'prefix' => 'PP-' . date('dmY')]);
+            $id_pengadaan = IdGenerator::generate(['table' => 'pengadaan', 'field' => 'id_pengadaan', 'length' => 17, 'prefix' => 'PP-' . date('dmY')]);
             $pengadaan = Pengadaan::create([
                 'id_pengadaan' => $id_pengadaan,
                 'id_user' => $request->user,
@@ -58,7 +58,7 @@ class PengadaanController extends Controller
             ]);
 
             foreach ($request->pengadaan as $data) {
-                $id_detail = IdGenerator::generate(['table' => 'detail_pengadaan', 'field' => 'id_detail_pengadaan', 'length' => 8, 'prefix' => 'DPP-']);
+                $id_detail = IdGenerator::generate(['table' => 'detail_pengadaan', 'field' => 'id_detail_pengadaan', 'length' => 9, 'prefix' => 'DPP-']);
 
                 DetailPengadaan::create([
                     'id_detail_pengadaan' => $id_detail,
@@ -70,7 +70,7 @@ class PengadaanController extends Controller
             DB::commit();
             return response()->json(200);
         } catch (\Throwable $th) {
-            return response()->json('Something Went Wrong', 400);
+            return response()->json(['message' => 'Something Went Wrong'], 400);
             DB::rollback();
             //throw $th;
         }

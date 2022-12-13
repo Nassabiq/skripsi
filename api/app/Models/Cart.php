@@ -13,7 +13,7 @@ class Cart extends Model
     protected $keyType = 'string';
     public $timestamps = false;
 
-    protected $fillable = ['id_cart', 'id_user', 'id_sku', 'id_finishing', 'qty_produk', 'ukuran'];
+    protected $fillable = ['id_cart', 'id_user', 'id_sku', 'id_finishing', 'qty_cart', 'ukuran'];
 
     public function user()
     {

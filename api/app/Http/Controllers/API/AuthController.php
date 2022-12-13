@@ -16,23 +16,25 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator =  Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'nama_user' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string'
         ]);
 
-        if ($validator->fails()) return response()->json($validator->errors());
+        if ($validator->fails()) return response()->json($validator->errors(), 400);
+
         $id_user = IdGenerator::generate(['table' => 'users', 'field' => 'id_user', 'length' => 10, 'prefix' => 'USER-']);
 
         $user = User::create([
             'id_user' => $id_user,
-            'name' => $request->name,
+            'nama_user' => $request->nama_user,
             'email' => $request->email,
             'id_role' => 'role-08',
             'tgl_register' => Carbon::now(),
             'password' => Hash::make($request->password)
         ]);
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = auth()->login($user);
+        // $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'data' => $user,

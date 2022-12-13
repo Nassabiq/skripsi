@@ -61,8 +61,14 @@
 							<template v-if="data.status_pesanan != 1">
 								<div class="flex flex-col gap-4">
 									<div>
+										<div v-if="data.status_pesanan == 2" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-blue-500 capitalize border border-blue-500 rounded-full">
+											<span class="flex justify-center">Sudah Bayar dan Siap Dikerjakan</span>
+										</div>
 										<div v-if="data.status_pesanan == 3" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-blue-500 capitalize border border-blue-500 rounded-full">
 											<span class="flex justify-center">Dalam Pengerjaan</span>
+										</div>
+										<div v-if="data.status_pesanan == 4" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-blue-500 capitalize border border-blue-500 rounded-full">
+											<span class="flex justify-center">Proses Pengecekan</span>
 										</div>
 										<div v-if="data.status_pesanan == 5" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-yellow-500 capitalize border border-yellow-500 rounded-full">
 											<span class="flex justify-center">Siap Diambil / Dikirim</span>
@@ -72,17 +78,29 @@
 										</div>
 									</div>
 									<div class="flex items-center gap-2">
-										<button class="btn btn-with-icon btn-sm btn-indigo" @click="changeStatus(data.id_transaksi, index)" v-if="data.status_pesanan == 2 && data.pengiriman == 0">
+										<template v-if="data.no_resi == null && data.pengiriman == 0">
+											<button class="btn btn-with-icon btn-sm btn-indigo" @click="openModal(data)" v-if="data.status_pesanan == 5 && data.pengiriman == 0">
+												<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+													<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+												</svg>
+												<span>Input No Resi</span>
+											</button>
+										</template>
+										<template v-else>
+											<div class="space-y-2">
+												<p class="text-xs font-semibold text-gray-600">No Resi</p>
+												<p class="text-xs text-gray-500">{{ data.no_resi }}</p>
+											</div>
+										</template>
+										<button class="btn btn-with-icon btn-sm btn-indigo" @click="changeStatus(data.id_transaksi, index)" v-if="data.status_pesanan !== 6">
 											<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
 												<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
 											</svg>
-											<span>Input No Resi</span>
-										</button>
-										<button class="btn btn-with-icon btn-sm btn-indigo" @click="changeStatus(data.id_transaksi, index)" v-if="data.status_pesanan !== 4">
-											<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-												<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-											</svg>
-											<span>{{ data.status_pesanan == 2 ? "Proses" : data.status_pesanan == 3 ? "Ubah Status" : "Selesaikan" }}</span>
+											<span v-if="data.status_pesanan == 2">Proses</span>
+											<span v-if="data.status_pesanan == 3">Selesaikan Produksi</span>
+											<span v-if="data.status_pesanan == 4">Selesaikan Pengecekan</span>
+											<span v-if="data.status_pesanan == 5">Selesaikan Pesanan</span>
+											<!-- <span>{{ data.status_pesanan == 2 ? "Proses" : data.status_pesanan == 3 ? "Ubah Status" : "Selesaikan" }}</span> -->
 										</button>
 										<NuxtLink target="_blank" :to="{name: 'pencatatan-transaksi-id', params: {id: data.id_transaksi}}">
 											<button class="btn btn-sm btn-with-icon btn-teal">
@@ -160,6 +178,20 @@
 				</div>
 			</template>
 		</div>
+		<Modal size="max-w-xl" title="Input No Resi" @close-modal="closeModal" :data="modalData" v-show="modal">
+			<template #content>
+				<div class="col-span-12 space-y-4">
+					<div class="my-2">
+						<label class="label">No Resi</label>
+						<input type="text" class="form-input form-input-lg" placeholder="No Resi ... " v-model="no_resi" />
+						<p class="mt-2 text-xs text-red-500" v-if="validation.resi">{{ validation.resi[0] }}</p>
+					</div>
+				</div>
+			</template>
+			<template #submit>
+				<button class="btn btn-lg btn-green" @click.prevent="inputResi(modalData.id_transaksi)">Submit</button>
+			</template>
+		</Modal>
 	</div>
 </template>
 
@@ -177,6 +209,11 @@ export default {
 			selectedStatus: "",
 			show: 5,
 			page: 1,
+
+			modal: false,
+			no_resi: "",
+			validation: [],
+			modalData: [],
 		};
 	},
 	mounted() {
@@ -238,6 +275,26 @@ export default {
 							.catch((error) => console.log(error));
 					}
 				});
+		},
+
+		openModal(data) {
+			this.modalData = data;
+			this.modal = !this.modal;
+		},
+		closeModal() {
+			this.modalData = [];
+			this.modal = !this.modal;
+		},
+
+		async inputResi(id) {
+			this.$axios
+				.post("/api/transaksi/resi/" + id, {
+					resi: this.no_resi,
+				})
+				.then((response) => this.getDataTransaksi())
+				.then((response) => this.closeModal())
+				.then(() => this.$swal.fire("Success!", "Status Pesanan Berhasil diubah.", "success"))
+				.catch((error) => (this.validation = error.response.data));
 		},
 
 		onChangeStatus() {

@@ -4,7 +4,6 @@
 			<div class="col-span-12 md:col-span-7 md:place-self-center">
 				<div class="mx-auto sm:w-full sm:max-w-md">
 					<h2 class="mt-6 font-serif text-4xl font-extrabold leading-9 text-center text-gray-900 uppercase">Registration</h2>
-					<!-- {{ validation }} -->
 				</div>
 			</div>
 			<div class="col-span-12 md:col-span-5">
@@ -16,6 +15,7 @@
 								<div class="mt-1 rounded-md shadow-sm">
 									<input id="name" type="text" autofocus v-model="name" class="block w-full px-3 py-2 placeholder-gray-400 transition duration-150 ease-in-out border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-green-500 focus:border-green-300 sm:text-sm sm:leading-5" />
 								</div>
+								<p class="mt-2 text-xs text-red-500" v-if="validation.nama_user">{{ validation.nama_user[0] }}</p>
 							</div>
 
 							<div class="mt-6">
@@ -23,6 +23,7 @@
 								<div class="mt-1 rounded-md shadow-sm">
 									<input id="email" type="email" v-model="email" class="block w-full px-3 py-2 placeholder-gray-400 transition duration-150 ease-in-out border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-green-500 focus:border-green-300 sm:text-sm sm:leading-5" />
 								</div>
+								<p class="mt-2 text-xs text-red-500" v-if="validation.email">{{ validation.email[0] }}</p>
 							</div>
 
 							<div class="mt-6">
@@ -34,10 +35,10 @@
 
 							<div class="mt-6">
 								<label for="password_confirmation" class="block text-sm font-medium leading-5 text-gray-700"> Confirm Password </label>
-
 								<div class="mt-1 rounded-md shadow-sm">
 									<input id="password_confirmation" type="password" v-model="password_confirmation" required class="block w-full px-3 py-2 placeholder-gray-400 transition duration-150 ease-in-out border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-green-500 focus:border-green-300 sm:text-sm sm:leading-5" />
 								</div>
+								<p class="mt-1 text-xs text-red-500" v-if="validation.length > 0">{{ validation[0].password }}</p>
 							</div>
 
 							<div class="mt-6">
@@ -58,7 +59,6 @@
 </template>
 
 <script>
-import axios from "axios";
 export default {
 	name: "register",
 	auth: false,
@@ -77,20 +77,28 @@ export default {
 			// e.preventDefault();
 			if (this.password !== this.password_confirmation) {
 				this.validation.push({password: "Password konfirmasi tidak sesuai"});
-			}
-			await this.$axios
-				.post("/api/register", {
-					name: this.name,
-					email: this.email,
-					password: this.password,
-				})
-				.then(() => {
-					// console.log("success");
-					this.$router.push("/");
-				})
-				.catch((error) => {
-					this.validation = error.response.data;
+			} else {
+				await this.$axios
+					.post("/api/register", {
+						nama_user: this.name,
+						email: this.email,
+						password: this.password,
+					})
+					.then(() => {
+						this.$router.push("/login");
+					})
+					.catch((error) => {
+						this.validation = error.response.data;
+					});
+
+				this.$swal.fire({
+					icon: "success",
+					showConfirmButton: false,
+					text: "Registrasi Sukses, Silahkan Login",
+					timer: 2000,
+					timerProgressBar: true,
 				});
+			}
 		},
 	},
 };

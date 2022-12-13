@@ -29,4 +29,8 @@ class SKU extends Model
     {
         return $this->hasMany(HargaJualProduk::class, 'id_sku');
     }
+    public function transaksi()
+    {
+        return $this->hasMany(DetailTransaksi::class, 'id_sku');
+    }
 }

@@ -65,19 +65,19 @@
 						<div class="col-span-12 md:col-span-6">
 							<label class="label">Jumlah Order (Dalam Pcs)</label>
 							<div class="flex justify-between gap-2">
-								<button class="mt-1 btn btn-sm btn-indigo" @click.prevent="cart.qty_produk--" :disabled="cart.qty_produk <= 0">
+								<button class="mt-1 btn btn-sm btn-indigo" @click.prevent="cart.qty_cart--" :disabled="cart.qty_cart <= 0">
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
 										<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" />
 									</svg>
 								</button>
-								<input type="text" class="form-input form-input-lg" v-model="cart.qty_produk" placeholder="QTY ... " disabled />
-								<button class="mt-1 btn btn-sm btn-indigo" @click.prevent="cart.qty_produk++">
+								<input type="text" class="form-input form-input-lg" v-model="cart.qty_cart" placeholder="QTY ... " disabled />
+								<button class="mt-1 btn btn-sm btn-indigo" @click.prevent="cart.qty_cart++">
 									<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
 									</svg>
 								</button>
 							</div>
-							<p class="mt-2 text-xs text-red-500" v-if="validation.qty_produk">{{ validation.qty_produk[0] }}</p>
+							<p class="mt-2 text-xs text-red-500" v-if="validation.qty_cart">{{ validation.qty_cart[0] }}</p>
 							<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.nama_produk">{{ validation.nama_produk[0] }}</p> -->
 						</div>
 						<div class="col-span-12">
@@ -158,7 +158,7 @@ export default {
 
 			cart: {
 				bahan_baku: "",
-				qty_produk: 0,
+				qty_cart: 0,
 				finishing: "",
 				panjang: "",
 				lebar: "",
@@ -224,7 +224,7 @@ export default {
 			this.modalData = null;
 			this.cart = {
 				bahan_baku: "",
-				qty_produk: 0,
+				qty_cart: 0,
 				finishing: "",
 				panjang: "",
 				lebar: "",
@@ -250,7 +250,7 @@ export default {
 		},
 
 		subtotal(data) {
-			return data.satuan_produk == "m2" ? this.cart.bahan_baku.price * (this.cart.panjang * this.cart.lebar) * this.cart.qty_produk : this.cart.bahan_baku.price * this.cart.qty_produk;
+			return data.satuan_produk == "m2" ? this.cart.bahan_baku.price * (this.cart.panjang * this.cart.lebar) * this.cart.qty_cart : this.cart.bahan_baku.price * this.cart.qty_cart;
 		},
 
 		addToCart() {
@@ -260,7 +260,7 @@ export default {
 					id_sku: this.cart.bahan_baku.id,
 					finishing: this.cart.finishing,
 					ukuran: (this.cart.panjang || this.cart.lebar) == 0 ? null : JSON.stringify({panjang: parseInt(this.cart.panjang), lebar: parseInt(this.cart.lebar)}),
-					qty_produk: this.cart.qty_produk,
+					qty_cart: this.cart.qty_cart,
 				})
 				.then(() => {
 					this.closeModal();

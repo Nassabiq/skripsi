@@ -21,7 +21,7 @@ class CartController extends Controller
             'id_user'   => 'required',
             'id_sku'   => 'required',
             'finishing'   => 'required',
-            'qty_produk'   => 'required|numeric',
+            'qty_cart'   => 'required|numeric',
         ]);
 
         if ($validator->fails()) return response()->json($validator->errors(), 400);
@@ -32,7 +32,7 @@ class CartController extends Controller
             'id_user' => $request->id_user,
             'id_sku' => $request->id_sku,
             'id_finishing' => $request->finishing,
-            'qty_produk' => $request->qty_produk,
+            'qty_cart' => $request->qty_cart,
             'ukuran' => $request->ukuran,
         ]);
 

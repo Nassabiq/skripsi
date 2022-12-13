@@ -20,7 +20,7 @@ class DetailTransaksi extends Model
 
     public function transaksi()
     {
-        return $this->belongsTo(TransaksiPenjualan::class, 'id_transaksi');
+        return $this->belongsTo(Transaksi::class, 'id_transaksi');
     }
     public function sku()
     {

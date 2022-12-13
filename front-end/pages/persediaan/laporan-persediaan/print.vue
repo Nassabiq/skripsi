@@ -45,7 +45,7 @@
 											<tr class="text-gray-800 font-title" v-for="item in data.detail_stok">
 												<td class="p-3 text-sm border border-slate-300">{{ data.id_stok_masuk }}</td>
 												<td class="p-3 text-sm border border-slate-300">{{ $moment(data.tgl_stok_masuk).format("DD MMMM YYYY") }}</td>
-												<td class="p-3 text-sm border border-slate-300">-</td>
+												<td class="p-3 text-sm border border-slate-300">{{ data.user.nama_user }}</td>
 												<td class="p-3 text-sm border border-slate-300">{{ item.bahan_baku.nama_bahan_baku }}</td>
 												<td class="p-3 text-sm border border-slate-300">{{ item.qty_stok }}</td>
 												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(item.harga_beli) }}</td>

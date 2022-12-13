@@ -100,18 +100,18 @@ export default {
 		harga(data) {
 			if (data.sku.produk.satuan_produk == "m2") {
 				let ukuran = JSON.parse(data.ukuran).panjang * JSON.parse(data.ukuran).lebar;
-				let price = data.sku.harga[data.sku.harga.length - 1].harga_produk * ukuran * data.qty_produk;
+				let price = data.sku.harga[data.sku.harga.length - 1].harga_produk * ukuran * data.qty_cart;
 				return "Rp. " + Intl.NumberFormat().format(price);
 			} else {
-				let price = data.sku.harga[data.sku.harga.length - 1].harga_produk * data.qty_produk;
+				let price = data.sku.harga[data.sku.harga.length - 1].harga_produk * data.qty_cart;
 				return "Rp. " + Intl.NumberFormat().format(price);
 			}
 		},
 		qty(data) {
 			if (data.sku.produk.satuan_produk == "m2") {
 				let ukuran = JSON.parse(data.ukuran);
-				return ukuran.panjang * ukuran.lebar + " " + data.sku.produk.satuan_produk + " - " + data.qty_produk + " pcs";
-			} else return data.qty_produk + data.sku.produk.satuan_produk;
+				return ukuran.panjang * ukuran.lebar + " " + data.sku.produk.satuan_produk + " - " + data.qty_cart + " pcs";
+			} else return data.qty_cart + data.sku.produk.satuan_produk;
 		},
 		checkout() {
 			if (this.$auth.loggedIn) {
