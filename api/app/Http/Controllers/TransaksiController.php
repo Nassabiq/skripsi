@@ -49,25 +49,7 @@ class TransaksiController extends Controller
         return response()->json($data, 200);
     }
 
-    public function laporanPenjualan(Request $request)
-    {
-        $from = Carbon::parse($request->from);
-        $to = Carbon::parse($request->to);
 
-        $data = Transaksi::with(
-            'detailTransaksi.sku.harga',
-            'detailTransaksi.sku.produk',
-            'detailTransaksi.sku.bahanBaku',
-            'detailTransaksi.finishing',
-            'pelanggan'
-        )
-            ->orderBy('tgl_transaksi', 'asc')
-            ->whereBetween('tgl_transaksi', [$from, $to])
-            ->where('status_pesanan', 6)
-            ->get();
-
-        return response()->json($data, 200);
-    }
 
     public function detailTransaksi($id)
     {

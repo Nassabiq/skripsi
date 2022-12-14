@@ -28,22 +28,22 @@
 				<table class="table table-auto table-produk">
 					<thead class="bg-gray-100">
 						<tr class="text-left text-gray-800 font-title">
-							<th class="p-3">Id Transaksi</th>
+							<th class="p-3">Id Stok Masuk</th>
 							<th class="p-3">Tgl Transaksi</th>
-							<th class="p-3">Customer</th>
+							<th class="p-3">User</th>
 							<th class="p-3">Jumlah Pesanan</th>
 							<th class="p-3">Total Pesanan</th>
 							<th class="p-1"></th>
 						</tr>
 					</thead>
-					<tbody class="divide-y-2 divide-gray-100 divide-dotted" v-if="penjualan.length > 0">
-						<template v-for="(data, index) in penjualan">
+					<tbody class="divide-y-2 divide-gray-100 divide-dotted" v-if="persediaan.length > 0">
+						<template v-for="(data, index) in persediaan">
 							<tr class="text-sm">
-								<td class="w-32 p-3">{{ data.id_transaksi }}</td>
-								<td class="p-3">{{ $moment(data.tgl_transaksi).format("DD MMMM YYYY") }}</td>
-								<td class="p-3">{{ data.pelanggan.nama_pelanggan }}</td>
-								<td class="p-3">{{ data.detail_transaksi.length }}</td>
-								<td class="p-3">Rp. {{ Intl.NumberFormat().format(data.total_harga) }}</td>
+								<td class="w-32 p-3">{{ data.id_stok_masuk }}</td>
+								<td class="p-3">{{ $moment(data.tgl_stok_masuk).format("DD MMMM YYYY") }}</td>
+								<td class="p-3">{{ data.user.nama_user }}</td>
+								<td class="p-3">{{ data.detail_stok.length }}</td>
+								<td class="p-3">Rp. {{ Intl.NumberFormat().format(data.total_harga_beli) }}</td>
 								<td class="p-2">
 									<button class="p-1 text-blue-400 border border-blue-600 rounded-full focus:bg-blue-100 hover:text-blue-800" @click.prevent="showRow(index)">
 										<svg xmlns="http://www.w3.org/2000/svg" :class="content === index ? 'rotate-90 duration-300' : 'rotate-0 duration-300'" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -53,59 +53,44 @@
 								</td>
 							</tr>
 							<tr>
-								<td class="p-3 bg-sky-50" colspan="6" v-show="content === index">
-									<div class="px-4 pb-2 font-semibold">Detail Transaksi</div>
-									<div class="grid grid-cols-2" v-for="item in data.detail_transaksi">
+								<td class="p-3 bg-slate-50" colspan="6" v-show="content === index">
+									<div class="px-4 pb-2 font-semibold">Detail Barang Masuk</div>
+									<div class="grid grid-cols-2" v-for="item in data.detail_stok">
 										<div class="col-span-2 md:col-span-1">
 											<div class="border-t border-gray-200">
 												<dl>
 													<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Id Detail Transaksi</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">
-															{{ item.id_detail_transaksi }}
-														</dd>
+														<dt class="text-xs font-semibold">Id Detail Stok Masuk</dt>
+														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ item.id_detail_stok_masuk }}</dd>
 													</div>
 													<div class="px-3 py-4 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Nama Produk</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ item.sku.produk.nama_produk }}</dd>
+														<dt class="text-xs font-semibold">Nama Bahan Baku</dt>
+														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">
+															{{ item.bahan_baku.nama_bahan_baku }}
+														</dd>
 													</div>
+												</dl>
+											</div>
+										</div>
+										<div class="col-span-2 md:col-span-1">
+											<div class="border-t border-gray-200">
+												<dl>
 													<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
 														<dt class="text-xs font-semibold">QTY</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ item.qty_produk }} {{ item.sku.produk.satuan_produk }}</dd>
-													</div>
-												</dl>
-											</div>
-										</div>
-										<div class="col-span-2 md:col-span-1">
-											<div class="border-t border-gray-200">
-												<dl>
-													<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Ukuran</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2" v-if="item.ukuran">
-															<ul class="space-y-4">
-																<li>panjang : {{ JSON.parse(item.ukuran).panjang }}</li>
-																<li>lebar : {{ JSON.parse(item.ukuran).lebar }}</li>
-															</ul>
+														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">
+															{{ item.qty_stok + " / " + item.bahan_baku.satuan_bahan_baku }}
 														</dd>
 													</div>
 													<div class="px-3 py-4 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Jenis Bahan</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ item.sku.bahan_baku.nama_bahan_baku }}</dd>
-													</div>
-													<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Finishing</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2" v-text="item.finishing ? item.finishing.nama_finishing : '-'"></dd>
+														<dt class="text-xs font-semibold">Harga</dt>
+														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(item.harga_beli) }}</dd>
 													</div>
 												</dl>
 											</div>
 										</div>
-										<div class="col-span-2">
-											<dl>
-												<div class="px-5 py-6 bg-blue-100 sm:grid sm:grid-cols-3 sm:gap-4">
-													<dt class="text-sm font-semibold">Subtotal</dt>
-													<dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(item.subtotal) }}</dd>
-												</div>
-											</dl>
+										<div class="flex flex-col justify-between col-span-2 px-5 py-6 bg-sky-100 md:flex-row">
+											<dt class="text-sm font-semibold">Subtotal</dt>
+											<dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(item.qty_stok * item.harga_beli) }}</dd>
 										</div>
 									</div>
 								</td>
@@ -140,11 +125,11 @@
 			</div>
 			<div class="grid grid-cols-12 gap-4">
 				<div class="flex flex-col items-center justify-between col-span-12 px-4 py-2 mx-2 mt-4 bg-white border-2 rounded-lg shadow sm:flex-row border-slate-100 md:col-span-10">
-					<p class="font-semibold">Total Pendapatan</p>
+					<p class="font-semibold">Total Pengeluaran</p>
 					<p class="font-semibold">Rp. {{ Intl.NumberFormat().format(revenue) }}</p>
 				</div>
 				<div class="flex justify-end col-span-12 py-2 mx-2 md:mt-4 md:px-4 md:justify-start md:col-span-2">
-					<NuxtLink target="_blank" :to="{name: 'penjualan-laporan-penjualan-print', query: {dateStart: this.dateStart, dateEnd: this.dateEnd}}">
+					<NuxtLink target="_blank" :to="{name: 'persediaan-laporan-persediaan-print', query: {dateStart: this.dateStart, dateEnd: this.dateEnd}}">
 						<button class="px-4 py-2 text-white bg-green-500 rounded-lg shadow-md btn-with-icon hover:bg-green-600">
 							<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -160,25 +145,28 @@
 
 <script>
 export default {
-	name: "LaporanPenjualan",
+	name: "LaporanPersediaan",
 	layout: "auth",
 	data() {
 		return {
 			content: false,
-			penjualan: [],
+			persediaan: [],
 			dateStart: null,
 			dateEnd: null,
+
 			// user : this.$auth.user
 		};
 	},
+
 	created() {
-		this.getDataPenjualan();
+		this.getDataPersediaan();
 	},
 
 	computed: {
 		revenue() {
-			let data = this.penjualan;
-			let result = data.reduce((total, item) => total + item.total_harga, 0);
+			let data = this.persediaan;
+
+			let result = data.reduce((total, item) => total + item.total_harga_beli, 0);
 			return result;
 		},
 	},
@@ -187,12 +175,14 @@ export default {
 			if (this.content !== null) this.content = this.content == index ? null : index;
 			else this.content = index;
 		},
-		async getDataPenjualan() {
-			const penjualan = await this.$axios.$get("/api/penjualan/laporan?from=" + this.dateStart + "&to=" + this.dateEnd);
-			this.penjualan = penjualan;
+
+		async getDataPersediaan() {
+			let data = await this.$axios.$get("/api/laporan/stok-masuk?from=" + this.dateStart + "&to=" + this.dateEnd);
+			this.persediaan = data;
 		},
+
 		getDataInRange() {
-			this.getDataPenjualan();
+			this.getDataPersediaan();
 		},
 	},
 };

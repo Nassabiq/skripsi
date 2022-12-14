@@ -39,6 +39,12 @@ class ProdukController extends Controller
         return response()->json($produk, 200);
     }
 
+    public function hargaProduk(Request $request)
+    {
+        $data = SKU::where('id_produk', $request->id_produk)->where('id_bahan_baku', $request->id_bahan_baku)->first();
+        return response()->json($data, 200);
+    }
+
     public function kategori()
     {
         $kategori = KategoriProduk::get();

@@ -74,13 +74,4 @@ class StokMasukController extends Controller
             return response()->json($th, 400);
         }
     }
-
-    public function laporanStokMasuk(Request $request)
-    {
-        $from = Carbon::parse($request->from);
-        $to = Carbon::parse($request->to);
-
-        $data = StokMasuk::with('detailStok.bahanBaku', 'user')->orderBy('tgl_stok_masuk', 'asc')->whereBetween('tgl_stok_masuk', [$from, $to])->get();
-        return response()->json($data, 200);
-    }
 }

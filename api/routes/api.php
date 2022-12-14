@@ -4,6 +4,7 @@ use App\Http\Controllers\AnalisisHPPController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\BahanBakuController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PengadaanController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\StokMasukController;
@@ -26,7 +27,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-// Produk
+// Produk                  
 Route::get('/produk', [ProdukController::class, 'index']);
 Route::get('/kategori', [ProdukController::class, 'kategori']);
 Route::get('/katalog', [ProdukController::class, 'katalog']);
@@ -37,6 +38,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     // Produk
     Route::get('/produk/{id_produk}', [ProdukController::class, 'detail']);
+    Route::get('/produk/harga-produk', [ProdukController::class, 'hargaProduk']);
 
     Route::post('/produk', [ProdukController::class, 'addProduk']);
     Route::patch('/produk/{id_produk}', [ProdukController::class, 'updateProduk']);
@@ -58,19 +60,14 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/transaksi', [TransaksiController::class, 'index']);
     Route::get('/transaksi/all', [TransaksiController::class, 'dataTransaksi']);
     Route::get('/transaksi/{id_transaksi}', [TransaksiController::class, 'detailTransaksi']);
-    Route::get('/penjualan/laporan', [TransaksiController::class, 'laporanPenjualan']);
 
     Route::post('/transaksi', [TransaksiController::class, 'submitTransaksi']);
     Route::post('/transaksi/status/{id_transaksi}', [TransaksiController::class, 'changeStatus']);
     Route::post('/transaksi/resi/{id_transaksi}', [TransaksiController::class, 'inputResi']);
 
-
     // STOK MASUK
     Route::get('/stok-masuk', [StokMasukController::class, 'index']);
-    Route::get('/stok-masuk/laporan', [StokMasukController::class, 'laporanStokMasuk']);
-
     Route::post('/stok-masuk', [StokMasukController::class, 'addStok']);
-
 
     // PENGADAAN PERSEDIAAN
     Route::get('/pengadaan', [PengadaanController::class, 'index']);
@@ -81,6 +78,10 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::patch('/pengadaan/validasi/{id_pengadaan}', [PengadaanController::class, 'validasiPengadaan']);
     Route::delete('/pengadaan/{id_pengadaan}', [PengadaanController::class, 'deletePengadaan']);
 
+    // LAPORAN
+    Route::get('/laporan/penjualan', [LaporanController::class, 'laporanPenjualan']);
+    Route::get('/laporan/stok-masuk', [LaporanController::class, 'laporanStokMasuk']);
+
     // USER
     Route::get('/user', fn () => auth()->user()->load('role', 'pelanggan'));
     Route::get('/all-user', [UserController::class, 'index']);
@@ -89,8 +90,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/user', [UserController::class, 'addUser']);
     Route::patch('/user/{id_user}', [UserController::class, 'updateUser']);
     Route::delete('/user/{id_user}  ', [UserController::class, 'deleteUser']);
-
-
 
     // ANALISIS
     Route::get('/sku/bahan-baku', [AnalisisHPPController::class, 'getBahanBaku']);
