@@ -33,20 +33,14 @@
 		</div>
 		<div class="card">
 			<p class="text-lg font-semibold">Harga Pokok Produksi</p>
-			<ul>
-				<li v-for="data in hpp">{{ data }}</li>
-			</ul>
+			<!-- {{ hpp }} -->
 			<template>
-				<!-- <div class="flex justify-between">
-					<p class="text-sm font-semibold">Nama Bahan Baku : {{ data.bahan_baku }}</p>
-					<p class="text-sm">Bulan : {{ $moment(bulan).format("MMMM") }}</p>
-				</div> -->
 				<table class="table mt-4 table-auto table-produk">
 					<thead class="bg-gray-100">
 						<tr class="text-center text-gray-800 font-title">
 							<th rowspan="2" class="p-1 border-table">Tgl</th>
 							<th colspan="3" class="p-2 border-table">Pembelian</th>
-							<th colspan="3" class="p-2 border-table">Produksi</th>
+							<th colspan="3" class="p-2 border-table">Penjualan</th>
 							<th colspan="3" class="p-2 border-table">Persediaan</th>
 						</tr>
 						<tr class="text-center text-gray-800 font-title">
@@ -62,17 +56,32 @@
 						</tr>
 					</thead>
 					<tbody class="divide-y-2 divide-gray-100 divide-dotted">
-						<tr class="text-sm text-center">
-							<td class="p-2 border-table">1</td>
-							<td class="p-2 border-table"></td>
-							<td class="p-2 border-table"></td>
-							<td class="p-2 border-table"></td>
-							<td class="p-2 border-table"></td>
-							<td class="p-2 border-table"></td>
-							<td class="p-2 border-table"></td>
-							<td class="p-2 border-table">{{ persediaan.qty }}</td>
-							<td class="p-2 border-table">{{ persediaan.harga }}</td>
-							<td class="p-2 border-table">{{ persediaan.qty * persediaan.harga }}</td>
+						<tr class="text-sm text-center" v-for="data in hpp">
+							<td class="p-2 border-table">{{ data.tanggal }}</td>
+							<td class="p-2 border-table" v-text="data.pembelian.qty > 0 ? data.pembelian.qty : '-'"></td>
+							<td class="p-2 border-table" v-text="data.pembelian.harga > 0 ? data.pembelian.harga : '-'"></td>
+							<td class="p-2 border-table" v-text="data.pembelian.jumlah > 0 ? data.pembelian.jumlah : '-'"></td>
+							<td class="p-2 border-table" v-text="data.hpp.qty > 0 ? data.hpp.qty : '-'"></td>
+							<td class="p-2 border-table" v-text="data.hpp.harga > 0 ? data.hpp.harga : '-'"></td>
+							<td class="p-2 border-table" v-text="data.hpp.jumlah > 0 ? data.hpp.jumlah : '-'"></td>
+							<td class="p-2 border-table">
+								<ul v-if="qtyResult(data.persediaan).length > 0">
+									<li v-for="data in qtyResult(data.persediaan)" v-text="data"></li>
+								</ul>
+								<span v-else>{{ qtyResult(data.persediaan)[0] }}</span>
+							</td>
+							<td class="p-2 border-table">
+								<ul v-if="hargaResult(data.persediaan).length > 0">
+									<li v-for="data in hargaResult(data.persediaan)">{{ "Rp. " + Intl.NumberFormat().format(data) }}</li>
+								</ul>
+								<span v-else>{{ "Rp. " + Intl.NumberFormat().format(hargaResult(data.persediaan)[0]) }}</span>
+							</td>
+							<td class="p-2 border-table">
+								<ul v-if="totalResult(data.persediaan).length > 0">
+									<li v-for="data in totalResult(data.persediaan)">{{ "Rp. " + Intl.NumberFormat().format(data) }}</li>
+								</ul>
+								<span v-else>{{ "Rp. " + Intl.NumberFormat().format(totalResult(data.persediaan)[0]) }}</span>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -141,49 +150,29 @@ export default {
 			this.$axios
 				.get("/api/analisis-hpp?id_produk=" + this.id_produk + "&id_bahan_baku=" + this.id_bahan_baku + "&from=" + this.from + "&to=" + this.to)
 				.then((response) => {
-					console.log(JSON.parse(response.data));
 					this.hpp = response.data;
-				})
-				.then(() => {
-					// let produksi = this.produksi != null ? this.produksi.material : null;
-					// let pembelian = this.pembelian != null ? this.pembelian.material : null;
-					// let data = this.hpp;
-					// if (data.length > 0) data.pop();
-					// if (produksi && pembelian) {
-					// 	for (let i = 0; i < produksi.length; i++) {
-					// 		for (let j = 0; j < pembelian.length; j++) {
-					// 			if (produksi[i].id_material == pembelian[j].id_material) {
-					// 				data.push({
-					// 					bahan_baku: produksi[i].nama_bahan_baku,
-					// 					produksi: produksi[i].produksi,
-					// 					pembelian: pembelian[j].detail_barang,
-					// 				});
-					// 				// return data;
-					// 			}
-					// 		}
-					// 	}
-					// } else if (produksi == null) {
-					// 	for (let i = 0; i < pembelian.length; i++) {
-					// 		data.push({
-					// 			bahan_baku: pembelian[i].nama_bahan_baku,
-					// 			pembelian: pembelian[i].detail_barang,
-					// 		});
-					// 		// return data;
-					// 	}
-					// } else if (pembelian == null) {
-					// 	for (let j = 0; j < produksi.length; j++) {
-					// 		data.push({bahan_baku: produksi[i].nama_bahan_baku, produksi: produksi[j].produksi});
-					// 		// return data;
-					// 	}
-					// } else if (!pembelian && !produksi) {
-					// 	data == null;
-					// }
 				})
 				.catch((error) => {
 					console.log(error);
 				});
-			// if (this.data_produk && this.bulan && this.tahun) {
-			// }
+		},
+
+		qtyResult(data) {
+			const result = [];
+			Object.keys(data).forEach((k) => result.push(data[k].qty));
+			return result;
+		},
+		hargaResult(data) {
+			const result = [];
+			Object.keys(data).forEach((k) => result.push(data[k].harga));
+
+			return result;
+		},
+		totalResult(data) {
+			const result = [];
+			Object.keys(data).forEach((k) => result.push(data[k].jumlah));
+
+			return result;
 		},
 		// closeModal() {
 		// 	this.modal = false;
@@ -191,23 +180,6 @@ export default {
 		// 		id_produk: "",
 		// 		harga: "",
 		// 	};
-		// },
-		// showSatuan(id) {
-		// 	let products = this.products;
-
-		// 	products = products.filter((data) => {
-		// 		return data.id_produk.includes(id);
-		// 	});
-		// 	if (id) {
-		// 		if (!this.produk.satuan) {
-		// 			this.produk.satuan = products[0].categories.satuan.nama_satuan;
-		// 		} else {
-		// 			this.produk.satuan = null;
-		// 			this.produk.satuan = products[0].categories.satuan.nama_satuan;
-		// 		}
-		// 	} else {
-		// 		this.produk.satuan = null;
-		// 	}
 		// },
 	},
 };

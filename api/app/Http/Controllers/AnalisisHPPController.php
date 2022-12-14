@@ -66,10 +66,7 @@ class AnalisisHPPController extends Controller
             "harga" => 6000,
         );
         $result = json_encode($hpp_data);
-
-        // return response()->json($this->hpp_data, 200);
-        // $hpp_data;
-        $this->main(json_decode($result), $last_month_stock_data);
+        return $this->main(json_decode($result), $last_month_stock_data);
     }
 
     public function getBahanBaku(Request $request)
@@ -101,7 +98,6 @@ class AnalisisHPPController extends Controller
     public function push_array_and_unlink_the_source($array, $array_tobe_added)
     {
         array_push($array, json_decode(json_encode($array_tobe_added)));
-
         return $array;
     }
 
@@ -252,11 +248,7 @@ class AnalisisHPPController extends Controller
             $flag_transaction_date = $current_transaction_date;
         }
 
-        // the calculation is saved to $result_data
-        print_r($result_data);
-        // return response()->json($result_data, 200);
-        // $result = array_values($result_data);
-        // return response()->json(json_encode($result, true), 200);
+        return $result_data;
     }
 
     // Everything starts from here?!
