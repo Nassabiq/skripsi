@@ -55,15 +55,34 @@
 							<th class="p-2 border-table">Total</th>
 						</tr>
 					</thead>
-					<tbody class="divide-y-2 divide-gray-100 divide-dotted">
-						<tr class="text-sm text-center" v-for="data in hpp">
+					<tbody class="divide-y-2 divide-gray-100 divide-dotted" v-if="hpp">
+						<tr class="text-sm text-center" v-for="data in hpp[0]">
 							<td class="p-2 border-table">{{ data.tanggal }}</td>
 							<td class="p-2 border-table" v-text="data.pembelian.qty > 0 ? data.pembelian.qty : '-'"></td>
 							<td class="p-2 border-table" v-text="data.pembelian.harga > 0 ? data.pembelian.harga : '-'"></td>
 							<td class="p-2 border-table" v-text="data.pembelian.jumlah > 0 ? data.pembelian.jumlah : '-'"></td>
-							<td class="p-2 border-table" v-text="data.hpp.qty > 0 ? data.hpp.qty : '-'"></td>
-							<td class="p-2 border-table" v-text="data.hpp.harga > 0 ? data.hpp.harga : '-'"></td>
-							<td class="p-2 border-table" v-text="data.hpp.jumlah > 0 ? data.hpp.jumlah : '-'"></td>
+							<!-- <td class="p-2 border-table" v-text="hppQty(data.hpp)"></td>
+							<td class="p-2 border-table" v-text="data.hpp ? data.hpp : '-'"></td>
+							<td class="p-2 border-table" v-text="data.hpp ? data.hpp : '-'"></td> -->
+							<td class="p-2 border-table">
+								<ul v-if="data.hpp != null">
+									<li v-for="data in qtyResult(data.hpp)" v-text="data"></li>
+								</ul>
+								<span v-else>{{ 0 }}</span>
+							</td>
+							<td class="p-2 border-table">
+								<ul v-if="data.hpp != null">
+									<li v-for="data in hargaResult(data.hpp)">{{ "Rp. " + Intl.NumberFormat().format(data) }}</li>
+								</ul>
+								<span v-else>{{ 0 }}</span>
+							</td>
+							<td class="p-2 border-table">
+								<ul v-if="data.hpp != null">
+									<li v-for="data in totalResult(data.hpp)">{{ "Rp. " + Intl.NumberFormat().format(data) }}</li>
+								</ul>
+								<span v-else>{{ 0 }}</span>
+							</td>
+
 							<td class="p-2 border-table">
 								<ul v-if="qtyResult(data.persediaan).length > 0">
 									<li v-for="data in qtyResult(data.persediaan)" v-text="data"></li>
@@ -83,6 +102,18 @@
 								<span v-else>{{ "Rp. " + Intl.NumberFormat().format(totalResult(data.persediaan)[0]) }}</span>
 							</td>
 						</tr>
+						<!-- <tr v-if="hpp[1]">
+							<td class="p-2 border-table">Total</td>
+							<td class="p-2 border-table">{{ hpp[1].pembelian.qty }}</td>
+							<td class="p-2 border-table"></td>
+							<td class="p-2 border-table">{{ hpp[1].pembelian.jumlah }}</td>
+							<td class="p-2 border-table">{{ hpp[1].penjualan.qty }}</td>
+							<td class="p-2 border-table"></td>
+							<td class="p-2 border-table">{{ hpp[1].penjualan.jumlah }}</td>
+							<td class="p-2 border-table">{{ hpp[1].persediaan.qty }}</td>
+							<td class="p-2 border-table"></td>
+							<td class="p-2 border-table">{{ hpp[1].persediaan.jumlah }}</td>
+						</tr> -->
 					</tbody>
 				</table>
 			</template>
@@ -165,6 +196,12 @@ export default {
 		hargaResult(data) {
 			const result = [];
 			Object.keys(data).forEach((k) => result.push(data[k].harga));
+
+			return result;
+		},
+		hppQty(data) {
+			const result = [];
+			Object.keys(data).forEach((k) => result.push(data[k].qty));
 
 			return result;
 		},

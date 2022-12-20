@@ -39,10 +39,10 @@ class ProdukController extends Controller
         return response()->json($produk, 200);
     }
 
-    public function hargaProduk(Request $request)
+    public function harga(Request $request)
     {
-        $data = SKU::where('id_produk', $request->id_produk)->where('id_bahan_baku', $request->id_bahan_baku)->first();
-        return response()->json($data, 200);
+        $sku = SKU::with('harga')->where('id_produk', $request->id_produk)->where('id_bahan_baku', $request->id_bahan_baku)->first();
+        return response()->json($sku, 200);
     }
 
     public function kategori()
@@ -195,5 +195,27 @@ class ProdukController extends Controller
         Storage::deleteDirectory('image_produk/' . $produk->id_produk);
         $produk->delete();
         return response()->json($produk, 200);
+    }
+
+    public function updateHarga(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'harga'   => 'required|numeric',
+            'sku'   => 'required',
+        ]);
+
+        if ($validator->fails()) return response()->json($validator->errors(), 400);
+
+        $id = IdGenerator::generate([
+            'table' => 'harga_jual_produk', 'field' => 'id_harga_jual', 'length' => 8, 'prefix' => 'HP-'
+        ]);
+
+        $data = HargaJualProduk::create([
+            'id_harga_jual' => $id,
+            'id_sku' => $request->sku,
+            'harga_produk' => $request->harga,
+            'tgl_diubah' => Carbon::now()
+        ]);
+        return response()->json($data, 200);
     }
 }

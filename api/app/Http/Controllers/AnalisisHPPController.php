@@ -67,6 +67,7 @@ class AnalisisHPPController extends Controller
         );
         $result = json_encode($hpp_data);
         return $this->main(json_decode($result), $last_month_stock_data);
+        // $this->main(json_decode($result), $last_month_stock_data);
     }
 
     public function getBahanBaku(Request $request)
@@ -85,12 +86,12 @@ class AnalisisHPPController extends Controller
         }
     }
 
-    public function generate_row_item($qty, $costperunit)
+    public function generate_row_item($qty, $harga)
     {
         return (object) array(
             "qty" => $qty,
-            "harga" => $costperunit,
-            "jumlah" => ($qty * $costperunit),
+            "harga" => $harga,
+            "jumlah" => ($qty * $harga),
         );
     }
 
@@ -98,6 +99,7 @@ class AnalisisHPPController extends Controller
     public function push_array_and_unlink_the_source($array, $array_tobe_added)
     {
         array_push($array, json_decode(json_encode($array_tobe_added)));
+
         return $array;
     }
 
@@ -127,28 +129,44 @@ class AnalisisHPPController extends Controller
      * @param string $current_stock_key  The current of stock key.
      * @param int $remaining_stock_needed The variable to save the remaining_stock to be reduced.
      * */
-    public function find_remaining_stock($row_stock, $index_row_stock, $object_iterator, $transaction_item, $current_stock_key, $remaining_stock_needed)
+    public function find_remaining_stock($row_stock, $index_row_stock, $object_iterator, $transaction_item, $current_stock_key, $remaining_stock_needed, $hpp_item, $total_data)
     {
         $remaining_stock_needed = ($row_stock[$index_row_stock]->$current_stock_key->qty - $remaining_stock_needed);
 
         if ($remaining_stock_needed < 0) {
+            # add the stock to the hpp item first
+            $hpp_item->$current_stock_key = $this->generate_row_item($row_stock[$index_row_stock]->$current_stock_key->qty, $row_stock[$index_row_stock]->$current_stock_key->harga);
+
+            $total_data->penjualan->qty += $row_stock[$index_row_stock]->$current_stock_key->qty;
+            $total_data->penjualan->jumlah += ($row_stock[$index_row_stock]->$current_stock_key->qty * $row_stock[$index_row_stock]->$current_stock_key->harga);
+
             # delete the first top stock
             unset($row_stock[$index_row_stock]->$current_stock_key);
             $current_stock_key = $object_iterator->key();
             $remaining_stock_needed *= -1;
 
             # call itself to check another stock
-            $this->find_remaining_stock($row_stock, $index_row_stock, $object_iterator, $transaction_item, $current_stock_key, $remaining_stock_needed);
+            $this->find_remaining_stock($row_stock, $index_row_stock, $object_iterator, $transaction_item, $current_stock_key, $remaining_stock_needed, $hpp_item, $total_data);
+        } else {
+            $hpp_item->$current_stock_key = $this->generate_row_item($remaining_stock_needed, $row_stock[$index_row_stock]->$current_stock_key->harga);
+
+            $total_data->penjualan->qty += $remaining_stock_needed;
+            $total_data->penjualan->jumlah += ($remaining_stock_needed * $row_stock[$index_row_stock]->$current_stock_key->harga);
         }
 
-        return array($current_stock_key, $remaining_stock_needed);
+        return array($current_stock_key, $remaining_stock_needed, $hpp_item);
     }
-    public function calculate_remaining_stock_on_specific_key($row_stock, $index, $current_stock_key, $remaining_stock_needed)
+    public function calculate_remaining_stock_on_specific_key($row_stock, $index, $current_stock_key, $remaining_stock_needed, $hpp_item, $total_data)
     {
         $row_stock[$index]->$current_stock_key->qty = $row_stock[$index]->$current_stock_key->qty - $remaining_stock_needed;
         $row_stock[$index]->$current_stock_key->jumlah = $row_stock[$index]->$current_stock_key->harga * $row_stock[$index]->$current_stock_key->qty;
+
+        $hpp_item->$current_stock_key = $this->generate_row_item($remaining_stock_needed, $row_stock[$index]->$current_stock_key->harga);
+
+        $total_data->penjualan->qty += $row_stock[$index]->$current_stock_key->qty;
+        $total_data->penjualan->jumlah += $row_stock[$index]->$current_stock_key->jumlah;
     }
-    public function reduce_stock($row_stock, $index, $transaction_item)
+    public function reduce_stock($row_stock, $index, $transaction_item, $hpp_item, $total_data)
     {
         $object_iterator = new ArrayIterator($row_stock[$index]);
         $first_in_stock_key = $object_iterator->key();
@@ -156,15 +174,18 @@ class AnalisisHPPController extends Controller
         # check if the stock in transaction_item is exceed the current stock at $row_stock[$index]->$first_in_stock_key
         if ($row_stock[$index]->$first_in_stock_key->qty > $transaction_item->qty) {
             # get $remaining_stock_needed from $transaction_item->qty
-            $this->calculate_remaining_stock_on_specific_key($row_stock, $index, $first_in_stock_key, $transaction_item->qty);
+            $this->calculate_remaining_stock_on_specific_key($row_stock, $index, $first_in_stock_key, $transaction_item->qty, $hpp_item, $total_data);
         } else {
             // check if how much needed for the stock, need to check that the stock is enough for all code
-            list($current_stock_key, $remaining_stock_needed) = $this->find_remaining_stock($row_stock, $index, $object_iterator, $transaction_item, $first_in_stock_key, $transaction_item->qty);
+            list($current_stock_key, $remaining_stock_needed, $hpp_item) = $this->find_remaining_stock($row_stock, $index, $object_iterator, $transaction_item, $first_in_stock_key, $transaction_item->qty, $hpp_item, $total_data);
 
-            $this->calculate_remaining_stock_on_specific_key($row_stock, $index, $current_stock_key, $remaining_stock_needed);
+            $this->calculate_remaining_stock_on_specific_key($row_stock, $index, $current_stock_key, $remaining_stock_needed, $hpp_item, $total_data);
         }
 
-        return $row_stock;
+        return array(
+            $row_stock[$index],
+            $hpp_item
+        );
     }
 
     public function create_row($result_data, $month, $pembelian, $hpp, $stock)
@@ -172,14 +193,14 @@ class AnalisisHPPController extends Controller
         array_push($result_data, array(
             "tanggal" => $month,
             "pembelian" => $this->generate_row_item($pembelian ? $pembelian->qty : 0, $pembelian ? $pembelian->harga : 0),
-            "hpp" => $this->generate_row_item($hpp ? $hpp->qty : 0, (isset($hpp->harga)) ? $hpp->harga : 0),
+            "hpp" => $hpp,
             "persediaan" => $stock,
         ));
 
         return $result_data;
     }
 
-    public function add_row_table_below($row_stock, $result_data, $month, $index, $transaction_item, $costperunit)
+    public function add_row_table_below($row_stock, $result_data, $month, $index, $transaction_item, $costperunit, $total_data)
     {
         if ($transaction_item->id === "pembelian") {
             $row_stock = $this->add_stock($row_stock, $index, $transaction_item, $costperunit);
@@ -191,16 +212,21 @@ class AnalisisHPPController extends Controller
                 null,
                 $row_stock[$index]
             );
+
+            $total_data->pembelian->qty += $transaction_item->qty;
+            $total_data->pembelian->jumlah += ($transaction_item->qty * $transaction_item->harga);
         } else {
             // if transaction_item->id === "produksi"
-            $this->reduce_stock($row_stock, $index, $transaction_item);
+            # create an array to save hpp transaction item
+            $hpp_item = (object) array();
+            list($reduced_stock) = $this->reduce_stock($row_stock, $index, $transaction_item, $hpp_item, $total_data);
 
             $result_data = $this->create_row(
                 $result_data,
                 ($month ? $month : ""),
                 null,
-                $transaction_item,
-                $row_stock[$index]
+                $hpp_item,
+                $reduced_stock
             );
         }
 
@@ -229,6 +255,18 @@ class AnalisisHPPController extends Controller
         // prepare $row_stock for foreach calculation
         $row_stock = $this->push_array_and_unlink_the_source($row_stock, $row_stock["first"]);
 
+        // prepare the total variable
+        $total_data = (object) array(
+            "pembelian" => (object) array(
+                "qty" => 0,
+                "jumlah" => 0,
+            ),
+            "penjualan" => (object) array(
+                "qty" => 0,
+                "jumlah" => 0,
+            )
+        );
+
         foreach ($transaction_data as $index => $transaction_item) {
             $current_transaction_date = new DateTime($transaction_item->tgl);
 
@@ -238,7 +276,8 @@ class AnalisisHPPController extends Controller
                 (($current_transaction_date->format("d") === $flag_transaction_date->format("d") && $index !== 0) ? "" : $current_transaction_date->format("d")),
                 $index,
                 $transaction_item,
-                (isset($transaction_item->harga)) ? $transaction_item->harga : ""
+                (isset($transaction_item->harga)) ? $transaction_item->harga : "",
+                $total_data
             );
 
             // prepare $row_stock for next foreach calculation
@@ -248,8 +287,20 @@ class AnalisisHPPController extends Controller
             $flag_transaction_date = $current_transaction_date;
         }
 
-        return $result_data;
+        $total_data->persediaan = $result_data[array_key_last($result_data)]["persediaan"];
+        $total_data->barang_yang_tersedia_dijual = $total_data->pembelian->jumlah + $total_data->penjualan->jumlah;
+
+        // the calculation is saved to $result_data
+        // echo "RESULT Data -----------------------------------\n\n";
+        // print_r($result_data);
+
+        // echo "\n\nTotal Data -----------------------------------\n\n";
+        // print_r($total_data);
+        $data = [$result_data, $total_data];
+        return list($result_data, $total_data) = $data;
     }
+
+
 
     // Everything starts from here?!
 }

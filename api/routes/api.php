@@ -35,10 +35,11 @@ Route::get('/katalog', [ProdukController::class, 'katalog']);
 
 Route::post('/refresh', fn () =>  auth()->refresh());
 Route::group(['middleware' => ['auth:api']], function () {
-
     // Produk
     Route::get('/produk/{id_produk}', [ProdukController::class, 'detail']);
-    Route::get('/produk/harga-produk', [ProdukController::class, 'hargaProduk']);
+
+    Route::get('/harga', [ProdukController::class, 'harga']);
+    Route::post('/harga', [ProdukController::class, 'updateHarga']);
 
     Route::post('/produk', [ProdukController::class, 'addProduk']);
     Route::patch('/produk/{id_produk}', [ProdukController::class, 'updateProduk']);
@@ -81,6 +82,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     // LAPORAN
     Route::get('/laporan/penjualan', [LaporanController::class, 'laporanPenjualan']);
     Route::get('/laporan/stok-masuk', [LaporanController::class, 'laporanStokMasuk']);
+    Route::get('/laporan/omset', [LaporanController::class, 'laporanOmset']);
 
     // USER
     Route::get('/user', fn () => auth()->user()->load('role', 'pelanggan'));
@@ -102,5 +104,3 @@ Route::group(['middleware' => ['auth:api']], function () {
 // Route::post('/addKategori', [ProductController::class, 'addKategori']);
 // Route::post('/updateKategori/{id_kategori_produk}', [ProductController::class, 'updateKategori']);
 // Route::post('/deleteKategori/{id_kategori_produk}', [ProductController::class, 'deleteKategori']);
-
-// Route::post('/updateHarga', [ProductController::class, 'updateHarga']);

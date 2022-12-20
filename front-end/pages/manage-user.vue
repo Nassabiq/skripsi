@@ -55,10 +55,12 @@
 						<tbody class="divide-y-2 divide-gray-100 divide-dotted">
 							<tr class="text-sm" v-for="(item, index) in user.data">
 								<td class="p-3">{{ index + 1 }}</td>
-								<td class="p-3">{{ item.name }}</td>
+								<td class="p-3">{{ item.nama_user }}</td>
 								<td class="p-3">{{ item.email }}</td>
 								<td class="p-3">{{ item.role.nama_role }}</td>
-								<td class="p-3">tgl register</td>
+								<td class="p-3">
+									{{ $moment(item.tgl_register).format("DD MMMM YYYY") }}
+								</td>
 								<td class="p-2">
 									<button class="btn btn-sm btn-indigo" @click.prevent="editUser(item)">
 										<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
