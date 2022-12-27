@@ -111,7 +111,7 @@
 						<label class="label">Finishing</label>
 						<div class="flex-col">
 							<input type="text" class="form-input form-input-lg" placeholder="Finishing" v-model="product.finishing[index].nama_finishing" />
-							<span class="text-xs text-red-500" v-if="validation['finishing.' + index]">Form ini harus diisi.</span>
+							<!-- <span class="text-xs text-red-500" v-if="validation['finishing.' + index]">Form ini harus diisi.</span> -->
 						</div>
 					</div>
 					<div class="flex justify-end">
@@ -126,8 +126,8 @@
 						<label class="label">Data Finishing Baru</label>
 						<div class="flex gap-4 mb-2" v-for="(data, index) in addFinishing">
 							<div class="flex-col">
-								<input type="text" class="form-input form-input-lg" placeholder="Finishing" v-model="addFinishing[index].data" />
-								<span class="text-xs text-red-500" v-if="validation['finishing.' + index]">Form ini harus diisi.</span>
+								<input type="text" class="form-input form-input-lg" placeholder="Finishing" v-model="addFinishing[index]" />
+								<!-- <span class="text-xs text-red-500" v-if="validation['finishing.' + index]">Form ini harus diisi.</span> -->
 							</div>
 							<button class="mt-1 btn btn-sm btn-red" @click="deleteFinishingForm(index)">
 								<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -139,28 +139,30 @@
 				</div>
 				<div class="col-span-12 md:col-span-6 space-y-2">
 					<div class="grid grid-cols-12 gap-4" v-for="(produk, index) in product.stok">
-						<div class="col-span-6">
-							<label class="label">Jenis Bahan</label>
-							<select class="form-input form-input-lg" v-model="product.stok[index].bahan_baku.id_bahan_baku">
+						<template v-if="produk.harga.length < 2">
+							<div class="col-span-6">
+								<label class="label">Jenis Bahan</label>
+								<input type="text" class="form-input form-input-lg bg-gray-100" v-model="produk.bahan_baku.nama_bahan_baku" disabled />
+								<!-- <select class="form-input form-input-lg" v-model="produk.bahan_baku.id_bahan_baku" disabled>
 								<option value="">Pilih Jenis Bahan</option>
-								<!-- <option :value="produk.bahan_baku.id_bahan_baku" v-for="data in produk.bahan_baku">
-									{{ data.nama_bahan_baku }}
-								</option> -->
-							</select>
-							<!-- :hidden="produk.bahan_baku.find((item) => item.id == data.id_bahan_baku)" -->
-							<!-- <span class="text-xs text-red-500" v-if="validation['id_bahan.' + index]">Form ini harus diisi.</span> -->
-						</div>
-						<div class="col-span-6">
-							<div>
-								<label class="label">Harga Awal</label>
-								<div class="flex justify-between gap-2">
-									<div class="flex-col">
-										<div><number placeholder="Harga.." class="form-input form-input-lg" v-model="produk.harga[0].harga_produk" v-bind="number"></number></div>
-										<!-- <span class="text-xs text-red-500" v-if="validation['harga.' + index]">Form ini harus diisi.</span> -->
+								<option :value="bahan.id_bahan_baku" v-for="bahan in bahanBaku">
+									{{ bahan.nama_bahan_baku }}
+								</option>
+							</select> -->
+								<!-- <span class="text-xs text-red-500" v-if="validation['id_bahan.' + index]">Form ini harus diisi.</span> -->
+							</div>
+							<div class="col-span-6">
+								<div>
+									<label class="label">Harga Awal</label>
+									<div class="flex justify-between gap-2">
+										<div class="flex-col">
+											<div><number placeholder="Harga.." class="form-input form-input-lg" v-model="produk.harga[0].harga_produk" v-bind="number"></number></div>
+											<!-- <span class="text-xs text-red-500" v-if="validation['harga.' + index]">Form ini harus diisi.</span> -->
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
+						</template>
 					</div>
 					<div class="flex justify-end">
 						<button class="mt-1 btn btn-sm btn-indigo btn-with-icon" @click="addJenisBahanForm">
@@ -177,9 +179,9 @@
 								<label class="label">Jenis Bahan</label>
 								<select class="form-input form-input-lg" v-model="addJenisBahan[index].id">
 									<option value="">Pilih Jenis Bahan</option>
-									<!-- <option :hidden="produk.jenisBahan.find((item) => item.id == data.id_bahan_baku)" :value="data.id_bahan_baku" v-for="data in bahanBaku">
-										{{ data.nama_bahan_baku }}
-									</option> -->
+									<option :hidden="addJenisBahan.find((item) => item.id == product.stok[index].bahan_baku.id_bahan_baku)" :value="bahan.id_bahan_baku" v-for="bahan in bahanBaku">
+										{{ bahan.nama_bahan_baku }}
+									</option>
 								</select>
 								<!-- <span class="text-xs text-red-500" v-if="validation['id_bahan.' + index]">Form ini harus diisi.</span> -->
 							</div>
@@ -204,17 +206,6 @@
 								</div>
 							</div>
 						</div>
-						<!-- <div class="flex gap-4 mb-2" v-for="(data, index) in addJenisBahan">
-							<div class="flex-col">
-								<input type="text" class="form-input form-input-lg" placeholder="Finishing" v-model="addJenisBahan[index].data" />
-								<span class="text-xs text-red-500" v-if="validation['finishing.' + index]">Form ini harus diisi.</span>
-							</div>
-							<button class="mt-1 btn btn-sm btn-red" @click="deleteFinishingForm(index)">
-								<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-								</svg>
-							</button>
-						</div> -->
 					</template>
 				</div>
 				<div class="col-span-12">
@@ -308,13 +299,13 @@ export default {
 					],
 				},
 			},
-			number: {
-				decimal: ".",
-				separator: ",",
-				prefix: "Rp.  ",
-				precision: 2,
-				masked: false,
-			},
+			// number: {
+			// 	decimal: ".",
+			// 	separator: ",",
+			// 	prefix: "Rp.  ",
+			// 	precision: 2,
+			// 	masked: false,
+			// },
 			product: [],
 			uploadedImage: {
 				addImage: [],
@@ -353,41 +344,69 @@ export default {
 		async getData() {
 			const product = await this.$axios.$get("/api/produk/" + this.$route.params.id);
 			const categories = await this.$axios.$get("/api/kategori");
+			const bahanBaku = await this.$axios.$get("/api/bahan-baku");
 
 			this.product = product;
 			this.product.image_produk = JSON.parse(this.product.image_produk);
 			this.uploadedImage.allImages = [...this.product.image_produk];
 
 			this.categories = categories;
+			this.bahanBaku = bahanBaku;
 		},
 		async updateProduk() {
-			this.isloading = !this.isloading;
-			setTimeout(() => {
-				this.$axios
-					.patch("/api/produk/" + this.product.id_produk, {
-						nama_produk: this.product.nama_produk,
-						satuan_produk: this.product.satuan_produk,
-						id_kategori_produk: this.product.id_kategori_produk,
-						deskripsi_produk: this.product.deskripsi_produk,
-						informasi_pemesanan: this.product.informasi_pemesanan,
-					})
-					.then(() => {
-						this.modal = !this.modal;
-						this.getData();
-					})
-					.then(() => {
-						this.$swal.fire({
-							icon: "success",
-							title: "Success...",
-							text: "Data Berhasil diubah!",
-							showConfirmButton: false,
-							timer: 3000,
-							timerProgressBar: true,
-						});
-					})
-					.catch((error) => (this.validation = error.response.data))
-					.finally(() => (this.isloading = !this.isloading));
-			}, 500);
+			const finishing = this.product.finishing;
+			const finishingResult = [];
+
+			finishing.forEach((element) => {
+				const data = {
+					"id_finishing": element.id_finishing,
+					"nama_finishing": element.nama_finishing,
+				};
+				finishingResult.push(data);
+			});
+
+			const jenis_bahan = this.product.stok;
+			const jenis_bahan_result = [];
+
+			jenis_bahan.forEach((element) => {
+				const data = {
+					// "id_sku": element.id_sku,
+					"id_bahan_baku": element.bahan_baku.id_bahan_baku,
+					"nama_bahan_baku": element.bahan_baku.nama_bahan_baku,
+					"id_harga_jual": element.harga[0].id_harga_jual,
+					"harga_produk": element.harga[0].harga_produk,
+				};
+
+				jenis_bahan_result.push(data);
+			});
+
+			await this.$axios
+				.patch("/api/produk/" + this.product.id_produk, {
+					nama_produk: this.product.nama_produk,
+					satuan_produk: this.product.satuan_produk,
+					id_kategori_produk: this.product.id_kategori_produk,
+					deskripsi_produk: this.product.deskripsi_produk,
+					informasi_pemesanan: this.product.informasi_pemesanan,
+					finishing: JSON.stringify(finishingResult),
+					jenis_bahan: JSON.stringify(jenis_bahan_result),
+					new_finishing: this.addFinishing.length > 0 ? JSON.stringify(this.addFinishing) : null,
+					new_jenis_bahan: this.addJenisBahan.length > 0 ? JSON.stringify(this.addJenisBahan) : null,
+				})
+				.then(() => {
+					this.modal = !this.modal;
+					this.getData();
+				})
+				.then(() => {
+					this.$swal.fire({
+						icon: "success",
+						title: "Success...",
+						text: "Data Berhasil diubah!",
+						showConfirmButton: false,
+						timer: 3000,
+						timerProgressBar: true,
+					});
+				})
+				.catch((error) => (this.validation = error.response.data));
 		},
 		activateImage(imageIndex) {
 			this.activeImage = imageIndex;
@@ -414,7 +433,7 @@ export default {
 		},
 
 		addForm() {
-			this.addFinishing.push({data: ""});
+			this.addFinishing.push("");
 		},
 		addJenisBahanForm() {
 			this.addJenisBahan.push({id: "", harga: ""});

@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
+use function GuzzleHttp\Promise\all;
+
 class ProdukController extends Controller
 {
     public function index(Request $request)
@@ -127,26 +129,81 @@ class ProdukController extends Controller
     // UPDATE DATA INTO DATABASE
     public function updateProduk(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'nama_produk'   => 'required',
-            'id_kategori_produk'   => 'required',
-            'satuan_produk'   => 'required',
-            'deskripsi_produk'   => 'required',
-            'informasi_pemesanan'   => 'required',
-        ]);
+        // var_dump($request->all());
+        // $validator = Validator::make($request->all(), [
+        //     'nama_produk'   => 'required',
+        //     'id_kategori_produk'   => 'required',
+        //     'satuan_produk'   => 'required',
+        //     'deskripsi_produk'   => 'required',
+        //     'informasi_pemesanan'   => 'required',
+        // ]);
 
-        if ($validator->fails()) return response()->json($validator->errors(), 400);
+        // if ($validator->fails()) return response()->json($validator->errors(), 400);
 
-        $produk = Produk::findOrFail($id);
-        $produk->nama_produk =  $request->nama_produk;
-        $produk->slug_produk =  Str::slug($request->nama_produk);
-        $produk->satuan_produk =  $request->satuan_produk;
-        $produk->id_kategori_produk =  $request->id_kategori_produk;
-        $produk->deskripsi_produk = $request->deskripsi_produk;
-        $produk->informasi_pemesanan = $request->informasi_pemesanan;
-        $produk->save();
+        // $produk = Produk::findOrFail($id);
+        // $produk->nama_produk =  $request->nama_produk;
+        // $produk->slug_produk =  Str::slug($request->nama_produk);
+        // $produk->satuan_produk =  $request->satuan_produk;
+        // $produk->id_kategori_produk =  $request->id_kategori_produk;
+        // $produk->deskripsi_produk = $request->deskripsi_produk;
+        // $produk->informasi_pemesanan = $request->informasi_pemesanan;
 
-        return response()->json($produk, 200);
+        // $produk->save();
+
+        // $finishing = Finishing::where('id_produk', $id)->get();
+
+        // $finishing_update = json_decode($request->finishing);
+        // foreach ($finishing as $item) {
+        //     foreach ($finishing_update as $fu) {
+        //         if ($item->id_finishing == $fu->id_finishing) $item->nama_finishing = $fu->nama_finishing;
+        //         $item->save();
+        //     }
+        // }
+
+        // $jenis_bahan_update = json_decode($request->jenis_bahan);
+
+        // foreach ($jenis_bahan_update as $data) {
+        //     $harga = HargaJualProduk::findOrFail($data->id_harga_jual);
+        //     $harga->harga_produk = $data->harga_produk;
+        //     $harga->save();
+        // }
+
+        // if ($request->new_finishing != null) {
+        //     $new_finishing = json_decode($request->new_finishing);
+        //     foreach ($new_finishing as $data) {
+        //         $id_finishing = IdGenerator::generate(['table' => 'finishing', 'field' => 'id_finishing', 'length' => 8, 'prefix' => 'FP-']);
+        //         Finishing::create(['id_finishing' => $id_finishing, 'id_produk' => $id, 'nama_finishing' => $data]);                # code...
+        //     }
+        // }
+
+        if ($request->new_jenis_bahan != null) {
+            $new_jenis_bahan = json_decode($request->new_jenis_bahan);
+
+            foreach ($new_jenis_bahan as $item) {
+                $sku = SKU::where('id_produk', $id)->get();
+                foreach ($sku as $data) {
+                    if ($item->id !== $data->id_bahan_baku) {
+                        $id_sku = IdGenerator::generate(['table' => 'sku', 'field' => 'id_sku', 'length' => 9, 'prefix' => 'SKU-']);
+                        $id_harga_jual = IdGenerator::generate(['table' => 'harga_jual_produk', 'field' => 'id_harga_jual', 'length' => 8, 'prefix' => 'HP-']);
+
+                        SKU::create(['id_sku' => $id_sku, 'id_produk' => $id, 'id_bahan_baku' => $item->id]);
+                        HargaJualProduk::create([
+                            'id_harga_jual' => $id_harga_jual,
+                            'id_sku' => $id_sku,
+                            'harga_produk' => $item->harga,
+                            'tgl_diubah' => Carbon::now()
+                        ]);
+                        // var_dump(true);
+                        // } else {
+                        //     var_dump(false);
+                    }
+                }
+            }
+        }
+
+
+        // return response()->json(["message" => "Data Inserted Successfully"], 200);
+        return response()->json(400);
     }
 
     public function updateImage($id, Request $request)
