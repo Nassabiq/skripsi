@@ -145,7 +145,7 @@
 				</div>
 			</template>
 			<template #submit>
-				<!-- <button class="btn btn-lg btn-green" @click="addProduk">Submit</button> -->
+				<button class="btn btn-lg btn-green">Selesaikan</button>
 			</template>
 		</Modal>
 	</div>

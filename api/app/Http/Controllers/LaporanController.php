@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SKU;
 use App\Models\StokMasuk;
 use App\Models\Transaksi;
 use Carbon\Carbon;
@@ -42,6 +43,9 @@ class LaporanController extends Controller
     {
         $from = Carbon::parse($request->from);
         $to = Carbon::parse($request->to);
+        $id_produk = $request->produk;
+
+        // $data = SKU::with('transaksi')->where('id_produk', $request->produk)->get();
 
         $data = Transaksi::with(
             'detailTransaksi.sku.harga',
@@ -50,6 +54,9 @@ class LaporanController extends Controller
             'detailTransaksi.finishing',
             'pelanggan'
         )
+            ->whereHas('detailTransaksi.sku', function ($q) use ($id_produk) {
+                $q->where('id_produk', $id_produk);
+            })
             ->orderBy('tgl_transaksi', 'asc')
             ->whereBetween('tgl_transaksi', [$from, $to])
             ->where('status_pesanan', 6)

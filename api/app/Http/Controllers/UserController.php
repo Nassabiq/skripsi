@@ -35,10 +35,16 @@ class UserController extends Controller
         'email' => 'required|string|email|max:255|unique:users',
         'role' => 'required',
     ];
+    public $messages = [
+        'nama_user.required' => 'field nama bahan baku harus diisi',
+        'email.required' => 'field email harus diisi',
+        'email.email' => 'field email harus berformat email (@) ',
+        'role.required' => 'field role harus diisi',
+    ];
 
     public function addUser(Request $request)
     {
-        $validator =  Validator::make($request->all(), $this->rules);
+        $validator =  Validator::make($request->all(), $this->rules, $this->messages);
         if ($validator->fails()) return response()->json($validator->errors(), 400);
 
         $id_user = IdGenerator::generate(['table' => 'users', 'field' => 'id_user', 'length' => 10, 'prefix' => 'user-']);

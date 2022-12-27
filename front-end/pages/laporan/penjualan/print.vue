@@ -93,7 +93,7 @@ export default {
 	},
 	methods: {
 		async getDataPenjualan() {
-			const penjualan = await this.$axios.$get("/api/penjualan/laporan?from=" + this.dateStart + "&to=" + this.dateEnd);
+			const penjualan = await this.$axios.$get("/api/laporan/penjualan?from=" + this.dateStart + "&to=" + this.dateEnd);
 			this.penjualan = penjualan;
 		},
 

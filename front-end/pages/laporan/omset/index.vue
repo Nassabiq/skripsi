@@ -14,6 +14,15 @@
 				</div>
 				<div class="flex flex-col col-span-12 mb-2 space-y-2 sm:space-y-0 sm:space-x-2 sm:flex-row md:justify-end md:mb-0 md:col-span-6">
 					<div class="flex flex-col">
+						<label class="text-xs font-semibold text-gray-700">Produk</label>
+						<select class="px-6 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" v-model="selectedProduk" @change="getDataInRange">
+							<option value="">Pilih Produk</option>
+							<option :value="data.id_produk" v-for="data in produk">
+								{{ data.nama_produk }}
+							</option>
+						</select>
+					</div>
+					<div class="flex flex-col">
 						<label class="text-xs font-semibold text-gray-700">Tampilkan data dari:</label>
 						<input type="date" class="px-6 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" v-model="dateStart" @change="getDataInRange" />
 					</div>
@@ -24,6 +33,7 @@
 				</div>
 			</div>
 			<div class="overflow-x-auto overflow-y-hidden bg-white rounded-lg shadow">
+				{{ transaksi }}
 				<table class="table table-auto table-produk">
 					<thead class="bg-gray-100">
 						<tr class="text-left text-gray-800 font-title">
@@ -43,7 +53,7 @@
 											<p v-text="price(detail)"></p>
 										</div>
 									</li>
-									<!-- <li v-for="detail in data.detail_transaksi" v-text="detail"></li> -->
+									<li v-for="detail in data.detail_transaksi" v-text="detail"></li>
 								</ul>
 							</td>
 							<td class="p-3">Rp. {{ Intl.NumberFormat().format(data.total_harga) }}</td>
@@ -91,11 +101,15 @@ export default {
 		return {
 			dateStart: null,
 			dateEnd: null,
+			selectedProduk: "",
+
 			transaksi: [],
+			produk: [],
 		};
 	},
 	created() {
 		this.getDataTransaksi();
+		this.getProduk();
 	},
 	computed: {
 		total_transaksi() {
@@ -107,8 +121,12 @@ export default {
 		},
 	},
 	methods: {
+		async getProduk() {
+			const produk = await this.$axios.$get("api/produk");
+			this.produk = produk;
+		},
 		async getDataTransaksi() {
-			const transaksi = await this.$axios.$get("/api/laporan/omset?from=" + this.dateStart + "&to=" + this.dateEnd);
+			const transaksi = await this.$axios.$get("/api/laporan/omset?from=" + this.dateStart + "&to=" + this.dateEnd + "&produk=" + this.selectedProduk);
 			this.transaksi = transaksi;
 		},
 		getDataInRange() {

@@ -3,11 +3,30 @@
 		<div class="card">
 			<div class="grid grid-cols-12 gap-4 my-2">
 				<div class="flex flex-col col-span-12 col lg:col-span-8 sm:col-span-6">
-					<span class="mb-2 text-sm font-medium"> Search : </span>
-					<input class="block w-full mt-1 text-xs border border-gray-300 rounded shadow sm:w-3/5 lg:w-2/5 form-input-lg focus:border-green-200 focus:outline-none focus:ring-2 focus:ring-green-300" placeholder="Cari Bahan Baku..." v-model="search" @keyup="searchData" />
+					<div class="relative col-span-12 my-4 md:col-span-6">
+						<input type="search" class="w-full py-2 pl-8 pr-4 text-sm font-medium text-gray-800 border border-gray-200 rounded-lg shadow md:w-3/5 lg:w-2/5 focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" placeholder="Search..." v-model="search" @keyup="searchData" />
+						<div class="absolute top-0 left-0 inline-flex items-center px-2 py-3">
+							<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+								<rect x="0" y="0" width="24" height="24" stroke="none"></rect>
+								<circle cx="10" cy="10" r="7" />
+								<line x1="21" y1="21" x2="15" y2="15" />
+							</svg>
+						</div>
+					</div>
+					<!-- <span class="mb-2 text-sm font-medium"> Search : </span>
+					<input class="block w-full mt-1 text-xs border border-gray-300 rounded shadow sm:w-3/5 lg:w-2/5 form-input-lg focus:border-green-200 focus:outline-none focus:ring-2 focus:ring-green-300" placeholder="Cari Bahan Baku..." v-model="search" @keyup="searchData" /> -->
 				</div>
-				<div class="flex items-center justify-end col-span-12 sm:col-span-6 lg:col-span-4">
-					<button class="btn-with-icon btn btn-blue btn-sm" @click="modalBahanBaku = !modalBahanBaku">
+				<div class="grid items-end grid-cols-12 col-span-12 gap-4 sm:col-span-6 lg:col-span-4">
+					<div class="flex flex-col col-span-6">
+						<span class="mb-2 text-xs font-semibold md:text-right"> Items Per Page : </span>
+						<select @change="onChangeRecordsPerPage" v-model="size" class="px-2 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300">
+							<option :value="5">5</option>
+							<option :value="10">10</option>
+							<option :value="25">25</option>
+							<option :value="50">50</option>
+						</select>
+					</div>
+					<button class="col-span-6 btn-with-icon btn btn-blue btn-sm" @click="modalBahanBaku = !modalBahanBaku">
 						<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
 						</svg>
@@ -72,7 +91,7 @@
 				<div class="col-span-12 sm:col-span-9">
 					<label class="label">Nama Bahan Baku</label>
 					<input type="text" class="form-input form-input-lg" placeholder="Nama Bahan Baku ... " v-model="material.nama_bahan_baku" />
-					<p class="mt-2 text-xs text-red-500" v-if="validation.nama_kategori">{{ validation.nama_bahan_baku[0] }}</p>
+					<p class="mt-2 text-xs text-red-500" v-if="validation.nama_bahan_baku">{{ validation.nama_bahan_baku[0] }}</p>
 				</div>
 				<div class="col-span-12 sm:col-span-3">
 					<label class="label">Satuan</label>
@@ -90,14 +109,13 @@
 </template>
 
 <script>
-import Spinner from "../../components/SpinnerLoading.vue";
 import Modal from "../../components/ModalComponent.vue";
 import Pagination from "../../components/Pagination.vue";
 
 export default {
 	layout: "auth",
 	name: "bahan-baku",
-	components: {Spinner, Modal, Pagination},
+	components: {Modal, Pagination},
 	data() {
 		return {
 			modalBahanBaku: false,
@@ -111,7 +129,6 @@ export default {
 				satuan_bahan_baku: "",
 			},
 			validation: [],
-			isloading: false,
 			updateMode: false,
 
 			search: "",
@@ -146,7 +163,6 @@ export default {
 			this.getBahanBaku();
 		},
 		async addBahanBaku() {
-			this.isloading = true;
 			this.$axios
 				.post("/api/bahan-baku", {
 					nama_bahan_baku: this.material.nama_bahan_baku,
@@ -166,8 +182,7 @@ export default {
 						timerProgressBar: true,
 					});
 				})
-				.catch((error) => (this.validation = error.response.data))
-				.finally(() => (this.isloading = false));
+				.catch((error) => (this.validation = error.response.data));
 		},
 		editBahanBaku(data) {
 			this.updateMode = true;
@@ -179,7 +194,6 @@ export default {
 		},
 
 		async updateBahanBaku() {
-			this.isloading = true;
 			this.$axios
 				.put("/api/bahan-baku/" + this.id_bahan_baku, {
 					nama_bahan_baku: this.material.nama_bahan_baku,
@@ -199,8 +213,7 @@ export default {
 						timerProgressBar: true,
 					});
 				})
-				.catch((error) => (this.validation = error.response.data))
-				.finally(() => (this.isloading = false));
+				.catch((error) => (this.validation = error.response.data));
 		},
 
 		async deleteBahanBaku(id) {
@@ -216,15 +229,12 @@ export default {
 				})
 				.then((result) => {
 					if (result.isConfirmed) {
-						this.isloading = !this.isloading;
-						setTimeout(() => {
-							this.$axios
-								.delete("api/bahan-baku/" + id)
-								.then(() => this.$swal.fire("Deleted!", "Data Berhasil dihapus.", "success"))
-								.then(() => this.getBahanBaku())
-								.catch((error) => console.log(error))
-								.finally(() => (this.isloading = !this.isloading));
-						}, 500);
+						this.$axios
+							.delete("api/bahan-baku/" + id)
+							.then(() => this.$swal.fire("Deleted!", "Data Berhasil dihapus.", "success"))
+							.then(() => this.getBahanBaku())
+							.catch((error) => console.log(error))
+							.finally(() => (this.isloading = !this.isloading));
 					}
 				});
 		},

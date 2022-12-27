@@ -188,6 +188,7 @@ export default {
 			this.id_user = "";
 			this.modal = false;
 			this.updateMode = false;
+			this.validation = [];
 		},
 		async addUser() {
 			await this.$axios
@@ -195,7 +196,7 @@ export default {
 				.then(() => this.closeModal())
 				.then(() => this.getData())
 				.then(() => this.$swal.fire("Success!", "Data Berhasil Ditambahkan.", "success"))
-				.catch((error) => this.validation == error.response.data);
+				.catch((error) => (this.validation = error.response.data));
 		},
 		editUser(data) {
 			this.updateMode = true;

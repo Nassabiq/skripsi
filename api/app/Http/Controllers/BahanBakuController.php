@@ -23,6 +23,9 @@ class BahanBakuController extends Controller
         $validator = Validator::make($request->all(), [
             'nama_bahan_baku'   => 'required',
             'satuan_bahan_baku'   => 'required',
+        ], [
+            'nama_bahan_baku.required'   => 'Field ini harus diisi',
+            'satuan_bahan_baku.required'   => 'Field ini harus diisi',
         ]);
 
         if ($validator->fails()) return response()->json($validator->errors(), 400);

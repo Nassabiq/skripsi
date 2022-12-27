@@ -3,8 +3,18 @@
 		<div class="card">
 			<div class="grid grid-cols-12 gap-4 mt-6 mb-2">
 				<div class="flex flex-col col-span-12 col lg:col-span-8 sm:col-span-6">
-					<span class="mb-2 text-sm font-medium"> Search : </span>
-					<input class="block w-full mt-1 text-xs border border-gray-300 rounded shadow md:w-3/5 lg:w-2/5 form-input-lg focus:border-green-200 focus:outline-none focus:ring-2 focus:ring-green-300" placeholder="Cari Produk..." v-model="search" @keyup="searchData" />
+					<div class="relative col-span-12 my-4 md:col-span-6">
+						<input type="search" class="w-full py-2 pl-8 pr-4 text-sm font-medium text-gray-800 border border-gray-200 rounded-lg shadow md:w-3/5 lg:w-2/5 focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" placeholder="Search..." v-model="search" @keyup="searchData" />
+						<div class="absolute top-0 left-0 inline-flex items-center px-2 py-3">
+							<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+								<rect x="0" y="0" width="24" height="24" stroke="none"></rect>
+								<circle cx="10" cy="10" r="7" />
+								<line x1="21" y1="21" x2="15" y2="15" />
+							</svg>
+						</div>
+					</div>
+					<!-- <span class="mb-2 text-sm font-medium"> Search : </span> -->
+					<!-- <input class="block w-full mt-1 text-xs border border-gray-300 rounded shadow md:w-3/5 lg:w-2/5 form-input-lg focus:border-green-200 focus:outline-none focus:ring-2 focus:ring-green-300" placeholder="Search..." v-model="search" @keyup="searchData" /> -->
 				</div>
 				<div class="grid grid-cols-12 col-span-12 space-x-4 sm:col-span-6 lg:col-span-4">
 					<div class="flex flex-col col-span-6">

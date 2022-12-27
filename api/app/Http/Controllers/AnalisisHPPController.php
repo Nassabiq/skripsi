@@ -137,8 +137,8 @@ class AnalisisHPPController extends Controller
             # add the stock to the hpp item first
             $hpp_item->$current_stock_key = $this->generate_row_item($row_stock[$index_row_stock]->$current_stock_key->qty, $row_stock[$index_row_stock]->$current_stock_key->harga);
 
-            $total_data->penjualan->qty += $row_stock[$index_row_stock]->$current_stock_key->qty;
-            $total_data->penjualan->jumlah += ($row_stock[$index_row_stock]->$current_stock_key->qty * $row_stock[$index_row_stock]->$current_stock_key->harga);
+            $total_data->penjualan->qty += $hpp_item->$current_stock_key->qty;
+            $total_data->penjualan->jumlah += $hpp_item->$current_stock_key->jumlah;
 
             # delete the first top stock
             unset($row_stock[$index_row_stock]->$current_stock_key);
@@ -149,9 +149,6 @@ class AnalisisHPPController extends Controller
             $this->find_remaining_stock($row_stock, $index_row_stock, $object_iterator, $transaction_item, $current_stock_key, $remaining_stock_needed, $hpp_item, $total_data);
         } else {
             $hpp_item->$current_stock_key = $this->generate_row_item($remaining_stock_needed, $row_stock[$index_row_stock]->$current_stock_key->harga);
-
-            $total_data->penjualan->qty += $remaining_stock_needed;
-            $total_data->penjualan->jumlah += ($remaining_stock_needed * $row_stock[$index_row_stock]->$current_stock_key->harga);
         }
 
         return array($current_stock_key, $remaining_stock_needed, $hpp_item);
@@ -163,8 +160,8 @@ class AnalisisHPPController extends Controller
 
         $hpp_item->$current_stock_key = $this->generate_row_item($remaining_stock_needed, $row_stock[$index]->$current_stock_key->harga);
 
-        $total_data->penjualan->qty += $row_stock[$index]->$current_stock_key->qty;
-        $total_data->penjualan->jumlah += $row_stock[$index]->$current_stock_key->jumlah;
+        $total_data->penjualan->qty += $hpp_item->$current_stock_key->qty;
+        $total_data->penjualan->jumlah += $hpp_item->$current_stock_key->jumlah;
     }
     public function reduce_stock($row_stock, $index, $transaction_item, $hpp_item, $total_data)
     {
@@ -291,14 +288,10 @@ class AnalisisHPPController extends Controller
         $total_data->barang_yang_tersedia_dijual = $total_data->pembelian->jumlah + $total_data->penjualan->jumlah;
 
         // the calculation is saved to $result_data
-        // echo "RESULT Data -----------------------------------\n\n";
-        // print_r($result_data);
-
-        // echo "\n\nTotal Data -----------------------------------\n\n";
-        // print_r($total_data);
         $data = [$result_data, $total_data];
         return list($result_data, $total_data) = $data;
     }
+
 
 
 

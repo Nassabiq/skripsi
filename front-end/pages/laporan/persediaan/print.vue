@@ -96,7 +96,7 @@ export default {
 	methods: {
 		async getDataPersediaan() {
 			this.$axios
-				.get("/api/stok-masuk/laporan?from=" + this.dateStart + "&to=" + this.dateEnd)
+				.get("/api/laporan/stok-masuk?from=" + this.dateStart + "&to=" + this.dateEnd)
 				.then((response) => {
 					this.persediaan = response.data;
 				})

@@ -27,11 +27,11 @@
 						<div class="col-span-6">
 							<div class="px-2 py-3 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 								<dt class="text-xs font-medium text-gray-500">Status</dt>
-								<dd class="mt-1 text-xs text-gray-900 sm:mt-0 sm:col-span-2">: {{ pengadaan.status_pengadaan == 1 ? "Disetujui" : "-" }}</dd>
+								<dd class="mt-1 text-xs text-gray-900 sm:mt-0 sm:col-span-2">: {{ pengadaan.status_pengadaan == 1 ? "Disetujui" : "Belum disetujui" }}</dd>
 							</div>
 							<div class="px-2 py-3 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 								<dt class="text-xs font-medium text-gray-500">Tgl Disetujui</dt>
-								<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">: {{ pengadaan.tgl_disetujui ? $moment(pengadaan.tgl_disetujui).format("DD MMMM YYYY") : "-" }}</dd>
+								<dd class="mt-1 text-xs text-gray-900 sm:mt-0 sm:col-span-2">: {{ pengadaan.tgl_disetujui ? $moment(pengadaan.tgl_disetujui).format("DD MMMM YYYY") : "Belum disetujui" }}</dd>
 							</div>
 						</div>
 						<div class="col-span-12 px-4 mt-6">

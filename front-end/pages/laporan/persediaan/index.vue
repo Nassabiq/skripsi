@@ -129,7 +129,7 @@
 					<p class="font-semibold">Rp. {{ Intl.NumberFormat().format(revenue) }}</p>
 				</div>
 				<div class="flex justify-end col-span-12 py-2 mx-2 md:mt-4 md:px-4 md:justify-start md:col-span-2">
-					<NuxtLink target="_blank" :to="{name: 'persediaan-laporan-persediaan-print', query: {dateStart: this.dateStart, dateEnd: this.dateEnd}}">
+					<NuxtLink target="_blank" :to="{name: 'laporan-persediaan-print', query: {dateStart: this.dateStart, dateEnd: this.dateEnd}}">
 						<button class="px-4 py-2 text-white bg-green-500 rounded-lg shadow-md btn-with-icon hover:bg-green-600">
 							<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
