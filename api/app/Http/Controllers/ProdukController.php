@@ -51,21 +51,22 @@ class ProdukController extends Controller
         return response()->json($kategori, 200);
     }
 
-    public $rules = [
-        'nama_produk'   => 'required',
-        'id_kategori_produk'   => 'required',
-        'satuan_produk'   => 'required',
-        'deskripsi_produk'   => 'required',
-        'informasi_pemesanan'   => 'required',
-        'image_produk'   => 'required|max:5',
-        'image_produk.*'   => 'image|mimes:jpeg,png,jpg,gif,svg|max:10000',
-        'finishing'   => 'required',
-        'bahan'   => 'required',
-    ];
     // CREATE RECORD INTO DATABASE
     public function addProduk(Request $request)
     {
-        $validator = Validator::make($request->all(), $this->rules);
+        // var_dump($request->all());
+        $validator = Validator::make($request->all(), [
+            'nama_produk'   => 'required',
+            'id_kategori_produk'   => 'required',
+            'satuan_produk'   => 'required',
+            'deskripsi_produk'   => 'required',
+            'informasi_pemesanan'   => 'required',
+            'image_produk'   => 'required|max:5',
+            'image_produk.*'   => 'image|mimes:jpeg,png,jpg,gif,svg|max:10000',
+            'finishing.*'   => 'required',
+            'id_bahan.*'   => 'required',
+            'harga.*'   => 'required',
+        ]);
         if ($validator->fails()) return response()->json($validator->errors(), 400);
 
         DB::beginTransaction();
@@ -101,16 +102,15 @@ class ProdukController extends Controller
                 $id_finishing = IdGenerator::generate(['table' => 'finishing', 'field' => 'id_finishing', 'length' => 8, 'prefix' => 'FP-']);
                 Finishing::create(['id_finishing' => $id_finishing, 'id_produk' => $id_produk, 'nama_finishing' => $item]);
             }
-            foreach ($request->bahan as $item) {
-                $data = json_decode($item);
+            foreach (array_combine($request->id_bahan, $request->harga)  as $id_bahan => $harga) {
                 $id_sku = IdGenerator::generate(['table' => 'sku', 'field' => 'id_sku', 'length' => 9, 'prefix' => 'SKU-']);
-                $id_harga_jual = IdGenerator::generate(['table' => 'harga_jual_produk', 'field' => 'id_harga_jual', 'length' => 8, 'prefix' => 'HP-']);
+                SKU::create(['id_sku' => $id_sku, 'id_produk' => $id_produk, 'id_bahan_baku' => $id_bahan]);
 
-                SKU::create(['id_sku' => $id_sku, 'id_produk' => $id_produk, 'id_bahan_baku' => $data->id]);
+                $id_harga_jual = IdGenerator::generate(['table' => 'harga_jual_produk', 'field' => 'id_harga_jual', 'length' => 8, 'prefix' => 'HP-']);
                 HargaJualProduk::create([
                     'id_harga_jual' => $id_harga_jual,
                     'id_sku' => $id_sku,
-                    'harga_produk' => $data->harga,
+                    'harga_produk' => $harga,
                     'tgl_diubah' => Carbon::now()
                 ]);
             }
@@ -120,7 +120,7 @@ class ProdukController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return response()->json($th, 400);
+            return response()->json(['messages' => "Something Went Wrong"], 400);
         }
     }
 

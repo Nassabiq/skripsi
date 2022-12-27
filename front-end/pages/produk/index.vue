@@ -88,7 +88,7 @@
 
 						<div class="col-span-12">
 							<label class="text-xs font-semibold text-gray-700">Foto Produk</label>
-							<p class="mt-2 text-xs text-red-500" v-if="validation.image_produk">{{ validation.image[0] }}</p>
+							<p class="mt-2 text-xs text-red-500" v-if="validation.image_produk">{{ validation.image_produk[0] }}</p>
 
 							<div class="flex flex-col justify-center px-6 pt-5 pb-6 mt-1 border-2 border-gray-300 border-dashed rounded-md">
 								<div class="space-y-1 text-center">
@@ -126,7 +126,10 @@
 						<div class="col-span-12 md:col-span-6">
 							<label class="label">Finishing</label>
 							<div class="flex gap-4 mb-2" v-for="(data, index) in produk.finishing">
-								<input type="text" class="form-input form-input-lg" placeholder="Finishing" v-model="produk.finishing[index].data" />
+								<div class="flex-col">
+									<input type="text" class="form-input form-input-lg" placeholder="Finishing" v-model="produk.finishing[index].data" />
+									<span class="text-xs text-red-500" v-if="validation['finishing.' + index]">Form ini harus diisi.</span>
+								</div>
 								<button class="mt-1 btn btn-sm btn-indigo" v-if="index == 0" @click="addForm">
 									<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -146,18 +149,19 @@
 									<select class="form-input form-input-lg" v-model="produk.jenisBahan[index].id">
 										<option value="">Pilih Jenis Bahan</option>
 										<option :hidden="produk.jenisBahan.find((item) => item.id == data.id_bahan_baku)" :value="data.id_bahan_baku" v-for="data in bahanBaku">
-											<!-- <template v-if="produk.jenisBahan[index].id !== data.id_bahan_baku">
-											</template> -->
 											{{ data.nama_bahan_baku }}
 										</option>
 									</select>
-									<p class="mt-2 text-xs text-red-500" v-if="validation.id_kategori_produk">{{ validation.id_kategori_produk[0] }}</p>
+									<span class="text-xs text-red-500" v-if="validation['id_bahan.' + index]">Form ini harus diisi.</span>
 								</div>
 								<div class="col-span-6">
 									<div>
 										<label class="label">Harga Awal</label>
 										<div class="flex justify-between gap-2">
-											<div><number placeholder="Harga.." class="form-input form-input-lg" v-model="produk.jenisBahan[index].harga" v-bind="number"></number></div>
+											<div class="flex-col">
+												<div><number placeholder="Harga.." class="form-input form-input-lg" v-model="produk.jenisBahan[index].harga" v-bind="number"></number></div>
+												<span class="text-xs text-red-500" v-if="validation['harga.' + index]">Form ini harus diisi.</span>
+											</div>
 											<button class="mt-1 btn btn-sm btn-indigo" v-if="index == 0" @click="addFormBahan">
 												<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -168,7 +172,7 @@
 													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
 												</svg>
 											</button>
-											<p class="mt-2 text-xs text-red-500" v-if="validation.nama_produk">{{ validation.harga[0] }}</p>
+											<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.nama_produk">{{ validation.harga[0] }}</p> -->
 										</div>
 										<!-- <input type="text" class="form-input form-input-lg" placeholder="Harga Awal ... " v-model="jenisBahan.harga" /> -->
 									</div>
@@ -308,7 +312,8 @@ export default {
 			imageData.append("satuan_produk", this.produk.satuan_produk);
 			finishing.forEach((element, index) => imageData.append("finishing[" + index + "]", finishing[index].data));
 			bahan.forEach((element, index) => {
-				imageData.append("bahan[" + index + "]", JSON.stringify(bahan[index]));
+				imageData.append("id_bahan[" + index + "]", bahan[index].id);
+				imageData.append("harga[" + index + "]", bahan[index].harga);
 			});
 
 			this.isloading = true;

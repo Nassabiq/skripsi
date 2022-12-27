@@ -83,7 +83,7 @@
 		</div>
 
 		<!-- Modal Update Produk -->
-		<Modal size="max-w-2xl" title="Edit Data Produk" @close-modal="modal = !modal" v-show="modal">
+		<Modal size="max-w-3xl" title="Edit Data Produk" @close-modal="modal = !modal" v-show="modal">
 			<template #content>
 				<div class="col-span-7">
 					<label class="label">Nama Produk</label>
@@ -105,8 +105,118 @@
 					<input type="text" class="form-input form-input-lg" placeholder="Satuan Produk ... " v-model="product.satuan_produk" />
 					<p class="mt-2 text-xs text-red-500" v-if="validation.satuan_produk">{{ validation.satuan_produk[0] }}</p>
 				</div>
-				<div class="col-span-12 md:col-span-6"></div>
-				<div class="col-span-12 md:col-span-6"></div>
+
+				<div class="col-span-12 md:col-span-6 space-y-2">
+					<div class="gap-4" v-for="(data, index) in product.finishing">
+						<label class="label">Finishing</label>
+						<div class="flex-col">
+							<input type="text" class="form-input form-input-lg" placeholder="Finishing" v-model="product.finishing[index].nama_finishing" />
+							<span class="text-xs text-red-500" v-if="validation['finishing.' + index]">Form ini harus diisi.</span>
+						</div>
+					</div>
+					<div class="flex justify-end">
+						<button class="mt-1 btn btn-sm btn-indigo btn-with-icon" @click="addForm">
+							<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+							</svg>
+							Tambah Data Finishing
+						</button>
+					</div>
+					<template v-if="addFinishing && addFinishing.length > 0">
+						<label class="label">Data Finishing Baru</label>
+						<div class="flex gap-4 mb-2" v-for="(data, index) in addFinishing">
+							<div class="flex-col">
+								<input type="text" class="form-input form-input-lg" placeholder="Finishing" v-model="addFinishing[index].data" />
+								<span class="text-xs text-red-500" v-if="validation['finishing.' + index]">Form ini harus diisi.</span>
+							</div>
+							<button class="mt-1 btn btn-sm btn-red" @click="deleteFinishingForm(index)">
+								<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+								</svg>
+							</button>
+						</div>
+					</template>
+				</div>
+				<div class="col-span-12 md:col-span-6 space-y-2">
+					<div class="grid grid-cols-12 gap-4" v-for="(produk, index) in product.stok">
+						<div class="col-span-6">
+							<label class="label">Jenis Bahan</label>
+							<select class="form-input form-input-lg" v-model="product.stok[index].bahan_baku.id_bahan_baku">
+								<option value="">Pilih Jenis Bahan</option>
+								<!-- <option :value="produk.bahan_baku.id_bahan_baku" v-for="data in produk.bahan_baku">
+									{{ data.nama_bahan_baku }}
+								</option> -->
+							</select>
+							<!-- :hidden="produk.bahan_baku.find((item) => item.id == data.id_bahan_baku)" -->
+							<!-- <span class="text-xs text-red-500" v-if="validation['id_bahan.' + index]">Form ini harus diisi.</span> -->
+						</div>
+						<div class="col-span-6">
+							<div>
+								<label class="label">Harga Awal</label>
+								<div class="flex justify-between gap-2">
+									<div class="flex-col">
+										<div><number placeholder="Harga.." class="form-input form-input-lg" v-model="produk.harga[0].harga_produk" v-bind="number"></number></div>
+										<!-- <span class="text-xs text-red-500" v-if="validation['harga.' + index]">Form ini harus diisi.</span> -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="flex justify-end">
+						<button class="mt-1 btn btn-sm btn-indigo btn-with-icon" @click="addJenisBahanForm">
+							<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+							</svg>
+							Tambah Data Jenis Bahan
+						</button>
+					</div>
+					<template v-if="addJenisBahan && addJenisBahan.length > 0">
+						<label class="label">Data Jenis Bahan Baru</label>
+						<div class="grid grid-cols-12 gap-4" v-for="(data, index) in addJenisBahan">
+							<div class="col-span-6">
+								<label class="label">Jenis Bahan</label>
+								<select class="form-input form-input-lg" v-model="addJenisBahan[index].id">
+									<option value="">Pilih Jenis Bahan</option>
+									<!-- <option :hidden="produk.jenisBahan.find((item) => item.id == data.id_bahan_baku)" :value="data.id_bahan_baku" v-for="data in bahanBaku">
+										{{ data.nama_bahan_baku }}
+									</option> -->
+								</select>
+								<!-- <span class="text-xs text-red-500" v-if="validation['id_bahan.' + index]">Form ini harus diisi.</span> -->
+							</div>
+							<div class="col-span-6">
+								<div>
+									<label class="label">Harga Awal</label>
+									<div class="flex justify-between gap-2">
+										<div class="flex-col">
+											<div><number placeholder="Harga.." class="form-input form-input-lg" v-model="addJenisBahan[index].harga" v-bind="number"></number></div>
+											<!-- <span class="text-xs text-red-500" v-if="validation['harga.' + index]">Form ini harus diisi.</span> -->
+										</div>
+
+										<button class="mt-1 btn btn-sm btn-red" @click="deleteJenisBahanForm(index)">
+											<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+											</svg>
+										</button>
+
+										<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.nama_produk">{{ validation.harga[0] }}</p> -->
+									</div>
+									<!-- <input type="text" class="form-input form-input-lg" placeholder="Harga Awal ... " v-model="jenisBahan.harga" /> -->
+								</div>
+							</div>
+						</div>
+						<!-- <div class="flex gap-4 mb-2" v-for="(data, index) in addJenisBahan">
+							<div class="flex-col">
+								<input type="text" class="form-input form-input-lg" placeholder="Finishing" v-model="addJenisBahan[index].data" />
+								<span class="text-xs text-red-500" v-if="validation['finishing.' + index]">Form ini harus diisi.</span>
+							</div>
+							<button class="mt-1 btn btn-sm btn-red" @click="deleteFinishingForm(index)">
+								<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+								</svg>
+							</button>
+						</div> -->
+					</template>
+				</div>
 				<div class="col-span-12">
 					<label class="label">Deskripsi</label>
 					<div class="mt-1">
@@ -126,7 +236,6 @@
 								<quill-editor ref="editor" v-model="product.informasi_pemesanan" :options="editorOption" />
 							</client-only>
 						</section>
-						<!-- <textarea id="about" name="about" rows="8" class="form-input form-input-sm" v-model="product.informasi_pemesanan"></textarea> -->
 						<p class="mt-2 text-xs text-red-500" v-if="validation.informasi_pemesanan">{{ validation.informasi_pemesanan[0] }}</p>
 					</div>
 				</div>
@@ -199,6 +308,13 @@ export default {
 					],
 				},
 			},
+			number: {
+				decimal: ".",
+				separator: ",",
+				prefix: "Rp.  ",
+				precision: 2,
+				masked: false,
+			},
 			product: [],
 			uploadedImage: {
 				addImage: [],
@@ -218,6 +334,9 @@ export default {
 			previewImage: null,
 			activeImage: 0,
 			imageUrl: "http://localhost:8000/storage/image_produk/",
+
+			addFinishing: [],
+			addJenisBahan: [],
 		};
 	},
 	computed: {
@@ -292,6 +411,19 @@ export default {
 		},
 		openModalImage() {
 			this.modalImage = !this.modalImage;
+		},
+
+		addForm() {
+			this.addFinishing.push({data: ""});
+		},
+		addJenisBahanForm() {
+			this.addJenisBahan.push({id: "", harga: ""});
+		},
+		deleteFinishingForm(index) {
+			this.addFinishing.splice(index, 1);
+		},
+		deleteJenisBahanForm(index) {
+			this.addJenisBahan.splice(index, 1);
 		},
 
 		closeModalImage() {
