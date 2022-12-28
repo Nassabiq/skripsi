@@ -144,24 +144,28 @@
 				</div>
 			</div>
 		</div>
-		<Modal size="max-w-xl" :title="updateMode ? 'Edit Pengadaan Persediaan' : 'Buat Pengadaan Persediaan'" @close-modal="closeModal" v-show="modalPengadaan">
+		<Modal size="max-w-2xl" :title="updateMode ? 'Edit Pengadaan Persediaan' : 'Buat Pengadaan Persediaan'" @close-modal="closeModal" v-show="modalPengadaan">
 			<template #content>
 				<div class="col-span-12 sm:col-span-8">
 					<label class="label">Nama Pengadaan</label>
 					<input type="text" class="form-input form-input-lg" placeholder="Nama Pengadaan ... " v-model="nama_pengadaan" />
-					<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.nama_pengadaan">{{ validation.nama_pengadaan[0] }}</p> -->
+					<p class="mt-2 text-xs text-red-500" v-if="validation.nama_pengadaan">{{ validation.nama_pengadaan[0] }}</p>
 				</div>
 				<div class="grid grid-cols-12 col-span-12 gap-4" v-for="(data, index) in pengadaan">
-					<div class="col-span-12 sm:col-span-8">
+					<div class="col-span-12 sm:col-span-6">
 						<label class="label">Nama Bahan Baku</label>
 						<select class="form-input form-input-lg" v-model="pengadaan[index].id_bahan_baku">
 							<!-- <option v-if="updateMode" :value="pengadaan[index].id_material">{{ pengadaan[index].id_material }}</option> -->
 							<option value="">Pilih Bahan Baku</option>
 							<option :hidden="pengadaan.find((item) => item.id_bahan_baku == data.id_bahan_baku)" :value="data.id_bahan_baku" v-for="data in bahan_baku">{{ data.nama_bahan_baku }}</option>
 						</select>
+						<p class="mt-2 text-xs text-red-500" v-if="validation['pengadaan.' + index + '.id_bahan_baku']">Field ini harus diisi</p>
 					</div>
-					<div class="col-span-12 sm:col-span-4">
-						<label class="label">Qty</label>
+					<!-- <div class="col-span-12 sm:col-span-2">
+						<input type="text" disabled class="bg-gray-100" />
+					</div> -->
+					<div class="col-span-12 sm:col-span-6">
+						<label class="label">Qty (dalam satuan bahan baku)</label>
 						<div class="flex gap-2">
 							<input type="text" class="form-input form-input-lg" placeholder="Qty" v-model="pengadaan[index].jumlah_barang" />
 							<button class="mt-1 btn btn-sm btn-indigo" v-if="index == 0" @click="addForm">
@@ -175,12 +179,8 @@
 								</svg>
 							</button>
 						</div>
+						<p class="mt-2 text-xs text-red-500" v-if="validation['pengadaan.' + index + '.id_bahan_baku']">Field ini harus diisi</p>
 					</div>
-				</div>
-				<div class="col-span-12" v-if="validation">
-					<ul>
-						<li class="px-4 py-3 my-2 text-xs bg-red-100 rounded-md shadow-md sm:col-span-2" v-for="(error, index) in validation">{{ error[0] }}</li>
-					</ul>
 				</div>
 			</template>
 			<template #submit>

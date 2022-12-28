@@ -21,7 +21,9 @@ class CartController extends Controller
             'id_user'   => 'required',
             'id_sku'   => 'required',
             'finishing'   => 'required',
-            'qty_cart'   => 'required|numeric',
+            'qty_cart'   => 'required|numeric|gt:0',
+        ], [
+            'qty_cart.gt' => "jumlah minimal pemesanan harus lebih dari 0"
         ]);
 
         if ($validator->fails()) return response()->json($validator->errors(), 400);

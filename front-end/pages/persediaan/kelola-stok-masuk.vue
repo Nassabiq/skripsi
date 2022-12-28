@@ -156,31 +156,28 @@
 					<div class="grid grid-cols-12 gap-2" v-for="(data, index) in stok">
 						<div class="col-span-12 sm:col-span-5">
 							<label class="label">Nama Bahan Baku</label>
-							<select disabled class="form-input form-input-lg" v-model="stok[index].id_bahan_baku">
+							<select disabled class="bg-gray-100 form-input form-input-lg" v-model="stok[index].id_bahan_baku">
 								<option value="">Bahan Baku</option>
 								<option :value="data.id_bahan_baku" v-for="(data, index) in bahan_baku">{{ data.nama_bahan_baku }}</option>
 							</select>
+							<p class="mt-2 text-xs text-red-500" v-if="validation['stok.' + index + '.id_bahan_baku']">Field ini harus diisi</p>
 						</div>
 						<div class="col-span-12 sm:col-span-4">
 							<label class="label">Harga</label>
 							<div><number placeholder="Harga.." class="form-input form-input-lg" v-model="stok[index].harga" v-bind="number"></number></div>
+							<p class="mt-2 text-xs text-red-500" v-if="validation['stok.' + index + '.harga']">Field ini harus diisi</p>
 						</div>
 						<div class="col-span-12 sm:col-span-3">
 							<label class="label">Qty</label>
 							<div>
-								<input disabled type="text" placeholder="QTY	.." class="form-input form-input-lg" v-model.number="stok[index].qty" />
+								<input disabled type="text" placeholder="QTY	.." class="bg-gray-100 form-input form-input-lg" v-model.number="stok[index].qty" />
 							</div>
+							<p class="mt-2 text-xs text-red-500" v-if="validation['stok.' + index + '.qty']">Field ini harus diisi</p>
 						</div>
 					</div>
 					<div class="flex flex-col justify-between px-5 py-3 rounded-md shadow-md bg-lime-100 md:flex-row">
 						<dt class="text-sm font-semibold">Total</dt>
 						<dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(getSubtotal) }}</dd>
-					</div>
-					<div v-if="validation">
-						<!-- <dt class="text-sm font-semibold"></dt> -->
-						<ul>
-							<li class="px-5 py-3 mt-1 text-xs font-semibold bg-red-100 rounded-md shadow-md" v-for="(error, index) in validation">{{ error[0] }}</li>
-						</ul>
 					</div>
 				</div>
 			</template>

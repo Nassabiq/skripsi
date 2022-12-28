@@ -178,26 +178,29 @@ class ProdukController extends Controller
 
         if ($request->new_jenis_bahan != null) {
             $new_jenis_bahan = json_decode($request->new_jenis_bahan);
+            $sku = SKU::where('id_produk', $id)->get();
+
+            // $result = array_combine($sku, $new_jenis_bahan);
 
             foreach ($new_jenis_bahan as $item) {
-                $sku = SKU::where('id_produk', $id)->get();
-                foreach ($sku as $data) {
-                    if ($item->id !== $data->id_bahan_baku) {
-                        $id_sku = IdGenerator::generate(['table' => 'sku', 'field' => 'id_sku', 'length' => 9, 'prefix' => 'SKU-']);
-                        $id_harga_jual = IdGenerator::generate(['table' => 'harga_jual_produk', 'field' => 'id_harga_jual', 'length' => 8, 'prefix' => 'HP-']);
+                // foreach ($sku as $data) {
+                // if ($item->id == $data->id_bahan_baku) {
+                $id_sku = IdGenerator::generate(['table' => 'sku', 'field' => 'id_sku', 'length' => 9, 'prefix' => 'SKU-']);
+                $id_harga_jual = IdGenerator::generate(['table' => 'harga_jual_produk', 'field' => 'id_harga_jual', 'length' => 8, 'prefix' => 'HP-']);
 
-                        SKU::create(['id_sku' => $id_sku, 'id_produk' => $id, 'id_bahan_baku' => $item->id]);
-                        HargaJualProduk::create([
-                            'id_harga_jual' => $id_harga_jual,
-                            'id_sku' => $id_sku,
-                            'harga_produk' => $item->harga,
-                            'tgl_diubah' => Carbon::now()
-                        ]);
-                        // var_dump(true);
-                        // } else {
-                        //     var_dump(false);
-                    }
-                }
+                SKU::create(['id_sku' => $id_sku, 'id_produk' => $id, 'id_bahan_baku' => $item->id]);
+                HargaJualProduk::create([
+                    'id_harga_jual' => $id_harga_jual,
+                    'id_sku' => $id_sku,
+                    'harga_produk' => $item->harga,
+                    'tgl_diubah' => Carbon::now()
+                ]);
+                // } else {
+                //     var_dump(false);
+                //     break;
+                // } else {
+                // }
+                // }
             }
         }
 

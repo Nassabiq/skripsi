@@ -83,7 +83,7 @@
 		</div>
 
 		<!-- Modal Update Produk -->
-		<Modal size="max-w-3xl" title="Edit Data Produk" @close-modal="modal = !modal" v-show="modal">
+		<Modal size="max-w-3xl" title="Edit Data Produk" @close-modal="closeModal" v-show="modal">
 			<template #content>
 				<div class="col-span-7">
 					<label class="label">Nama Produk</label>
@@ -106,7 +106,7 @@
 					<p class="mt-2 text-xs text-red-500" v-if="validation.satuan_produk">{{ validation.satuan_produk[0] }}</p>
 				</div>
 
-				<div class="col-span-12 md:col-span-6 space-y-2">
+				<div class="col-span-12 space-y-2 md:col-span-6">
 					<div class="gap-4" v-for="(data, index) in product.finishing">
 						<label class="label">Finishing</label>
 						<div class="flex-col">
@@ -137,12 +137,12 @@
 						</div>
 					</template>
 				</div>
-				<div class="col-span-12 md:col-span-6 space-y-2">
+				<div class="col-span-12 space-y-2 md:col-span-6">
 					<div class="grid grid-cols-12 gap-4" v-for="(produk, index) in product.stok">
 						<template v-if="produk.harga.length < 2">
 							<div class="col-span-6">
 								<label class="label">Jenis Bahan</label>
-								<input type="text" class="form-input form-input-lg bg-gray-100" v-model="produk.bahan_baku.nama_bahan_baku" disabled />
+								<input type="text" class="bg-gray-100 form-input form-input-lg" v-model="produk.bahan_baku.nama_bahan_baku" disabled />
 								<!-- <select class="form-input form-input-lg" v-model="produk.bahan_baku.id_bahan_baku" disabled>
 								<option value="">Pilih Jenis Bahan</option>
 								<option :value="bahan.id_bahan_baku" v-for="bahan in bahanBaku">
@@ -370,7 +370,6 @@ export default {
 
 			jenis_bahan.forEach((element) => {
 				const data = {
-					// "id_sku": element.id_sku,
 					"id_bahan_baku": element.bahan_baku.id_bahan_baku,
 					"nama_bahan_baku": element.bahan_baku.nama_bahan_baku,
 					"id_harga_jual": element.harga[0].id_harga_jual,
@@ -427,6 +426,11 @@ export default {
 
 		openModal() {
 			this.modal = !this.modal;
+		},
+		closeModal() {
+			this.modal = false;
+			this.addFinishing = [];
+			this.addJenisBahan = [];
 		},
 		openModalImage() {
 			this.modalImage = !this.modalImage;
