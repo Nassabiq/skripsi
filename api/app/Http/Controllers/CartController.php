@@ -23,6 +23,7 @@ class CartController extends Controller
             'finishing'   => 'required',
             'qty_cart'   => 'required|numeric|gt:0',
         ], [
+            'id_sku.required' => "field jenis bahan tidak boleh kosong",
             'qty_cart.gt' => "jumlah minimal pemesanan harus lebih dari 0"
         ]);
 

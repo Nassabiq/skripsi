@@ -109,6 +109,7 @@
 								<span class="absolute rounded-md pointer-events-none -inset-px" :class="shipment == 1 ? 'border border-indigo-500' : 'border-2 border-transparent'" aria-hidden="true"></span>
 							</label>
 						</div>
+						<p class="mt-2 text-xs text-red-500" v-if="validation.shipment">{{ validation.shipment[0] }}</p>
 					</li>
 					<li class="py-4 border-b-2 border-gray-200">
 						<label class="text-sm font-semibold text-gray-700">Catatan Pesanan</label>

@@ -41,7 +41,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- Modal Tambah Produk -->
+		<!-- Modal Tambah ke Cart -->
 		<Modal size="max-w-5xl" title="Add to Cart" @close-modal="closeModal" v-show="modal" :data="modalData">
 			<template #content v-if="modalData">
 				<div class="col-span-12 space-y-4 md:col-span-6">
@@ -78,11 +78,11 @@
 								</button>
 							</div>
 							<p class="mt-2 text-xs text-red-500" v-if="validation.qty_cart">{{ validation.qty_cart[0] }}</p>
-							<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.nama_produk">{{ validation.nama_produk[0] }}</p> -->
 						</div>
 						<div class="col-span-12">
 							<label class="label">Jenis Bahan</label>
-							<div class="flex items-center gap-4 px-2 py-6 overflow-x-scroll">
+							<p class="mt-2 text-xs text-red-500" v-if="validation.id_sku">{{ validation.id_sku[0] }}</p>
+							<div class="flex items-center gap-4 p-2 overflow-x-scroll">
 								<label v-for="data in modalData.stok" class="relative flex items-center justify-center px-4 py-3 mt-2 text-xs font-medium text-gray-900 bg-white border rounded-md shadow-sm cursor-pointer group hover:bg-gray-50 focus:outline-none" :class="[cart.bahan_baku.id == data.id_sku ? 'ring-2 ring-blue-500' : '', data.bahan_baku.jml_stok < 1 ? 'ring-2 ring-red-500' : '']">
 									<input type="radio" v-model="cart.bahan_baku" :value="{id: data.id_sku, price: data.harga[data.harga.length - 1].harga_produk}" class="sr-only" aria-labelledby="size-choice-0-label" :disabled="data.jml_stok < 1" />
 									<span id="size-choice-0-label" class="whitespace-nowrap" v-text="data.bahan_baku.nama_bahan_baku"></span>
@@ -94,7 +94,6 @@
 									</span>
 								</label>
 							</div>
-							<p class="mt-2 text-xs text-red-500" v-if="validation.id_sku">{{ validation.id_sku[0] }}</p>
 							<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.id_kategori_produk">{{ validation.id_kategori_produk[0] }}</p> -->
 						</div>
 

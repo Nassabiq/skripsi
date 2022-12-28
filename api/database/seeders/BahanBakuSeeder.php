@@ -16,7 +16,7 @@ class BahanBakuSeeder extends Seeder
      */
     public function run()
     {
-        $nama_bahan_baku = ['Banner Flexi 280 China', 'Banner Flexi 240 China', 'Banner Jerman', 'Sticker Vinyl', 'Sticker Chromo'];
+        $nama_bahan_baku = ['Banner Flexi 280 China', 'Banner Flexi 240 China', 'Banner Jerman', 'Sticker Vinyl', 'Sticker Chromo', 'Art Cartoon', 'Art Paper'];
         $satuan_produk = ['m2', 'pcs'];
 
         foreach ($nama_bahan_baku as $data) {
