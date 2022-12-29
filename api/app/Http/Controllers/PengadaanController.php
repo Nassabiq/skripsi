@@ -78,6 +78,7 @@ class PengadaanController extends Controller
 
     public function updatePengadaan($id, Request $request)
     {
+        var_dump($request->all());
         $validator = Validator::make($request->all(), $this->rules, $this->messages);
         if ($validator->fails()) return response()->json($validator->messages(), 400);
 
@@ -86,10 +87,26 @@ class PengadaanController extends Controller
         ]);
 
         foreach ($request->pengadaan as $data) {
-            DetailPengadaan::where('id_detail_pengadaan', $data['id_detail_pengadaan'])->update([
-                'id_bahan_baku' => $data['id_bahan_baku'],
-                'jumlah_barang' => $data['jumlah_barang'],
-            ]);
+            if (isset($data['id_detail_pengadaan'])) {
+                # code...
+                DetailPengadaan::where('id_detail_pengadaan', $data['id_detail_pengadaan'])->update([
+                    'id_bahan_baku' => $data['id_bahan_baku'],
+                    'jumlah_barang' => $data['jumlah_barang'],
+                ]);
+            } else {
+                $id_detail = IdGenerator::generate(['table' => 'detail_pengadaan', 'field' => 'id_detail_pengadaan', 'length' => 9, 'prefix' => 'DPP-']);
+                DetailPengadaan::updateOrCreate([
+                    'id_detail_pengadaan' => $id_detail,
+                    'id_bahan_baku' => $data['id_bahan_baku'],
+                    'id_pengadaan' => $id,
+                    'jumlah_barang' => $data['jumlah_barang'],
+                ]);
+            }
+        }
+        if (count($request->deletedPengadaan) > 0) {
+            foreach ($request->deletedPengadaan as $data) {
+                DetailPengadaan::where('id_detail_pengadaan', $data['id_detail_pengadaan'])->delete();
+            }
         }
         return response()->json(200);
     }

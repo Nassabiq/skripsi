@@ -145,7 +145,7 @@ export default {
 			catatan: "",
 			customer: {
 				nama_pelanggan: "",
-				no_telepon: "",
+				no_telp: "",
 				alamat: "",
 			},
 			shipment: null,

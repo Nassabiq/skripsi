@@ -223,6 +223,8 @@ export default {
 				},
 			],
 
+			deletedPengadaan: [],
+
 			number: {
 				decimal: ",",
 				separator: ".",
@@ -272,6 +274,7 @@ export default {
 			});
 		},
 		deleteForm(index) {
+			if (this.updateMode) this.deletedPengadaan.push(this.pengadaan[index]);
 			this.pengadaan.splice(index, 1);
 		},
 		closeModal() {
@@ -345,6 +348,7 @@ export default {
 				.patch("/api/pengadaan/" + this.id_pengadaan, {
 					nama_pengadaan: this.nama_pengadaan,
 					pengadaan: this.pengadaan,
+					deletedPengadaan: this.deletedPengadaan,
 				})
 				.then((response) => {
 					this.closeModal();

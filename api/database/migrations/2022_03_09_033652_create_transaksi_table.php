@@ -22,6 +22,7 @@ class CreateTransaksiTable extends Migration
             $table->dateTime('tgl_transaksi');
             $table->integer('status_pesanan');
             $table->integer('status_pembayaran');
+            $table->json('dokumen_pembayaran');
             $table->integer('total_harga');
             $table->integer('pengiriman');
 
