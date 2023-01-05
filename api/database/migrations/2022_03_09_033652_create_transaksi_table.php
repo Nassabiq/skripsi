@@ -18,11 +18,11 @@ class CreateTransaksiTable extends Migration
             $table->primary('id_transaksi');
 
             $table->string('id_pelanggan')->references('id_pelanggan')->on('pelanggan');
+            $table->string('invoice_id')->nullable();
 
             $table->dateTime('tgl_transaksi');
             $table->integer('status_pesanan');
             $table->integer('status_pembayaran');
-            $table->json('dokumen_pembayaran');
             $table->integer('total_harga');
             $table->integer('pengiriman');
 

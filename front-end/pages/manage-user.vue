@@ -204,7 +204,7 @@ export default {
 
 			this.id_user = data.id_user;
 			this.user_form = {
-				nama_user: data.name,
+				nama_user: data.nama_user,
 				email: data.email,
 				role: data.id_role,
 			};
@@ -238,7 +238,8 @@ export default {
 					showCancelButton: true,
 					confirmButtonColor: "#3085d6",
 					cancelButtonColor: "#d33",
-					confirmButtonText: "Yes, delete it!",
+					confirmButtonText: "Yes",
+					cancelButtonText: "No",
 				})
 				.then((result) => {
 					if (result.isConfirmed) {

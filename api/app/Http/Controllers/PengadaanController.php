@@ -108,7 +108,7 @@ class PengadaanController extends Controller
                 DetailPengadaan::where('id_detail_pengadaan', $data['id_detail_pengadaan'])->delete();
             }
         }
-        return response()->json(200);
+        return response()->json(['message' => 'Data Successfuly updated'], 200);
     }
 
     public function validasiPengadaan($id)

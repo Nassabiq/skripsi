@@ -30,6 +30,9 @@
 				</label>
 			</div>
 			<template v-if="transaksi.length > 0">
+				<div>
+					<p class="text-xs font-semibold text-red-500">Setelah Melakukan Pembayaran, Harap Refresh Page terlebih dahulu</p>
+				</div>
 				<div v-for="data in transaksi" class="bg-white border-2 rounded-md border-slate-200">
 					<div class="flex flex-col justify-between px-6 py-4 border-b-2 md:flex-row border-slate-200">
 						<div class="flex space-x-8">
@@ -48,7 +51,7 @@
 						</div>
 						<div class="flex space-x-4">
 							<template v-if="data.status_pesanan == 1">
-								<button @click.prevent="openModal(data)" class="flex items-center justify-center gap-2 px-2 py-0 border-2 border-red-500 rounded-full hover:bg-red-100">
+								<button @click.prevent="payment(data)" class="flex items-center justify-center gap-2 px-2 py-0 border-2 border-red-500 rounded-full cursor-pointer hover:bg-red-100">
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-red-500">
 										<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
 									</svg>
@@ -56,12 +59,12 @@
 								</button>
 							</template>
 							<template v-else>
-								<a href="#" class="flex items-center justify-center gap-2 px-2 py-1 border-2 rounded-md border-slate-300 hover:bg-slate-100">
+								<button @click.prevent="openModal(data)" class="flex items-center justify-center gap-2 px-2 py-1 border-2 rounded-md border-slate-300 hover:bg-slate-100">
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
 										<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
 									</svg>
 									<span class="text-xs">Invoice</span>
-								</a>
+								</button>
 							</template>
 						</div>
 					</div>
@@ -113,7 +116,7 @@
 			</div>
 		</div>
 		<!-- Modal Tambah Produk -->
-		<Modal size="max-w-5xl" title="Pembayaran" @close-modal="closeModal" :data="modalData" v-show="modal">
+		<Modal size="max-w-5xl" title="Invoice" @close-modal="closeModal" :data="modalData" v-show="modal">
 			<template #content>
 				<div class="col-span-12 md:col-span-2">
 					<div class="w-full">
@@ -141,11 +144,11 @@
 					<!-- {{ modalData }} -->
 				</div>
 				<div class="col-span-12 md:col-span-5">
-					<span class="text-sm font-semibold text-gray-700">Cara Pembayaran</span>
+					<!-- <span class="text-sm font-semibold text-gray-700">Cara Pembayaran</span> -->
 				</div>
 			</template>
 			<template #submit>
-				<button class="btn btn-lg btn-green">Selesaikan</button>
+				<!-- <a target="_blank" :href="modalData.invoice_url" class="btn btn-lg btn-green">Selesaikan</a> -->
 			</template>
 		</Modal>
 	</div>
@@ -200,9 +203,18 @@ export default {
 			return "Rp. " + Intl.NumberFormat().format(result);
 		},
 
-		openModal(data) {
-			this.modalData = data;
+		async openModal(data) {
+			// let invoice = await this.$axios.$get("/api/transaksi/invoice/" + data.invoice_id);
+			let invoice = await this.$axios.$get("/api/transaksi/invoice/" + data.invoice_id);
+			this.modalData = invoice;
+
 			this.modal = !this.modal;
+		},
+
+		async payment(data) {
+			let invoice = await this.$axios.$get("/api/transaksi/invoice/" + data.invoice_id);
+			window.open(invoice.invoice_url);
+			// this.$router.push({path: });
 		},
 		closeModal() {
 			this.modalData = [];

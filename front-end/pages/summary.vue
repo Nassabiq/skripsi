@@ -211,7 +211,7 @@ export default {
 					this.$swal.fire({
 						icon: "success",
 						title: "Success...",
-						text: "Transaksi Berhasil ditambahkan!",
+						text: "Data Berhasil ditambahkan!",
 						showConfirmButton: false,
 						timer: 1500,
 						timerProgressBar: true,

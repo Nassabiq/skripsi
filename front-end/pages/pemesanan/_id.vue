@@ -25,17 +25,23 @@
 							</div>
 							<div class="px-2 py-3 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 								<dt class="text-sm font-medium text-gray-500">Nama Pemesan</dt>
-								<!-- <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" v-if="transaksi.pelanggan.nama_pelanggan"></dd> -->
+								<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" v-text="transaksi.pelanggan.nama_pelanggan" v-if="transaksi.pelanggan"></dd>
 							</div>
 						</div>
 						<div class="col-span-6">
 							<div class="px-2 py-3 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 								<dt class="text-sm font-medium text-gray-500">No. Telp</dt>
-								<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ transaksi.pelanggan.no_telp }}</dd>
+								<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" v-if="transaksi.pelanggan">: {{ transaksi.pelanggan.no_telp }}</dd>
 							</div>
 							<div class="px-2 py-3 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 								<dt class="text-sm font-medium text-gray-500">Tgl Transaksi</dt>
 								<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">: {{ $moment(transaksi.tgl_transaksi).format("DD MMMM YYYY") }}</dd>
+							</div>
+						</div>
+						<div class="col-span-12">
+							<div class="flex gap-4 px-2 py-3 bg-white sm:px-6">
+								<dt class="text-sm font-medium text-gray-500">Catatan</dt>
+								<dd class="mt-1 text-sm text-gray-900 sm:mt-0" v-if="transaksi.catatan">: {{ transaksi.catatan }}</dd>
 							</div>
 						</div>
 						<div class="col-span-12 px-4 mt-6">
@@ -56,33 +62,34 @@
 									<tbody class="">
 										<template v-for="(data, index) in transaksi.detail_transaksi">
 											<tr class="text-gray-800 font-title">
+												<td class="p-3 text-sm border border-slate-300">{{ index + 1 }}</td>
 												<td class="p-3 text-sm border border-slate-300">{{ data.sku.produk.nama_produk }}</td>
 												<td class="p-3 text-sm border border-slate-300">{{ data.qty_produk }}{{ data.sku.produk.satuan_produk }}</td>
-												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(data.sku.harga[data.sku.harga.length - 1].harga) }}</td>
-												<!-- <td class="p-3 text-sm border border-slate-300">{{ data.ukuran }}</td>
-												<td class="p-3 text-sm border border-slate-300">{{ data.jenis_bahan }}</td>
-												<td class="p-3 text-sm border border-slate-300">-</td>
-												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(data.produk.harga[data.produk.harga.length - 1].harga * data.qty) }}</td> -->
+												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(data.sku.harga[data.sku.harga.length - 1].harga_produk) }}</td>
+												<td class="p-3 text-sm border border-slate-300" v-text="data.ukuran ? data.ukuran + data.sku.produk.satuan_produk : '-'">{{ data.ukuran }}</td>
+												<td class="p-3 text-sm border border-slate-300">{{ data.sku.bahan_baku.nama_bahan_baku }}</td>
+												<!-- <td class="p-3 text-sm border border-slate-300">-</td> -->
+												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(data.sku.harga[data.sku.harga.length - 1].harga_produk * data.qty_produk) }}</td>
 											</tr>
 											<tr>
-												<!-- <td colspan="7" class="p-1 border border-slate-300">
+												<td colspan="7" class="p-1 border border-slate-300">
 													<p class="text-xs">Note:</p>
-													<div class="grid grid-cols-2 gap-4">
+													<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 														<div class="flex col-span-1 p-3">
 															<p class="text-xs">Finishing :</p>
-															<p class="pl-4 text-xs">{{ data.finishing }}</p>
+															<p class="pl-4 text-xs">{{ data.finishing.nama_finishing }}</p>
 														</div>
-														<div class="flex col-span-1 p-3">
+														<!-- <div class="flex col-span-1 p-3">
 															<p class="text-xs">Laminasi :</p>
 															<p class="pl-4 text-xs">{{ data.laminasi }}</p>
-														</div>
+														</div> -->
 													</div>
-												</td> -->
+												</td>
 											</tr>
 										</template>
 										<tr class="text-gray-800 bg-gray-100 font-title">
 											<td colspan="6" class="p-3 text-lg font-semibold border border-slate-300">Total</td>
-											<!-- <td class="p-3 font-semibold border border-slate-300">Rp. {{ Intl.NumberFormat().format(transaksi.total_pembayaran) }}</td> -->
+											<td class="p-3 font-semibold border border-slate-300">Rp. {{ Intl.NumberFormat().format(transaksi.total_harga) }}</td>
 										</tr>
 									</tbody>
 								</table>

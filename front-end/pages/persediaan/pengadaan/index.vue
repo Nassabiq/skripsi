@@ -313,7 +313,7 @@ export default {
 					this.$swal.fire({
 						icon: "success",
 						title: "Success...",
-						text: "Data Berhasil ditambah!",
+						text: "Data Berhasil ditambahkan!",
 						showConfirmButton: false,
 						timer: 1500,
 						timerProgressBar: true,
@@ -377,6 +377,7 @@ export default {
 					confirmButtonColor: "#3085d6",
 					cancelButtonColor: "#d33",
 					confirmButtonText: "Validasi!",
+					cancelButtonText: "Cancel",
 				})
 				.then((result) => {
 					if (result.isConfirmed) {
@@ -406,7 +407,8 @@ export default {
 					showCancelButton: true,
 					confirmButtonColor: "#3085d6",
 					cancelButtonColor: "#d33",
-					confirmButtonText: "Yes, delete it!",
+					confirmButtonText: "Yes",
+					cancelButtonText: "No",
 				})
 				.then((result) => {
 					if (result.isConfirmed) {

@@ -32,6 +32,7 @@ Route::get('/produk', [ProdukController::class, 'index']);
 Route::get('/kategori', [ProdukController::class, 'kategori']);
 Route::get('/katalog', [ProdukController::class, 'katalog']);
 
+Route::post('/transaksi/notification', [TransaksiController::class, 'callback']);
 
 Route::post('/refresh', fn () =>  auth()->refresh());
 Route::group(['middleware' => ['auth:api']], function () {
@@ -61,6 +62,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/transaksi', [TransaksiController::class, 'index']);
     Route::get('/transaksi/all', [TransaksiController::class, 'dataTransaksi']);
     Route::get('/transaksi/{id_transaksi}', [TransaksiController::class, 'detailTransaksi']);
+    Route::get('/transaksi/invoice/{invoice_id}', [TransaksiController::class, 'getInvoice']);
 
     Route::post('/transaksi', [TransaksiController::class, 'submitTransaksi']);
     Route::post('/transaksi/status/{id_transaksi}', [TransaksiController::class, 'changeStatus']);

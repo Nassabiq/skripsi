@@ -10,9 +10,10 @@ use Carbon\Carbon;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-
+use Xendit\Xendit;
 
 class TransaksiController extends Controller
 {
@@ -50,8 +51,6 @@ class TransaksiController extends Controller
         return response()->json($data, 200);
     }
 
-
-
     public function detailTransaksi($id)
     {
         $data = Transaksi::with(
@@ -64,11 +63,32 @@ class TransaksiController extends Controller
         return response()->json($data, 200);
     }
 
+    public function getInvoice($invoice_id)
+    {
+        Xendit::setApiKey(env('XENDIT_SECRET_API_KEY'));
+        $getInvoice = \Xendit\Invoice::retrieve($invoice_id);
+        return response()->json($getInvoice, 200);
+    }
+
+    public function callback()
+    {
+        $data =  request()->all();
+        $status = $data['status'];
+        $external_id = $data['external_id'];
+
+        Transaksi::where('id_transaksi', $external_id)->update([
+            'status_pembayaran' => $status == "PAID" ? 1 : 0,
+            'status_pesanan' => 2
+        ]);
+        return response()->json($data, 200);
+    }
+
     public function submitTransaksi(Request $request)
     {
         DB::beginTransaction();
         try {
             $errors = collect();
+            Xendit::setApiKey(env('XENDIT_SECRET_API_KEY'));
 
             $validator = Validator::make($request->except('pelanggan'), ['shipment' => 'required',], ['required' => 'form ini harus diisi']);
             if ($validator->fails()) $errors = $validator->errors();
@@ -95,7 +115,6 @@ class TransaksiController extends Controller
                     'no_telp' => $request->pelanggan['no_telp'],
                 ]);
             }
-
 
             $id_transaksi = IdGenerator::generate(['table' => 'transaksi', 'field' => 'id_transaksi', 'length' => 20, 'prefix' => 'ORDER-' . date('dmY')]);
             $transaksi = Transaksi::create([
@@ -134,6 +153,17 @@ class TransaksiController extends Controller
 
                 Cart::where('id_cart', $data->id_cart)->delete();
             }
+            $params = [
+                'external_id' => $id_transaksi,
+                'payer_email' => Auth::user()->email,
+                'description' => 'Invoice Transaksi UQI Media',
+                'amount' => $transaksi->total_harga,
+
+            ];
+            $createInvoice = \Xendit\Invoice::create($params);
+
+            $transaksi->invoice_id = $createInvoice['id'];
+            $transaksi->save();
 
             DB::commit();
         } catch (\Throwable $th) {
@@ -163,6 +193,7 @@ class TransaksiController extends Controller
 
         $data = Transaksi::findOrFail($id);
         $data->no_resi = $request->resi;
+        $data->status_pesanan = 6;
         $data->save();
 
         return response()->json($data, 200);

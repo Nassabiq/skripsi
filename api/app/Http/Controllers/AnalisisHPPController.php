@@ -9,6 +9,7 @@ use ArrayIterator;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 use function PHPUnit\Framework\isNull;
 
@@ -17,24 +18,36 @@ class AnalisisHPPController extends Controller
 
     public function analisis(Request $request)
     {
-        $from = Carbon::parse($request->from);
-        $to = Carbon::parse($request->to);
+        // $month = str_replace('/', '-', $request->month);
+        $validator = Validator::make($request->all(), [
+            'id_produk'   => 'required',
+            'id_bahan_baku'   => 'required',
+            'month'   => 'required',
+        ], [
+            'required' => 'form ini harus diisi'
+        ]);
 
+        if ($validator->fails()) return response()->json($validator->errors(), 400);
+
+        $month = date('m', strtotime($request->month));
+        $year = date('Y', strtotime($request->month));
+        // var_dump([$month, $year]);
         $sku = SKU::where('id_produk', $request->id_produk)->where('id_bahan_baku', $request->id_bahan_baku)->first();
-        $produksi = DetailTransaksi::with('transaksi')->whereHas('transaksi', function ($q) use ($from, $to) {
+        $produksi = DetailTransaksi::with('transaksi')->whereHas('transaksi', function ($q) use ($month, $year) {
             $q->where('status_pesanan', 6);
             $q->orderBy('tgl_transaksi', 'asc');
-            $q->whereBetween('tgl_transaksi', [$from, $to]);
+            $q->whereMonth('tgl_transaksi', $month);
+            $q->whereYear('tgl_transaksi', $year);
         })->where('id_sku', $sku->id_sku)->get();
 
-        $pembelian = DetailStokMasuk::with('stokMasuk')->whereHas('stokMasuk', function ($q) use ($from, $to) {
+        $pembelian = DetailStokMasuk::with('stokMasuk')->whereHas('stokMasuk', function ($q) use ($month, $year) {
             $q->orderBy('tgl_stok_masuk', 'asc');
-            $q->whereBetween('tgl_stok_masuk', [$from, $to]);
+            $q->whereMonth('tgl_stok_masuk', $month);
+            $q->whereYear('tgl_stok_masuk', $year);
         })->where('id_bahan_baku', $request->id_bahan_baku)->get();
 
         $data_produksi = [];
         $data_pembelian = [];
-
         foreach ($produksi as $data) {
             $ukuran = is_null($data->ukuran) ? null : json_decode($data->ukuran);
             array_push(
@@ -42,7 +55,7 @@ class AnalisisHPPController extends Controller
                 [
                     'id' => 'produksi',
                     'tgl' => $data->transaksi->tgl_transaksi,
-                    'qty' => is_null($data->qty_produk) ? $data->qty_produk : $data->qty_produk * ($ukuran->panjang * $ukuran->lebar),
+                    'qty' => is_null($data->ukuran) ? $data->qty_produk : $data->qty_produk * ($ukuran->panjang * $ukuran->lebar),
                 ]
             );
         }
@@ -62,12 +75,19 @@ class AnalisisHPPController extends Controller
         usort($hpp_data, fn ($a, $b) => strtotime($a["tgl"]) - strtotime($b["tgl"]));
 
         $last_month_stock_data = (object) array(
-            "qty" => 100,
-            "harga" => 6000,
+            "p6000" => (object) array(
+                "qty" => 100,
+                "harga" => 6000,
+            )
         );
+
+        // $data = [];
         $result = json_encode($hpp_data);
-        return $this->main(json_decode($result), $last_month_stock_data);
-        // $this->main(json_decode($result), $last_month_stock_data);
+        $stock = json_encode($last_month_stock_data);
+
+        // return $this->main($hpp_data, $last_month_stock_data);
+        // return response()->json($hpp_data, 200);
+        return $this->main(json_decode($result), json_decode($stock));
     }
 
     public function getBahanBaku(Request $request)
@@ -168,6 +188,7 @@ class AnalisisHPPController extends Controller
         $object_iterator = new ArrayIterator($row_stock[$index]);
         $first_in_stock_key = $object_iterator->key();
 
+        print_r([$row_stock[$index], $first_in_stock_key]);
         # check if the stock in transaction_item is exceed the current stock at $row_stock[$index]->$first_in_stock_key
         if ($row_stock[$index]->$first_in_stock_key->qty > $transaction_item->qty) {
             # get $remaining_stock_needed from $transaction_item->qty
@@ -190,7 +211,7 @@ class AnalisisHPPController extends Controller
         array_push($result_data, array(
             "tanggal" => $month,
             "pembelian" => $this->generate_row_item($pembelian ? $pembelian->qty : 0, $pembelian ? $pembelian->harga : 0),
-            "hpp" => $hpp,
+            "hpp" => ($hpp ? $hpp : $this->generate_row_item(0, 0)),
             "persediaan" => $stock,
         ));
 
@@ -200,7 +221,7 @@ class AnalisisHPPController extends Controller
     public function add_row_table_below($row_stock, $result_data, $month, $index, $transaction_item, $costperunit, $total_data)
     {
         if ($transaction_item->id === "pembelian") {
-            $row_stock = $this->add_stock($row_stock, $index, $transaction_item, $costperunit);
+            $row_stock = $this->add_stock($row_stock, $index, $transaction_item, ("p" . $costperunit));
 
             $result_data = $this->create_row(
                 $result_data,
@@ -236,21 +257,13 @@ class AnalisisHPPController extends Controller
         $flag_transaction_date = new DateTime($transaction_data[0]->tgl);
         $month_of_transaction = $this->get_full_month_name($flag_transaction_date);
 
-        // create the first $row_stock
-        $row_stock = array(
-            "first" => (object) array(
-                $last_month_stock_data->harga => $this->generate_row_item(
-                    $last_month_stock_data->qty,
-                    $last_month_stock_data->harga,
-                ),
-            ),
-        );
-
         // create the first row
-        $result_data = $this->create_row(array(), "$month_of_transaction 1", null, null, $row_stock["first"]);
+        $result_data = $this->create_row(array(), "$month_of_transaction 1", null, null, json_decode(json_encode($last_month_stock_data)));
 
         // prepare $row_stock for foreach calculation
-        $row_stock = $this->push_array_and_unlink_the_source($row_stock, $row_stock["first"]);
+        $row_stock = array($last_month_stock_data);
+
+        // print_r($row_stock);exit(1);
 
         // prepare the total variable
         $total_data = (object) array(
@@ -278,7 +291,7 @@ class AnalisisHPPController extends Controller
             );
 
             // prepare $row_stock for next foreach calculation
-            $row_stock = $this->push_array_and_unlink_the_source($row_stock, $row_stock[($index)]);
+            $row_stock = $this->push_array_and_unlink_the_source($row_stock, $row_stock[$index]);
 
             // set the flag transation date for the next foreach calculation
             $flag_transaction_date = $current_transaction_date;
@@ -288,12 +301,14 @@ class AnalisisHPPController extends Controller
         $total_data->barang_yang_tersedia_dijual = $total_data->pembelian->jumlah + $total_data->penjualan->jumlah;
 
         // the calculation is saved to $result_data
+        // echo "RESULT Data -----------------------------------\n\n";
+        // print_r($result_data);
+
+        // echo "\n\nTotal Data -----------------------------------\n\n";
+        // print_r($total_data);
         $data = [$result_data, $total_data];
         return list($result_data, $total_data) = $data;
     }
-
-
-
 
     // Everything starts from here?!
 }

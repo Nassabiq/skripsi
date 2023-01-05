@@ -96,13 +96,13 @@
 											<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
 												<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
 											</svg>
-											<span v-if="data.status_pesanan == 2">Proses</span>
+											<span v-if="data.status_pesanan == 2">Proses Pesanan</span>
 											<span v-if="data.status_pesanan == 3">Selesaikan Produksi</span>
 											<span v-if="data.status_pesanan == 4">Selesaikan Pengecekan</span>
 											<span v-if="data.status_pesanan == 5">Selesaikan Pesanan</span>
 											<!-- <span>{{ data.status_pesanan == 2 ? "Proses" : data.status_pesanan == 3 ? "Ubah Status" : "Selesaikan" }}</span> -->
 										</button>
-										<NuxtLink target="_blank" :to="{name: 'pencatatan-transaksi-id', params: {id: data.id_transaksi}}">
+										<NuxtLink target="_blank" :to="{name: 'pemesanan-id', params: {id: data.id_transaksi}}">
 											<button class="btn btn-sm btn-with-icon btn-teal">
 												<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
 													<path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
@@ -264,7 +264,8 @@ export default {
 					showCancelButton: true,
 					confirmButtonColor: "#3085d6",
 					cancelButtonColor: "#d33",
-					confirmButtonText: "Yes!",
+					confirmButtonText: "Yes",
+					cancelButtonText: "No",
 				})
 				.then((result) => {
 					if (result.isConfirmed) {

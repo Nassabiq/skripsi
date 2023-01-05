@@ -9,6 +9,7 @@
 						{{ product.nama_produk }}
 					</option>
 				</select>
+				<p class="mt-2 text-xs text-red-500" v-if="validation.id_produk">{{ validation.id_produk[0] }}</p>
 			</div>
 			<div class="flex flex-col col-span-12 space-y-2 md:col-span-4">
 				<label class="label">Bahan Baku</label>
@@ -18,14 +19,18 @@
 						{{ data.bahan_baku.nama_bahan_baku }}
 					</option>
 				</select>
+				<p class="mt-2 text-xs text-red-500" v-if="validation.id_bahan_baku">{{ validation.id_bahan_baku[0] }}</p>
 			</div>
-			<div class="flex flex-col col-span-12 space-y-2 md:col-span-2">
+			<!-- <div class="flex flex-col col-span-12 space-y-2 md:col-span-2">
 				<label class="text-xs font-semibold text-gray-700">Tampilkan data dari:</label>
 				<input type="date" class="px-6 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" v-model="from" />
-			</div>
+				<p class="mt-2 text-xs text-red-500" v-if="validation.from">{{ validation.from[0] }}</p>
+			</div> -->
 			<div class="flex flex-col col-span-12 space-y-2 md:col-span-2">
-				<label class="text-xs font-semibold text-gray-700">sampai : </label>
-				<input type="date" class="px-6 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" v-model="to" />
+				<label class="text-xs font-semibold text-gray-700">Bulan : </label>
+				<date-picker type="month" v-model="month" format="MMMM-YYYY" placeholder="Masukan Bulan" value-type="format"></date-picker>
+				<!-- <input type="date" class="px-6 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" v-model="to" /> -->
+				<p class="mt-2 text-xs text-red-500" v-if="validation.month">{{ validation.month[0] }}</p>
 			</div>
 			<div class="flex items-end justify-end col-span-12">
 				<button type="submit" class="btn btn-lg btn-blue" @click.prevent="getDetailHPP">Generate Data</button>
@@ -57,8 +62,8 @@
 					<tr class="text-sm text-center" v-for="data in hpp[0]">
 						<td class="p-2 border-table">{{ data.tanggal }}</td>
 						<td class="p-2 border-table" v-text="data.pembelian.qty > 0 ? data.pembelian.qty : '-'"></td>
-						<td class="p-2 border-table" v-text="data.pembelian.harga > 0 ? data.pembelian.harga : '-'"></td>
-						<td class="p-2 border-table" v-text="data.pembelian.jumlah > 0 ? data.pembelian.jumlah : '-'"></td>
+						<td class="p-2 border-table" v-text="data.pembelian.harga > 0 ? 'Rp. ' + Intl.NumberFormat().format(data.pembelian.harga) : '-'"></td>
+						<td class="p-2 border-table" v-text="data.pembelian.jumlah > 0 ? 'Rp. ' + Intl.NumberFormat().format(data.pembelian.jumlah) : '-'"></td>
 						<td class="p-2 border-table">
 							<ul v-if="data.hpp != null">
 								<li v-for="data in qtyResult(data.hpp)" v-text="data"></li>
@@ -176,8 +181,7 @@ export default {
 
 			id_produk: "",
 			id_bahan_baku: "",
-			from: "",
-			to: "",
+			month: "",
 
 			products: [],
 			bahan_baku: [],
@@ -221,11 +225,12 @@ export default {
 		},
 		async getDetailHPP() {
 			this.$axios
-				.get("/api/analisis-hpp?id_produk=" + this.id_produk + "&id_bahan_baku=" + this.id_bahan_baku + "&from=" + this.from + "&to=" + this.to)
+				.get("/api/analisis-hpp?id_produk=" + this.id_produk + "&id_bahan_baku=" + this.id_bahan_baku + "&month=" + this.month)
 				.then((response) => {
 					this.hpp = response.data;
 				})
 				.catch((error) => {
+					this.validation = error.response.data;
 					console.log(error);
 				});
 		},
