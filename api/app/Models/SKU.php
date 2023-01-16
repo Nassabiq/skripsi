@@ -33,8 +33,8 @@ class SKU extends Model
     {
         return $this->hasMany(DetailTransaksi::class, 'id_sku');
     }
-    // public function hpp()
-    // {
-    //     return $this->hasMany(DetailTransaksi::class, 'id_sku');
-    // }
+    public function hpp()
+    {
+        return $this->hasMany(HPP::class, 'id_sku');
+    }
 }

@@ -99,6 +99,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/sku/bahan-baku', [AnalisisHPPController::class, 'getBahanBaku']);
     Route::get('/analisis-hpp', [AnalisisHPPController::class, 'analisis']);
 
+    Route::post('/analisis-hpp', [AnalisisHPPController::class, 'saveResult']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 

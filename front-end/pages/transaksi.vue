@@ -1,6 +1,6 @@
 <template>
 	<div class="margin-auth">
-		<div class="space-y-4 lg:px-24">
+		<div class="max-w-2xl px-2 mx-auto space-y-4 sm:py-2 sm:px-4 lg:max-w-5xl">
 			<p class="text-2xl font-semibold text-gray-900">Riwayat Transaksi</p>
 			<div class="flex gap-4">
 				<label class="relative flex items-center justify-center px-4 py-1 text-xs font-medium text-gray-900 bg-white border rounded-full shadow-sm cursor-pointer group hover:bg-gray-50 focus:outline-none" :class="status_pesanan == '' ? 'ring-2 ring-slate-500' : ''">
@@ -120,13 +120,13 @@
 			<template #content>
 				<div class="col-span-12 md:col-span-2">
 					<div class="w-full">
-						<img src="~/assets/img/qr.png" class="w-full" alt="" srcset="" />
+						<!-- <img src="~/assets/img/qr.png" class="w-full" alt="" srcset="" />
 						<p class="text-xs text-center text-gray-600">No.Rekening: xxxxxxxxxx</p>
-						<p class="text-xs text-center text-gray-600">a.n / admin (bank)</p>
+						<p class="text-xs text-center text-gray-600">a.n / admin (bank)</p> -->
 					</div>
 				</div>
 				<div class="col-span-12 md:col-span-5">
-					<ul class="space-y-2">
+					<!-- <ul class="space-y-2">
 						<li class="flex items-center justify-between px-4 py-2 bg-white border-2 rounded-md border-slate-200">
 							<p class="text-xs font-semibold text-gray-600">Total Pesanan :</p>
 							<p class="text-sm text-gray-600">{{ "Rp. " + Intl.NumberFormat().format(modalData.total_harga) }}</p>
@@ -139,7 +139,7 @@
 							<p class="text-sm font-semibold text-gray-600">Total :</p>
 							<p class="text-gray-600">{{ "Rp. " + Intl.NumberFormat().format(modalData.total_harga + 10000) }}</p>
 						</li>
-					</ul>
+					</ul> -->
 
 					<!-- {{ modalData }} -->
 				</div>

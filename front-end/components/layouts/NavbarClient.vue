@@ -1,46 +1,46 @@
 <template>
 	<div class="min-h-full">
-		<nav class="bg-green-600">
+		<nav class="bg-white border-b border-gray-100 shadow-md">
 			<div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-				<div class="flex items-center justify-between h-16">
-					<div class="flex items-center basis-1/3">
-						<div class="flex-shrink-0">
-							<img src="~/assets/img/logo.png" class="w-12 h-12" alt="" srcset="" />
+				<div class="flex items-center justify-between h-14">
+					<div class="flex items-center">
+						<div class="">
+							<img src="~/assets/img/logo-navbar.png" class="h-10" alt="" srcset="" />
 						</div>
 						<div class="hidden md:block">
 							<div class="flex items-baseline ml-10 space-x-4">
 								<NuxtLink to="/">
-									<a href="#" class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-green-700 hover:text-white" aria-current="page">Home</a>
+									<a href="#" class="px-3 py-2 text-xs font-semibold tracking-wide text-gray-700 hover:text-green-500 hover:font-extrabold" aria-current="page">Home</a>
 								</NuxtLink>
 								<NuxtLink to="/katalog">
-									<a href="#" class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-green-700 hover:text-white">Katalog</a>
+									<a href="#" class="px-3 py-2 text-xs font-semibold tracking-wide text-gray-700 hover:text-green-500 hover:font-extrabold">Katalog</a>
 								</NuxtLink>
 								<NuxtLink to="/transaksi" v-if="$auth.loggedIn">
-									<a href="#" class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-green-700 hover:text-white">Transaksi</a>
+									<a href="#" class="px-3 py-2 text-xs font-semibold tracking-wide text-gray-700 hover:text-green-500 hover:font-extrabold">Transaksi</a>
 								</NuxtLink>
 							</div>
 						</div>
 					</div>
-					<div class="hidden md:block basis-2/3">
+					<div class="hidden md:block">
 						<div class="flex items-center justify-end gap-4 ml-4 md:ml-6">
-							<input class="block w-1/2 mt-1 text-xs border border-gray-300 rounded shadow form-input-lg focus:border-green-200 focus:outline-none focus:ring-2 focus:ring-green-300" placeholder="Search..." />
-							<button type="button" @click.prevent="cart = !cart" class="p-1 text-gray-100 bg-green-700 rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-800">
+							<input class="block w-full text-xs border border-gray-200 rounded-md bg-gray-50 form-input-md focus:border-green-200 focus:outline-none focus:ring-2 focus:ring-green-300" placeholder="Search..." />
+							<button type="button" @click.prevent="cart = !cart" class="flex items-center max-w-xs p-1 space-x-2 text-sm font-semibold text-gray-700 hover:text-green-500">
 								<!-- cart -->
-								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
 									<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
 								</svg>
+								<p class="text-xs">Cart</p>
 							</button>
 
 							<!-- Profile dropdown -->
-							<div class="relative ml-3">
-								<div>
-									<button @click.prevent="dropdown = !dropdown" type="button" class="flex items-center max-w-xs p-1 text-sm text-gray-100 bg-green-700 rounded-full focus:ring-white focus:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-700 hover:text-white" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-										<span class="sr-only">Open user menu</span>
-										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-											<path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
-										</svg>
-									</button>
-								</div>
+							<div class="relative">
+								<button @click.prevent="dropdown = !dropdown" type="button" class="flex items-center max-w-xs p-1 space-x-2 text-sm font-semibold text-gray-700 hover:text-green-500" :class="{'text-green-500': dropdown, '': !dropdown}" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+										<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+									</svg>
+									<p class="text-xs">Account</p>
+								</button>
+								<!-- <div></div> -->
 								<div class="absolute right-0 z-10 w-48 py-1 mt-2 transition duration-1000 ease-in-out origin-top-right transform bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" v-show="dropdown">
 									<!-- Active: "bg-gray-100", Not Active: "" -->
 									<template v-if="$auth.loggedIn">
@@ -142,6 +142,6 @@ export default {
 
 <style>
 .nuxt-link-exact-active > a {
-	@apply text-white bg-green-700;
+	@apply text-green-500 font-bold;
 }
 </style>

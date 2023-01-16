@@ -1,6 +1,6 @@
 <template>
 	<div class="margin-auth">
-		<p class="text-3xl font-semibold text-blue-600">Hello World</p>
+		<!-- <p class="text-3xl font-semibold text-blue-600">Hello World</p> -->
 	</div>
 </template>
 

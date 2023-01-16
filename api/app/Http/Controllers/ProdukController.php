@@ -43,7 +43,7 @@ class ProdukController extends Controller
 
     public function harga(Request $request)
     {
-        $sku = SKU::with('harga')->where('id_produk', $request->id_produk)->where('id_bahan_baku', $request->id_bahan_baku)->first();
+        $sku = SKU::with('harga', 'hpp')->where('id_produk', $request->id_produk)->where('id_bahan_baku', $request->id_bahan_baku)->first();
         return response()->json($sku, 200);
     }
 

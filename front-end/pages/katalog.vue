@@ -1,48 +1,58 @@
 <template>
 	<div class="auth">
-		<div class="grid grid-cols-5 gap-4">
-			<div class="col-span-5 space-y-4 md:col-span-2 lg:col-span-1">
-				<p class="text-2xl font-semibold text-gray-800">Katalog</p>
+		<div class="grid grid-cols-4 gap-4">
+			<!-- <div class="col-span-5 space-y-4 md:col-span-2 lg:col-span-1">
 				<ul class="space-y-1">
 					<li @click.prevent="clear" :class="{'bg-green-600 text-white': id_kategori == ''}" class="px-4 py-2 text-xs font-medium text-gray-800 rounded-md cursor-pointer hover:bg-green-600 hover:text-white">All Data</li>
 					<li @click.prevent="getKatalog(data.id_kategori_produk)" :class="{'bg-green-600 text-white': id_kategori == data.id_kategori_produk}" class="px-4 py-2 text-xs font-medium text-gray-800 rounded-md cursor-pointer hover:bg-green-600 hover:text-white" v-for="(data, index) in categories">{{ data.nama_kategori }}</li>
 				</ul>
-			</div>
-			<div class="col-span-5 md:col-span-3 lg:col-span-4">
-				<div v-if="products.length > 0">
-					<div class="max-w-2xl px-2 mx-auto sm:py-2 sm:px-4 lg:max-w-7xl">
+			</div> -->
+			<div class="col-span-4 md:col-span-3 lg:col-span-4">
+				<div class="max-w-2xl px-2 mx-auto sm:py-2 sm:px-4 lg:max-w-5xl">
+					<p class="px-4 mb-4 text-2xl font-semibold text-gray-800">Katalog</p>
+					<div v-if="products.length > 0">
 						<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-							<a href="#" class="px-3 py-2 bg-gray-100 rounded-lg shadow-lg group shadow-gray-200" v-for="product in products">
-								<div class="w-full overflow-hidden bg-gray-200 rounded-lg aspect-square">
-									<img :src="'http://localhost:8000/storage/image_produk/' + product.id_produk + '/' + JSON.parse(product.image_produk)[0].filename" alt="" class="object-cover w-full h-full border-2 rounded-md border-slate-200" />
+							<!-- bg-gray-100 rounded-lg shadow-lg group shadow-gray-200 -->
+							<a href="#" class="px-3 py-2 space-y-2" v-for="product in products">
+								<div class="overflow-hidden bg-gray-200 border-2 border-green-400 rounded-lg aspect-square">
+									<img :src="'http://localhost:8000/storage/image_produk/' + product.id_produk + '/' + JSON.parse(product.image_produk)[0].filename" alt="" class="object-cover w-full h-full rounded-md" />
 									<!-- <img :src="product.image" class="object-cover object-center w-full h-full group-hover:opacity-75" /> -->
 								</div>
-								<p class="mt-1 font-semibold text-gray-700">{{ product.nama_produk }}</p>
-								<p class="text-xs font-medium text-gray-900" v-if="product.stok[0]">
-									<span v-text="harga(product.stok)"></span>
-									<!-- Rp. {{ Intl.NumberFormat().format(product.stok[0].harga[0].harga_produk) }} -->
-									<span class="mt-4 text-xs text-gray-600"> / {{ product.satuan_produk }}</span>
-								</p>
-								<div class="flex items-center justify-end gap-2 hover:text-green-600">
-									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-										<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-									</svg>
-									<p class="text-xs font-semibold" @click.prevent="showModal(product)">Add to Cart</p>
+								<div>
+									<p class="mt-1 font-semibold tracking-tight text-gray-900">{{ product.nama_produk }}</p>
+									<p class="text-[11px] font-medium text-gray-900" v-if="product.stok[0]">
+										<span v-text="harga(product.stok)"></span>
+										<!-- Rp. {{ Intl.NumberFormat().format(product.stok[0].harga[0].harga_produk) }} -->
+										<span class="mt-4 text-xs text-gray-600"> / {{ product.satuan_produk }}</span>
+									</p>
+								</div>
+								<div class="flex justify-end">
+									<button class="flex items-center gap-2 px-3 py-2 text-green-700 border border-green-700 rounded-full btn-sm hover:text-white hover:bg-green-700">
+										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+											<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+										</svg>
+										<p class="text-xs font-semibold" @click.prevent="showModal(product)">Add to Cart</p>
+									</button>
 								</div>
 							</a>
 							<!-- More products... -->
 						</div>
 					</div>
-				</div>
-				<div v-else>
-					<div class="max-w-full bg-gray-100 rounded-md sm:py-2">
-						<div class="px-8 py-6 mx-auto text-center">Tidak Ada Data</div>
+					<div v-else>
+						<div class="max-w-2xl px-2 mx-auto sm:py-2 sm:px-4 lg:max-w-5xl">
+							<div class="flex items-center justify-center gap-4 py-40 font-semibold text-center border-2 border-gray-300 rounded-lg">
+								<svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
+									<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+								</svg>
+								<span class="text-3xl"> Tidak Ada Data </span>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<!-- Modal Tambah ke Cart -->
-		<Modal size="max-w-5xl" title="Add to Cart" @close-modal="closeModal" v-show="modal" :data="modalData">
+		<Modal size="max-w-6xl" title="Add to Cart" @close-modal="closeModal" v-show="modal" :data="modalData">
 			<template #content v-if="modalData">
 				<div class="col-span-12 space-y-4 md:col-span-6">
 					<p class="text-2xl font-semibold">{{ modalData.nama_produk }}</p>

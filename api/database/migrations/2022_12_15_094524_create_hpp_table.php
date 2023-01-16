@@ -20,7 +20,6 @@ class CreateHppTable extends Migration
             $table->string('id_sku')->references('id_sku')->on('sku');
 
             $table->json('biaya_overhead');
-            $table->json('hasil_analisa');
             $table->dateTime('tgl_analisa');
             $table->integer('nilai_hpp');
         });

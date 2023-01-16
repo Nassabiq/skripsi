@@ -84,8 +84,15 @@
 				</div>
 			</div>
 			<div class="col-span-12 md:col-span-6">
-				<div class="card">
+				<div class="space-y-4 card">
 					<p class="text-lg font-semibold">Hasil Analisis HPP dan Harga Jual</p>
+					<div v-if="data_harga">
+						<p class="text-xs font-semibold" v-if="data_harga.hpp">Nilai Analisis HPP Terbaru</p>
+						<div v-for="data in data_harga.hpp" class="flex justify-between px-4 py-2 bg-white border rounded-md">
+							<p class="text-xs font-semibold">{{ $moment(data.tgl_analisa).format("DD MMMM YYYY") }}</p>
+							<p class="text-xs">Rp. {{ Intl.NumberFormat().format(data.nilai_hpp) }}</p>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

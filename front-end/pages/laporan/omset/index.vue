@@ -13,7 +13,7 @@
 					</div>
 				</div>
 				<div class="flex flex-col col-span-12 mb-2 space-y-2 sm:space-y-0 sm:space-x-2 sm:flex-row md:justify-end md:mb-0 md:col-span-6">
-					<div class="flex flex-col">
+					<!-- <div class="flex flex-col">
 						<label class="text-xs font-semibold text-gray-700">Produk</label>
 						<select class="px-6 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" v-model="selectedProduk" @change="getDataInRange">
 							<option value="">Pilih Produk</option>
@@ -21,7 +21,7 @@
 								{{ data.nama_produk }}
 							</option>
 						</select>
-					</div>
+					</div> -->
 					<div class="flex flex-col">
 						<label class="text-xs font-semibold text-gray-700">Tampilkan data dari:</label>
 						<input type="date" class="px-6 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" v-model="dateStart" @change="getDataInRange" />
@@ -126,7 +126,7 @@ export default {
 			this.produk = produk;
 		},
 		async getDataTransaksi() {
-			const transaksi = await this.$axios.$get("/api/laporan/omset?from=" + this.dateStart + "&to=" + this.dateEnd + "&produk=" + this.selectedProduk);
+			const transaksi = await this.$axios.$get("/api/laporan/omset?from=" + this.dateStart + "&to=" + this.dateEnd);
 			this.transaksi = transaksi;
 		},
 		getDataInRange() {

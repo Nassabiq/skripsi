@@ -4,21 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\DetailStokMasuk;
 use App\Models\DetailTransaksi;
+use App\Models\HPP;
 use App\Models\SKU;
 use ArrayIterator;
 use Carbon\Carbon;
 use DateTime;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
-use function PHPUnit\Framework\isNull;
 
 class AnalisisHPPController extends Controller
 {
 
     public function analisis(Request $request)
     {
-        // $month = str_replace('/', '-', $request->month);
         $validator = Validator::make($request->all(), [
             'id_produk'   => 'required',
             'id_bahan_baku'   => 'required',
@@ -29,9 +28,42 @@ class AnalisisHPPController extends Controller
 
         if ($validator->fails()) return response()->json($validator->errors(), 400);
 
-        $month = date('m', strtotime($request->month));
-        $year = date('Y', strtotime($request->month));
-        // var_dump([$month, $year]);
+        $month = (int) date('m', strtotime($request->month));
+        $year = (int) date('Y', strtotime($request->month));
+
+        $last_month = 0;
+        $last_year = 0;
+        if ($month == 1) {
+            $last_month = 12;
+            $last_year = $year - 1;
+            # code...
+        } else {
+            $last_month = $month - 1;
+            $last_year = $year;
+        }
+
+        $last_month_stock_data_empty = (object) array(
+            "p0" => (object) array(
+                "qty" => 0,
+                "harga" => 0,
+                "jumlah" => 0,
+            )
+        );
+
+        // LAST MONTH STOCK
+        $stock = $this->generateHPPData($request, $last_month, $last_year, $last_month_stock_data_empty);
+        $stock_result = count($stock[0]) > 0 ? $this->main($stock[0], $stock[1])[1]->persediaan : $stock[1];
+
+        // GENERATE HPP DATA
+        $hpp = $this->generateHPPData($request, $month, $year, $stock_result);
+        return count($hpp[0]) > 0
+            ? response()->json($this->main($hpp[0], $hpp[1]), 200)
+            : response()->json(['error' => 'Tidak Ada Data'], 400);
+    }
+
+    public function generateHPPData($request, $month, $year, $last_month_stock_data)
+    {
+        // var_dump($month, $year);
         $sku = SKU::where('id_produk', $request->id_produk)->where('id_bahan_baku', $request->id_bahan_baku)->first();
         $produksi = DetailTransaksi::with('transaksi')->whereHas('transaksi', function ($q) use ($month, $year) {
             $q->where('status_pesanan', 6);
@@ -45,6 +77,7 @@ class AnalisisHPPController extends Controller
             $q->whereMonth('tgl_stok_masuk', $month);
             $q->whereYear('tgl_stok_masuk', $year);
         })->where('id_bahan_baku', $request->id_bahan_baku)->get();
+
 
         $data_produksi = [];
         $data_pembelian = [];
@@ -74,25 +107,41 @@ class AnalisisHPPController extends Controller
         $hpp_data = array_merge($data_produksi, $data_pembelian);
         usort($hpp_data, fn ($a, $b) => strtotime($a["tgl"]) - strtotime($b["tgl"]));
 
-        $last_month_stock_data = (object) array(
-            "p6000" => (object) array(
-                "qty" => 100,
-                "harga" => 6000,
-            )
-        );
-
-        // $data = [];
         $result = json_encode($hpp_data);
         $stock = json_encode($last_month_stock_data);
 
-        // return $this->main($hpp_data, $last_month_stock_data);
-        // return response()->json($hpp_data, 200);
-        return $this->main(json_decode($result), json_decode($stock));
+        $data = [json_decode($result), json_decode($stock)];
+        return $data;
     }
 
     public function getBahanBaku(Request $request)
     {
         $data = SKU::where('id_produk', $request->id_produk)->with('bahanBaku')->get();
+        return response()->json($data, 200);
+    }
+
+    public function saveResult(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'biaya_produksi'   => 'required|numeric',
+            'overhead.mesin'   => 'required|numeric',
+            'overhead.produksi_tambahan'   => 'required|numeric',
+            'overhead.tenaga_kerja'   => 'required|numeric',
+            'overhead.maintenance'   => 'required|numeric',
+        ]);
+        if ($validator->fails()) return response()->json($validator->errors(), 400);
+
+        $sku = SKU::where('id_bahan_baku', $request->id_bahan_baku)->where('id_produk', $request->id_produk)->first();
+
+        $id_hpp = IdGenerator::generate(['table' => 'hpp', 'field' => 'id_hpp', 'length' => 9, 'prefix' => 'HPP-']);
+        $data = HPP::create([
+            'id_hpp' => $id_hpp,
+            'id_sku' => $sku->id_sku,
+            'biaya_overhead' => json_encode($request->overhead),
+            'tgl_analisa' => Carbon::now(),
+            'nilai_hpp' => $request->hpp,
+        ]);
+
         return response()->json($data, 200);
     }
 
@@ -130,6 +179,7 @@ class AnalisisHPPController extends Controller
             $row_stock[$index]->$costperunit->qty = $row_stock[$index]->$costperunit->qty + $transaction_item->qty;
             $row_stock[$index]->$costperunit->jumlah = $row_stock[$index]->$costperunit->harga * $row_stock[$index]->$costperunit->qty;
         } else {
+            // var_dump($row_stock[$index]);
             $row_stock[$index]->$costperunit = $this->generate_row_item(
                 $transaction_item->qty,
                 $transaction_item->harga,
@@ -188,7 +238,7 @@ class AnalisisHPPController extends Controller
         $object_iterator = new ArrayIterator($row_stock[$index]);
         $first_in_stock_key = $object_iterator->key();
 
-        print_r([$row_stock[$index], $first_in_stock_key]);
+        // print_r([$row_stock[$index], $first_in_stock_key]);
         # check if the stock in transaction_item is exceed the current stock at $row_stock[$index]->$first_in_stock_key
         if ($row_stock[$index]->$first_in_stock_key->qty > $transaction_item->qty) {
             # get $remaining_stock_needed from $transaction_item->qty
@@ -208,6 +258,7 @@ class AnalisisHPPController extends Controller
 
     public function create_row($result_data, $month, $pembelian, $hpp, $stock)
     {
+        // var_dump($hpp);
         array_push($result_data, array(
             "tanggal" => $month,
             "pembelian" => $this->generate_row_item($pembelian ? $pembelian->qty : 0, $pembelian ? $pembelian->harga : 0),
@@ -221,6 +272,7 @@ class AnalisisHPPController extends Controller
     public function add_row_table_below($row_stock, $result_data, $month, $index, $transaction_item, $costperunit, $total_data)
     {
         if ($transaction_item->id === "pembelian") {
+            // var_dump();
             $row_stock = $this->add_stock($row_stock, $index, $transaction_item, ("p" . $costperunit));
 
             $result_data = $this->create_row(

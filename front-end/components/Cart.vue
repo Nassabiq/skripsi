@@ -3,7 +3,7 @@
 		<div class="absolute inset-0 overflow-hidden">
 			<div class="fixed inset-y-0 right-0 flex max-w-full pl-10 pointer-events-none">
 				<div class="relative w-screen max-w-md pointer-events-auto">
-					<div class="flex flex-col h-full py-6 overflow-y-scroll bg-white border-l-2 border-green-600 shadow-xl">
+					<div class="flex flex-col h-full py-6 overflow-y-scroll border-l-2 border-gray-100 shadow-xl bg-gray-50">
 						<div class="px-4 sm:px-6">
 							<div class="flex justify-between">
 								<h2 class="text-lg font-semibold text-gray-900" id="slide-over-title">Cart</h2>
@@ -60,7 +60,7 @@
 									</div>
 									<!-- {{ cart }} -->
 								</div>
-								<div class="flex justify-center my-4 btn btn-indigo btn-lg" @click.prevent="checkout">
+								<div class="flex justify-center my-4 font-semibold text-green-600 border border-green-500 cursor-pointer hover:bg-green-500 hover:text-white btn btn-lg" @click.prevent="checkout">
 									<button class="btn-with-icon" type="submit">
 										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 											<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
