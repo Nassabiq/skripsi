@@ -3,14 +3,14 @@
 		<div class="card">
 			<div class="grid grid-cols-12 gap-4">
 				<div class="relative col-span-12 my-4 md:col-span-6">
-					<input type="search" class="w-full py-2 pl-8 pr-4 text-sm font-medium text-gray-800 border border-gray-200 rounded-lg shadow md:w-3/5 focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" placeholder="Search..." />
+					<!-- <input type="search" class="w-full py-2 pl-8 pr-4 text-sm font-medium text-gray-800 border border-gray-200 rounded-lg shadow md:w-3/5 focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" placeholder="Search..." />
 					<div class="absolute top-0 left-0 inline-flex items-center px-2 py-3">
 						<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
 							<rect x="0" y="0" width="24" height="24" stroke="none"></rect>
 							<circle cx="10" cy="10" r="7" />
 							<line x1="21" y1="21" x2="15" y2="15" />
 						</svg>
-					</div>
+					</div> -->
 				</div>
 				<div class="flex flex-col col-span-12 mb-2 space-y-2 sm:space-y-0 sm:space-x-2 sm:flex-row md:justify-end md:mb-0 md:col-span-6">
 					<!-- <div class="flex flex-col">
@@ -33,8 +33,8 @@
 				</div>
 			</div>
 			<div class="overflow-x-auto overflow-y-hidden bg-white rounded-lg shadow">
-				{{ transaksi }}
-				<table class="table table-auto table-produk">
+				<!-- {{ transaksi }} -->
+				<!-- <table class="table table-auto table-produk">
 					<thead class="bg-gray-100">
 						<tr class="text-left text-gray-800 font-title">
 							<th class="p-3">Id Transaksi</th>
@@ -87,7 +87,7 @@
 							</td>
 						</tr>
 					</tbody>
-				</table>
+				</table> -->
 			</div>
 		</div>
 	</div>
