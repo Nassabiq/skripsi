@@ -31,13 +31,14 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/produk', [ProdukController::class, 'index']);
 Route::get('/kategori', [ProdukController::class, 'kategori']);
 Route::get('/katalog', [ProdukController::class, 'katalog']);
+Route::get('/katalog/{id_produk}', [ProdukController::class, 'detail']);
 
 Route::post('/transaksi/notification', [TransaksiController::class, 'callback']);
 
 Route::post('/refresh', fn () =>  auth()->refresh());
 Route::group(['middleware' => ['auth:api']], function () {
     // Produk
-    Route::get('/produk/{id_produk}', [ProdukController::class, 'detail']);
+    Route::get('/produk/{id_produk }', [ProdukController::class,  'detail']);
 
     Route::get('/harga', [ProdukController::class, 'harga']);
     Route::post('/harga', [ProdukController::class, 'updateHarga']);

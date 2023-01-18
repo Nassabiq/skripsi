@@ -4,9 +4,11 @@
 			<div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
 				<div class="flex items-center justify-between h-14">
 					<div class="flex items-center">
-						<div class="">
-							<img src="~/assets/img/logo-navbar.png" class="h-10" alt="" srcset="" />
-						</div>
+						<NuxtLink to="/">
+							<div class="">
+								<img src="~/assets/img/logo-navbar.png" class="h-10" alt="" srcset="" />
+							</div>
+						</NuxtLink>
 						<div class="hidden md:block">
 							<div class="flex items-baseline ml-10 space-x-4">
 								<NuxtLink to="/">
@@ -23,7 +25,7 @@
 					</div>
 					<div class="hidden md:block">
 						<div class="flex items-center justify-end gap-4 ml-4 md:ml-6">
-							<input class="block w-full text-xs border border-gray-200 rounded-md bg-gray-50 form-input-md focus:border-green-200 focus:outline-none focus:ring-2 focus:ring-green-300" placeholder="Search..." />
+							<!-- <input class="block w-full text-xs border border-gray-200 rounded-md bg-gray-50 form-input-md focus:border-green-200 focus:outline-none focus:ring-2 focus:ring-green-300" placeholder="Search..." /> -->
 							<button type="button" @click.prevent="cart = !cart" class="flex items-center max-w-xs p-1 space-x-2 text-sm font-semibold text-gray-700 hover:text-green-500">
 								<!-- cart -->
 								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">

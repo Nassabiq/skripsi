@@ -9,13 +9,16 @@
 				<!-- /End replace -->
 			</div>
 		</main>
+		<Footer></Footer>
 	</div>
 </template>
 
 <script>
 import Navbar from "../components/layouts/NavbarClient.vue";
+import Footer from "../components/layouts/Footer.vue";
+
 export default {
-	components: {Navbar},
+	components: {Navbar, Footer},
 };
 </script>
 
