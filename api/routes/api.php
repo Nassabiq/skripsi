@@ -83,6 +83,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::delete('/pengadaan/{id_pengadaan}', [PengadaanController::class, 'deletePengadaan']);
 
     // LAPORAN
+    Route::get('/dashboard', [LaporanController::class, 'dashboard']);
     Route::get('/laporan/penjualan', [LaporanController::class, 'laporanPenjualan']);
     Route::get('/laporan/stok-masuk', [LaporanController::class, 'laporanStokMasuk']);
     Route::get('/laporan/omset', [LaporanController::class, 'laporanOmset']);

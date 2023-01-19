@@ -2,26 +2,8 @@
 	<div class="margin-auth">
 		<div class="card">
 			<div class="grid grid-cols-12 gap-4">
-				<div class="relative col-span-12 my-4 md:col-span-6">
-					<!-- <input type="search" class="w-full py-2 pl-8 pr-4 text-sm font-medium text-gray-800 border border-gray-200 rounded-lg shadow md:w-3/5 focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" placeholder="Search..." />
-					<div class="absolute top-0 left-0 inline-flex items-center px-2 py-3">
-						<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-							<rect x="0" y="0" width="24" height="24" stroke="none"></rect>
-							<circle cx="10" cy="10" r="7" />
-							<line x1="21" y1="21" x2="15" y2="15" />
-						</svg>
-					</div> -->
-				</div>
+				<div class="relative col-span-12 my-4 md:col-span-6"></div>
 				<div class="flex flex-col col-span-12 mb-2 space-y-2 sm:space-y-0 sm:space-x-2 sm:flex-row md:justify-end md:mb-0 md:col-span-6">
-					<!-- <div class="flex flex-col">
-						<label class="text-xs font-semibold text-gray-700">Produk</label>
-						<select class="px-6 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" v-model="selectedProduk" @change="getDataInRange">
-							<option value="">Pilih Produk</option>
-							<option :value="data.id_produk" v-for="data in produk">
-								{{ data.nama_produk }}
-							</option>
-						</select>
-					</div> -->
 					<div class="flex flex-col">
 						<label class="text-xs font-semibold text-gray-700">Tampilkan data dari:</label>
 						<input type="date" class="px-6 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300" v-model="dateStart" @change="getDataInRange" />
@@ -33,7 +15,17 @@
 				</div>
 			</div>
 			<div class="overflow-x-auto overflow-y-hidden bg-white rounded-lg shadow">
-				<!-- {{ transaksi }} -->
+				<div v-for="data in reports">
+					<p class="px-3 py-2 text-base font-bold text-gray-800 border-b border-gray-100">
+						{{ data.nama_produk }}
+					</p>
+					<ul v-for="item in data.stok" class="list-inside">
+						<li class="px-3 py-2 ml-5 text-sm font-semibold text-gray-800">{{ item.bahan_baku.nama_bahan_baku }}</li>
+						<li class="px-3 py-2 ml-10 text-sm text-gray-700">Omset Pendapatan = Rp. {{ Intl.NumberFormat().format(pendapatan_per_item(item.transaksi)) }}</li>
+						<li class="px-3 py-2 ml-10 text-sm text-gray-700" v-if="item.hpp.length > 0">Nilai HPP Terakhir = Rp. {{ Intl.NumberFormat().format(item.hpp[item.hpp.length - 1].nilai_hpp) }}</li>
+						<li class="px-3 py-2 ml-10 text-sm text-gray-700">Rp. {{ Intl.NumberFormat().format(pendapatan_per_item(item.transaksi) - item.hpp[item.hpp.length - 1].nilai_hpp) }}</li>
+					</ul>
+				</div>
 				<!-- <table class="table table-auto table-produk">
 					<thead class="bg-gray-100">
 						<tr class="text-left text-gray-800 font-title">
@@ -101,36 +93,37 @@ export default {
 		return {
 			dateStart: null,
 			dateEnd: null,
-			selectedProduk: "",
 
-			transaksi: [],
-			produk: [],
+			reports: [],
 		};
 	},
 	created() {
-		this.getDataTransaksi();
-		this.getProduk();
+		this.getReports();
 	},
 	computed: {
-		total_transaksi() {
-			const transaksi = this.transaksi;
-			const initValue = 0;
-
-			const result = transaksi.reduce((accumulator, value) => accumulator + value.total_harga, initValue);
-			return result;
-		},
+		// total_transaksi() {
+		// 	const transaksi = this.transaksi;
+		// 	const initValue = 0;
+		// 	const result = transaksi.reduce((accumulator, value) => accumulator + value.total_harga, initValue);
+		// 	return result;
+		// },
 	},
 	methods: {
 		async getProduk() {
 			const produk = await this.$axios.$get("api/produk");
 			this.produk = produk;
 		},
-		async getDataTransaksi() {
-			const transaksi = await this.$axios.$get("/api/laporan/omset?from=" + this.dateStart + "&to=" + this.dateEnd);
-			this.transaksi = transaksi;
+		async getReports() {
+			const reports = await this.$axios.$get("/api/laporan/omset?from=" + this.dateStart + "&to=" + this.dateEnd);
+			this.reports = reports;
 		},
 		getDataInRange() {
-			this.getDataTransaksi();
+			this.getReports();
+		},
+		pendapatan_per_item(data) {
+			const result = data.reduce((accumulator, currentValue) => accumulator + currentValue.transaksi.total_harga, 0);
+			// return result;
+			return result;
 		},
 		price(data) {
 			if (data.ukuran != null) {
