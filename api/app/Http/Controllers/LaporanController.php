@@ -56,45 +56,34 @@ class LaporanController extends Controller
                 $q->whereBetween('tgl_transaksi', [$from, $to]);
                 $q->where('status_pesanan', 6);
             })->get();
-        // $id_sku = SKU::pluck('id_sku');
-        // $dtl_transaksi = DetailTransaksi::with('transaksi', 'sku.produk')
-        //     ->whereHas('transaksi', function ($q) use ($from, $to) {
-        //         $q->whereBetween('tgl_transaksi', [$from, $to]);
-        //     })
-        //     ->whereIn('id_sku', $id_sku)
-        //     ->get();
 
-        /* 
-            NAMA PRODUK
-                BAHAN BAKU
-                    OMSET PENDAPATAN
-                    NILAI HPP
-                    --------------------------------------
-                                        TOTAL PENDAPATAN
+        $total_omset = $this->total_omset($prod);
+        $total_hpp = $this->total_hpp($prod);
+        // return $total_hpp;
 
-            --------------LOOP----------------------------
+        return response()->json(['reports' => $prod, 'total_omset' => $total_omset, 'total_hpp' => $total_hpp], 200);
+    }
 
-            TOTAL OMSET KESELURUHAN
-            TOTAL NILAI HPP
-            ----------------------------------------------
-                                TOTAL PENDAPATAN BERSIH
-        */
+    public function total_omset($data)
+    {
+        $result = 0;
+        foreach ($data as $item) {
+            foreach ($item->stok as $stok) {
+                foreach ($stok->transaksi as $item) $result += $item->transaksi->total_harga;
+            }
+        }
 
-        // Data Transaksi Selesai
-        // $data = Transaksi::with(
-        //     'detailTransaksi.sku.harga',
-        //     'detailTransaksi.sku.produk',
-        //     'detailTransaksi.sku.bahanBaku',
-        //     'detailTransaksi.finishing',
-        //     'pelanggan'
-        // )
-        //     ->orderBy('tgl_transaksi', 'asc')
-        //     ->whereBetween('tgl_transaksi', [$from, $to])
-        //     ->where('status_pesanan', 6)
-        //     ->get();
+        return $result;
+    }
 
-        // Data Nilai HPP
-
-        return response()->json($prod, 200);
+    public function total_hpp($data)
+    {
+        $result = 0;
+        foreach ($data as $item) {
+            foreach ($item->stok as $stok) {
+                foreach ($stok->hpp as $hpp) $result += $hpp->nilai_hpp;
+            }
+        }
+        return $result;
     }
 }

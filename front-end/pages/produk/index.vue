@@ -70,17 +70,7 @@
 						<p class="mt-2 text-xs text-red-500" v-if="validation.nama_produk">{{ validation.nama_produk[0] }}</p>
 					</div>
 					<div class="grid grid-cols-12 gap-4">
-						<div class="col-span-12 sm:col-span-8">
-							<label class="label">Kategori Produk</label>
-							<select class="form-input form-input-lg" v-model="produk.id_kategori_produk">
-								<option value="">Pilih Kategori</option>
-								<option :value="category.id_kategori_produk" v-for="category in categories">
-									{{ category.nama_kategori }}
-								</option>
-							</select>
-							<p class="mt-2 text-xs text-red-500" v-if="validation.id_kategori_produk">{{ validation.id_kategori_produk[0] }}</p>
-						</div>
-						<div class="col-span-12 sm:col-span-4">
+						<div class="col-span-12">
 							<label class="label">Satuan</label>
 							<input type="text" class="form-input form-input-lg" placeholder="Satuan Produk ... " v-model="produk.satuan_produk" />
 							<p class="mt-2 text-xs text-red-500" v-if="validation.satuan_produk">{{ validation.satuan_produk[0] }}</p>
@@ -238,12 +228,10 @@ export default {
 	data() {
 		return {
 			products: [],
-			categories: [],
 			bahanBaku: [],
 
 			produk: {
 				nama_produk: "",
-				id_kategori_produk: "",
 				satuan_produk: "",
 				deskripsi_produk: "",
 				informasi_pemesanan: "",
@@ -292,9 +280,7 @@ export default {
 			this.products = products;
 		},
 		async getCategories() {
-			const categories = await this.$axios.$get("/api/kategori");
 			const bahanBaku = await this.$axios.$get("/api/bahan-baku");
-			this.categories = categories;
 			this.bahanBaku = bahanBaku;
 		},
 		async addProduk() {
@@ -306,7 +292,7 @@ export default {
 			file.forEach((img, index) => imageData.append("image_produk[" + index + "]", file[index]));
 
 			imageData.append("nama_produk", this.produk.nama_produk);
-			imageData.append("id_kategori_produk", this.produk.id_kategori_produk);
+			// imageData.append("id_kategori_produk", this.produk.id_kategori_produk);
 			imageData.append("deskripsi_produk", this.produk.deskripsi_produk);
 			imageData.append("informasi_pemesanan", this.produk.informasi_pemesanan);
 			imageData.append("satuan_produk", this.produk.satuan_produk);

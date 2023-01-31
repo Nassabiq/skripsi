@@ -66,7 +66,12 @@
 												<td class="p-3 text-sm border border-slate-300">{{ data.sku.produk.nama_produk }}</td>
 												<td class="p-3 text-sm border border-slate-300">{{ data.qty_produk }}{{ data.sku.produk.satuan_produk }}</td>
 												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(data.sku.harga[data.sku.harga.length - 1].harga_produk) }}</td>
-												<td class="p-3 text-sm border border-slate-300" v-text="data.ukuran ? data.ukuran + data.sku.produk.satuan_produk : '-'">{{ data.ukuran }}</td>
+												<td class="p-3 text-sm border border-slate-300 whitespace-nowrap" v-if="data.ukuran">
+													<ul>
+														<li>panjang : {{ JSON.parse(data.ukuran).panjang }}</li>
+														<li>lebar : {{ JSON.parse(data.ukuran).lebar }}</li>
+													</ul>
+												</td>
 												<td class="p-3 text-sm border border-slate-300">{{ data.sku.bahan_baku.nama_bahan_baku }}</td>
 												<!-- <td class="p-3 text-sm border border-slate-300">-</td> -->
 												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(data.sku.harga[data.sku.harga.length - 1].harga_produk * data.qty_produk) }}</td>

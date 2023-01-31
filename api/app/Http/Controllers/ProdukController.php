@@ -31,13 +31,13 @@ class ProdukController extends Controller
 
     public function detail($id_produk)
     {
-        $produk =  Produk::with('kategori', 'stok.bahanBaku', 'stok.harga', 'finishing')->find($id_produk);
+        $produk =  Produk::with('stok.bahanBaku', 'stok.harga', 'finishing')->find($id_produk);
         return response()->json($produk, 200);
     }
     public function katalog(Request $request)
     {
-        $kategori = '%' . $request->kategori . '%';
-        $produk =  Produk::with(['stok.harga', 'stok.bahanBaku', 'finishing'])->where('id_kategori_produk', 'like', $kategori)->get();
+        $search = '%' . $request->search . '%';
+        $produk =  Produk::with(['stok.harga', 'stok.bahanBaku', 'finishing'])->where('nama_produk', 'like', $search)->get();
         return response()->json($produk, 200);
     }
 

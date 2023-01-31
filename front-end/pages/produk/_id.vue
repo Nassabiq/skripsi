@@ -26,8 +26,6 @@
 					<div class="grid grid-cols-12 py-2 border-b-2 border-slate-200">
 						<div class="col-span-10 item">
 							<p v-if="product.nama_produk" class="text-4xl font-semibold text-gray-700 capitalize font-title">{{ product.nama_produk }}</p>
-							<p v-if="product.kategori" class="text-sm text-gray-600">{{ product.kategori.nama_kategori }}</p>
-							<Skeleton v-else height="50px" />
 						</div>
 						<div class="flex items-center justify-end col-span-2 gap-2">
 							<button class="btn btn-sm btn-green" @click.prevent="openModal">
@@ -85,22 +83,12 @@
 		<!-- Modal Update Produk -->
 		<Modal size="max-w-3xl" title="Edit Data Produk" @close-modal="closeModal" v-show="modal">
 			<template #content>
-				<div class="col-span-7">
+				<div class="col-span-9">
 					<label class="label">Nama Produk</label>
 					<input type="text" class="form-input form-input-lg" placeholder="Nama Produk ... " v-model="product.nama_produk" />
 					<p class="mt-2 text-xs text-red-500" v-if="validation.nama_produk">{{ validation.nama_produk[0] }}</p>
 				</div>
 				<div class="col-span-3">
-					<label class="label">Kategori Produk</label>
-					<select class="form-input form-input-lg" v-model="product.id_kategori_produk">
-						<option value="">Pilih Kategori</option>
-						<option :value="category.id_kategori_produk" v-for="category in categories">
-							{{ category.nama_kategori }}
-						</option>
-					</select>
-					<p class="mt-2 text-xs text-red-500" v-if="validation.id_kategori_produk">{{ validation.id_kategori_produk[0] }}</p>
-				</div>
-				<div class="col-span-2">
 					<label class="label">Satuan Produk</label>
 					<input type="text" class="form-input form-input-lg" placeholder="Satuan Produk ... " v-model="product.satuan_produk" />
 					<p class="mt-2 text-xs text-red-500" v-if="validation.satuan_produk">{{ validation.satuan_produk[0] }}</p>
@@ -383,7 +371,7 @@ export default {
 				.patch("/api/produk/" + this.product.id_produk, {
 					nama_produk: this.product.nama_produk,
 					satuan_produk: this.product.satuan_produk,
-					id_kategori_produk: this.product.id_kategori_produk,
+					// id_kategori_produk: this.product.id_kategori_produk,
 					deskripsi_produk: this.product.deskripsi_produk,
 					informasi_pemesanan: this.product.informasi_pemesanan,
 					finishing: JSON.stringify(finishingResult),
