@@ -74,7 +74,7 @@
 												</td>
 												<td class="p-3 text-sm border border-slate-300">{{ data.sku.bahan_baku.nama_bahan_baku }}</td>
 												<!-- <td class="p-3 text-sm border border-slate-300">-</td> -->
-												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(data.sku.harga[data.sku.harga.length - 1].harga_produk * data.qty_produk) }}</td>
+												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(data.subtotal) }}</td>
 											</tr>
 											<tr>
 												<td colspan="7" class="p-1 border border-slate-300">
@@ -120,6 +120,7 @@
 import QrcodeVue from "qrcode.vue";
 export default {
 	components: {QrcodeVue},
+	// middleware: ["role/admin", "role/operator-produksi", "role/marketing", "role/operator-finishing", "role/pelanggan"],
 	data() {
 		return {
 			// transaksi: [],

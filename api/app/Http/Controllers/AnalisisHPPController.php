@@ -99,8 +99,8 @@ class AnalisisHPPController extends Controller
                     'id' => 'pembelian',
                     'tgl' => $data->stokMasuk->tgl_stok_masuk,
                     'qty' => $data->qty_stok,
-                    'harga' => $data->harga_beli,
-                    'total' => $data->harga_beli * $data->qty_stok,
+                    'harga' => round($data->harga_beli / $data->qty_stok),
+                    'total' => $data->harga_beli,
                 ]
             );
         }
@@ -179,7 +179,6 @@ class AnalisisHPPController extends Controller
             $row_stock[$index]->$costperunit->qty = $row_stock[$index]->$costperunit->qty + $transaction_item->qty;
             $row_stock[$index]->$costperunit->jumlah = $row_stock[$index]->$costperunit->harga * $row_stock[$index]->$costperunit->qty;
         } else {
-            // var_dump($row_stock[$index]);
             $row_stock[$index]->$costperunit = $this->generate_row_item(
                 $transaction_item->qty,
                 $transaction_item->harga,
@@ -238,7 +237,6 @@ class AnalisisHPPController extends Controller
         $object_iterator = new ArrayIterator($row_stock[$index]);
         $first_in_stock_key = $object_iterator->key();
 
-        // print_r([$row_stock[$index], $first_in_stock_key]);
         # check if the stock in transaction_item is exceed the current stock at $row_stock[$index]->$first_in_stock_key
         if ($row_stock[$index]->$first_in_stock_key->qty > $transaction_item->qty) {
             # get $remaining_stock_needed from $transaction_item->qty
@@ -258,7 +256,6 @@ class AnalisisHPPController extends Controller
 
     public function create_row($result_data, $month, $pembelian, $hpp, $stock)
     {
-        // var_dump($hpp);
         array_push($result_data, array(
             "tanggal" => $month,
             "pembelian" => $this->generate_row_item($pembelian ? $pembelian->qty : 0, $pembelian ? $pembelian->harga : 0),
@@ -272,7 +269,6 @@ class AnalisisHPPController extends Controller
     public function add_row_table_below($row_stock, $result_data, $month, $index, $transaction_item, $costperunit, $total_data)
     {
         if ($transaction_item->id === "pembelian") {
-            // var_dump();
             $row_stock = $this->add_stock($row_stock, $index, $transaction_item, ("p" . $costperunit));
 
             $result_data = $this->create_row(

@@ -46,9 +46,11 @@
 								<div class="absolute right-0 z-10 w-48 py-1 mt-2 transition duration-1000 ease-in-out origin-top-right transform bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" v-show="dropdown">
 									<!-- Active: "bg-gray-100", Not Active: "" -->
 									<template v-if="$auth.loggedIn">
-										<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-0">Profile</a>
-										<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-1">Transaksi</a>
-										<NuxtLink to="/dashboard">
+										<!-- <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-0">Profile</a> -->
+										<NuxtLink to="/transaksi">
+											<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-1">Transaksi</a>
+										</NuxtLink>
+										<NuxtLink to="/dashboard" v-if="role != 'Pelanggan'">
 											<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-1">Admin Page</a>
 										</NuxtLink>
 										<a href="#" @click.prevent="logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100" role="menuitem" tabindex="-1" id="user-menu-item-2">Log out</a>
@@ -121,6 +123,11 @@ export default {
 			dropdown: false,
 			cart: false,
 		};
+	},
+	computed: {
+		role() {
+			return this.$auth.user.role.nama_role;
+		},
 	},
 	methods: {
 		showCart() {

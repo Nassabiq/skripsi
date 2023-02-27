@@ -68,7 +68,7 @@
 										<div class="flex justify-between px-4 pt-2 pb-1">
 											<div>
 												<p class="text-lg font-semibold tracking-wider">{{ data.bahan_baku.nama_bahan_baku }}</p>
-												<p class="text-xs">Rp. {{ Intl.NumberFormat().format(data.harga_beli) }}</p>
+												<p class="text-xs">Rp. {{ Intl.NumberFormat().format(Math.round(data.harga_beli / data.qty_stok)) }}</p>
 											</div>
 											<div class="place-self-center">
 												<p class="font-semibold">
@@ -78,46 +78,11 @@
 										</div>
 										<div class="flex justify-end px-4 pb-2 space-x-4">
 											<dt class="text-xs font-semibold">Subtotal</dt>
-											<dd class="mt-1 text-xs font-semibold sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(data.qty_stok * data.harga_beli) }}</dd>
+											<dd class="mt-1 text-xs font-semibold sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(data.harga_beli) }}</dd>
 										</div>
 									</div>
 								</div>
 							</td>
-							<tr>
-								<td class="p-3 bg-sky-100" colspan="6" v-show="content === index">
-									<div class="px-4 pb-2 font-semibold">Detail Stok Masuk</div>
-									<div class="grid grid-cols-2" v-for="(data, index) in data.detail_stok" :key="index">
-										<div class="col-span-2 md:col-span-1">
-											<div class="border-t border-sky-200">
-												<dl>
-													<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Id Detail Stok Masuk</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ data.id_detail_stok_masuk }}</dd>
-													</div>
-													<div class="px-3 py-4 bg-slate-50 sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Nama Bahan Baku</dt>
-														<dd class="mt-1 text-xs capitalize sm:mt-0 sm:col-span-2">{{ data.bahan_baku.nama_bahan_baku }}</dd>
-													</div>
-												</dl>
-											</div>
-										</div>
-										<div class="col-span-2 md:col-span-1">
-											<div class="border-t border-sky-200">
-												<dl>
-													<div class="px-3 py-4 bg-white sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">QTY</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">{{ data.qty_stok }}</dd>
-													</div>
-													<div class="px-3 py-4 bg-slate-50 sm:grid sm:grid-cols-3 sm:gap-4">
-														<dt class="text-xs font-semibold">Harga</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(data.harga_beli) }}</dd>
-													</div>
-												</dl>
-											</div>
-										</div>
-									</div>
-								</td>
-							</tr>
 						</template>
 					</tbody>
 					<tbody v-else>
@@ -196,6 +161,7 @@ export default {
 	name: "KelolaStokMasuk",
 	layout: "auth",
 	components: {number, Pagination},
+	middleware: "role/operator-inventory",
 	data() {
 		return {
 			content: null,
@@ -221,13 +187,13 @@ export default {
 			search: "",
 			// user : this.$auth.user
 
-			number: {
-				decimal: ",",
-				separator: ".",
-				prefix: "Rp. ",
-				precision: 2,
-				masked: false,
-			},
+			// number: {
+			// 	decimal: ",",
+			// 	separator: ".",
+			// 	prefix: "Rp. ",
+			// 	precision: 2,
+			// 	masked: false,
+			// },
 		};
 	},
 
@@ -240,12 +206,9 @@ export default {
 	computed: {
 		getSubtotal() {
 			let price = this.stok;
-			let total = 0;
+			let total = price.reduce((accumulator, currentValue) => accumulator + parseInt(currentValue.harga), 0);
 
-			for (let index = 0; index < price.length; index++) {
-				total += price[index].harga * price[index].qty;
-			}
-			return total;
+			return total ? parseInt(total) : 0;
 		},
 	},
 	methods: {

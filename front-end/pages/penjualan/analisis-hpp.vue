@@ -209,6 +209,7 @@ export default {
 	name: "AnalisisHPP",
 	layout: "auth",
 	components: {number},
+	middleware: "role/manager-penjualan",
 	data() {
 		return {
 			persediaan: {

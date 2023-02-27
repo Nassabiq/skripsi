@@ -62,7 +62,7 @@ class PengadaanController extends Controller
 
                 DetailPengadaan::create([
                     'id_detail_pengadaan' => $id_detail,
-                    'id_bahan_baku' => $data['id_bahan_baku'],
+                    'id_bahan_baku' => $data['id_bahan_baku']['id'],
                     'id_pengadaan' => $pengadaan->id_pengadaan,
                     'jumlah_barang' => $data['jumlah_barang'],
                 ]);
@@ -72,13 +72,12 @@ class PengadaanController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Something Went Wrong'], 400);
             DB::rollback();
-            //throw $th;
         }
     }
 
     public function updatePengadaan($id, Request $request)
     {
-        var_dump($request->all());
+        // var_dump($request->all());
         $validator = Validator::make($request->all(), $this->rules, $this->messages);
         if ($validator->fails()) return response()->json($validator->messages(), 400);
 

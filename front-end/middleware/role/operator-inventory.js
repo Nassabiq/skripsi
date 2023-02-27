@@ -1,4 +1,6 @@
 // Operator Inventory
 export default function ({redirect, $auth}) {
-	if ($auth.user.role.nama_role != "Operator Inventory") redirect("/");
+	const role = ["Admin", "Manager Inventory", "Operator Inventory"];
+	const role_name = $auth.user.role.nama_role;
+	if (!role.includes(role_name)) redirect("/");
 }

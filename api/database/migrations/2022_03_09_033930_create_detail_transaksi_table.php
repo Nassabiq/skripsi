@@ -23,6 +23,8 @@ class CreateDetailTransaksiTable extends Migration
 
             $table->integer('qty_produk');
             $table->json('ukuran')->nullable();
+            $table->json('file_upload');
+
             $table->integer('subtotal');
         });
     }

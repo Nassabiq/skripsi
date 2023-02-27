@@ -59,7 +59,6 @@ class ProdukController extends Controller
         // var_dump($request->all());
         $validator = Validator::make($request->all(), [
             'nama_produk'   => 'required',
-            'id_kategori_produk'   => 'required',
             'satuan_produk'   => 'required',
             'deskripsi_produk'   => 'required',
             'informasi_pemesanan'   => 'required',
@@ -91,7 +90,6 @@ class ProdukController extends Controller
 
             $produk = Produk::create([
                 'id_produk' => $id_produk,
-                'id_kategori_produk' => $request->id_kategori_produk,
                 'nama_produk' => $request->nama_produk,
                 'slug_produk' => Str::slug($request->nama_produk),
                 'image_produk' => json_encode($files),
@@ -132,7 +130,6 @@ class ProdukController extends Controller
         // var_dump($request->all());
         $validator = Validator::make($request->all(), [
             'nama_produk'   => 'required',
-            'id_kategori_produk'   => 'required',
             'satuan_produk'   => 'required',
             'deskripsi_produk'   => 'required',
             'informasi_pemesanan'   => 'required',
@@ -144,7 +141,6 @@ class ProdukController extends Controller
         $produk->nama_produk =  $request->nama_produk;
         $produk->slug_produk =  Str::slug($request->nama_produk);
         $produk->satuan_produk =  $request->satuan_produk;
-        $produk->id_kategori_produk =  $request->id_kategori_produk;
         $produk->deskripsi_produk = $request->deskripsi_produk;
         $produk->informasi_pemesanan = $request->informasi_pemesanan;
 
@@ -198,12 +194,6 @@ class ProdukController extends Controller
                     'harga_produk' => $item->harga,
                     'tgl_diubah' => Carbon::now()
                 ]);
-                // } else {
-                //     var_dump(false);
-                //     break;
-                // } else {
-                // }
-                // }
             }
         }
 
@@ -214,14 +204,14 @@ class ProdukController extends Controller
     public function updateImage($id, Request $request)
     {
         $product = Produk::findOrFail($id);
-        $image = json_decode($product->image);
+        $image = json_decode($product->image_produk);
 
         $path = public_path('storage/');
 
-        foreach ($image as $key => $img) {
-            if ($request->deletedImage) {
-                foreach ($request->deletedImage as $imgDeleted) {
-                    $deletedImage = json_decode($imgDeleted);
+        if ($request->deletedImage) {
+            foreach ($request->deletedImage as $imgDeleted) {
+                $deletedImage = json_decode($imgDeleted);
+                foreach ($image as $key => $img) {
                     if ($img->filename == $deletedImage->filename) {
                         $filename = $path . $img->fileUrl;
                         unlink($filename);
@@ -231,20 +221,19 @@ class ProdukController extends Controller
             }
         }
         $i = count($image) + 1;
-        if ($request->hasFile('image')) {
-            foreach ($request->file('image') as $img) {
+        $files = [];
+        if ($request->hasFile('image_produk')) {
+            foreach ($request->file('image_produk') as $img) {
                 $filename = "image-" . $product->id_produk . "-" . $i++ . "." . $img->getClientOriginalExtension();
                 $img = $img->storeAs('image_produk/' . $product->id_produk, $filename);
 
                 // $dir = DIRECTORY_SEPARATOR;
                 $fileUrl = "image_produk/" . $product->id_produk . "/" . $filename;
-                $files = compact('filename', 'fileUrl');
-
-                $image[] = $files;
+                $files[] = compact('filename', 'fileUrl');
             }
         }
 
-        $product->image = json_encode($image);
+        $product->image_produk = json_encode($files);
         $product->save();
 
         return response()->json($product, 200);

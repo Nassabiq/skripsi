@@ -162,6 +162,7 @@
 export default {
 	name: "LaporanPenjualan",
 	layout: "auth",
+	middleware: "role/multiple-manager",
 	data() {
 		return {
 			content: false,

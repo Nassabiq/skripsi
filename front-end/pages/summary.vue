@@ -171,10 +171,8 @@ export default {
 				let ukuran = satuanMeterPersegi ? JSON.parse(currentValue.ukuran).panjang * JSON.parse(currentValue.ukuran).lebar : null;
 
 				let totalPrice = satuanMeterPersegi ? price * ukuran : price;
-				// let sumCart = ;
 				return accumulator + totalPrice * currentValue.qty_cart;
 			}, 0);
-			// return "Rp. " + Intl.NumberFormat().format(result);
 			return result;
 		},
 		pelanggan() {

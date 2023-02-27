@@ -13,20 +13,20 @@
 					<span id="size-choice-0-label">Belum Bayar</span>
 					<span class="absolute rounded-full pointer-events-none -inset-px" :class="status_pesanan == 1 ? 'border border-red-500' : 'border-2 border-transparent'" aria-hidden="true"></span>
 				</label>
-				<label class="relative flex items-center justify-center px-4 py-1 text-xs font-medium text-gray-900 bg-white border rounded-full shadow-sm cursor-pointer group hover:bg-gray-50 focus:outline-none" :class="status_pesanan == 2 ? 'ring-2 ring-indigo-500' : ''">
-					<input type="radio" v-model="status_pesanan" @change="getData()" :value="2" class="sr-only" aria-labelledby="size-choice-0-label" />
-					<span id="size-choice-0-label">Dalam Pengerjaan</span>
-					<span class="absolute rounded-full pointer-events-none -inset-px" :class="status_pesanan == 2 ? 'border border-indigo-500' : 'border-2 border-transparent'" aria-hidden="true"></span>
-				</label>
-				<label class="relative flex items-center justify-center px-4 py-1 text-xs font-medium text-gray-900 bg-white border rounded-full shadow-sm cursor-pointer group hover:bg-gray-50 focus:outline-none" :class="status_pesanan == 3 ? 'ring-2 ring-yellow-500' : ''">
+				<label class="relative flex items-center justify-center px-4 py-1 text-xs font-medium text-gray-900 bg-white border rounded-full shadow-sm cursor-pointer group hover:bg-gray-50 focus:outline-none" :class="status_pesanan == 3 ? 'ring-2 ring-indigo-500' : ''">
 					<input type="radio" v-model="status_pesanan" @change="getData()" :value="3" class="sr-only" aria-labelledby="size-choice-0-label" />
-					<span id="size-choice-0-label">Siap diambil / dikirim</span>
-					<span class="absolute rounded-full pointer-events-none -inset-px" :class="status_pesanan == 3 ? 'border border-yellow-500' : 'border-2 border-transparent'" aria-hidden="true"></span>
+					<span id="size-choice-0-label">Dalam Pengerjaan</span>
+					<span class="absolute rounded-full pointer-events-none -inset-px" :class="status_pesanan >= 2 && tatus_pesanan <= 4 ? 'border border-indigo-500' : 'border-2 border-transparent'" aria-hidden="true"></span>
 				</label>
-				<label class="relative flex items-center justify-center px-4 py-1 text-xs font-medium text-gray-900 bg-white border rounded-full shadow-sm cursor-pointer group hover:bg-gray-50 focus:outline-none" @change="getData()" :class="status_pesanan == 4 ? 'ring-2 ring-green-500' : ''">
-					<input type="radio" v-model="status_pesanan" :value="4" class="sr-only" aria-labelledby="size-choice-0-label" />
+				<label class="relative flex items-center justify-center px-4 py-1 text-xs font-medium text-gray-900 bg-white border rounded-full shadow-sm cursor-pointer group hover:bg-gray-50 focus:outline-none" :class="status_pesanan == 5 ? 'ring-2 ring-yellow-500' : ''">
+					<input type="radio" v-model="status_pesanan" @change="getData()" :value="5" class="sr-only" aria-labelledby="size-choice-0-label" />
+					<span id="size-choice-0-label">Siap diambil / dikirim</span>
+					<span class="absolute rounded-full pointer-events-none -inset-px" :class="status_pesanan == 5 ? 'border border-yellow-500' : 'border-2 border-transparent'" aria-hidden="true"></span>
+				</label>
+				<label class="relative flex items-center justify-center px-4 py-1 text-xs font-medium text-gray-900 bg-white border rounded-full shadow-sm cursor-pointer group hover:bg-gray-50 focus:outline-none" @change="getData()" :class="status_pesanan == 6 ? 'ring-2 ring-green-500' : ''">
+					<input type="radio" v-model="status_pesanan" :value="6" class="sr-only" aria-labelledby="size-choice-0-label" />
 					<span id="size-choice-0-label">Selesai</span>
-					<span class="absolute rounded-full pointer-events-none -inset-px" :class="status_pesanan == 4 ? 'border border-green-500' : 'border-2 border-transparent'" aria-hidden="true"></span>
+					<span class="absolute rounded-full pointer-events-none -inset-px" :class="status_pesanan == 6 ? 'border border-green-500' : 'border-2 border-transparent'" aria-hidden="true"></span>
 				</label>
 			</div>
 			<template v-if="transaksi.length > 0">
@@ -59,12 +59,14 @@
 								</button>
 							</template>
 							<template v-else>
-								<button @click.prevent="openModal(data)" class="flex items-center justify-center gap-2 px-2 py-1 border-2 rounded-md border-slate-300 hover:bg-slate-100">
-									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-										<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-									</svg>
-									<span class="text-xs">Invoice</span>
-								</button>
+								<NuxtLink target="_blank" :to="{name: 'pemesanan-id', params: {id: data.id_transaksi}}">
+									<button class="flex items-center justify-center gap-2 px-2 py-1 border-2 rounded-md border-slate-300 hover:bg-slate-100">
+										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+											<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+										</svg>
+										<span class="text-xs">Invoice</span>
+									</button>
+								</NuxtLink>
 							</template>
 						</div>
 					</div>

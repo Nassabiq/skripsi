@@ -48,8 +48,8 @@
 												<td class="p-3 text-sm border border-slate-300">{{ data.user.nama_user }}</td>
 												<td class="p-3 text-sm border border-slate-300">{{ item.bahan_baku.nama_bahan_baku }}</td>
 												<td class="p-3 text-sm border border-slate-300">{{ item.qty_stok }}</td>
+												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(item.harga_beli / item.qty_stok) }}</td>
 												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(item.harga_beli) }}</td>
-												<td class="p-3 text-sm border border-slate-300">Rp. {{ Intl.NumberFormat().format(item.harga_beli * item.qty_stok) }}</td>
 											</tr>
 										</template>
 										<tr>
@@ -70,6 +70,7 @@
 <script>
 export default {
 	name: "printLaporan",
+	middleware: "role/multiple-manager",
 	data() {
 		return {
 			// content: false,

@@ -1,37 +1,31 @@
 <template>
 	<div class="auth">
 		<div class="grid grid-cols-4 gap-4">
-			<!-- <div class="col-span-5 space-y-4 md:col-span-2 lg:col-span-1">
-				<ul class="space-y-1">
-					<li @click.prevent="clear" :class="{'bg-green-600 text-white': id_kategori == ''}" class="px-4 py-2 text-xs font-medium text-gray-800 rounded-md cursor-pointer hover:bg-green-600 hover:text-white">All Data</li>
-					<li @click.prevent="getKatalog(data.id_kategori_produk)" :class="{'bg-green-600 text-white': id_kategori == data.id_kategori_produk}" class="px-4 py-2 text-xs font-medium text-gray-800 rounded-md cursor-pointer hover:bg-green-600 hover:text-white" v-for="(data, index) in categories">{{ data.nama_kategori }}</li>
-				</ul>
-			</div> -->
 			<div class="col-span-4 md:col-span-3 lg:col-span-4">
 				<div class="max-w-2xl px-2 mx-auto sm:py-2 sm:px-4 lg:max-w-5xl">
-					<p class="px-4 mb-4 text-2xl font-semibold text-gray-800">Katalog</p>
+					<div class="flex items-center justify-between mb-4">
+						<p class="px-4 mb-4 text-2xl font-semibold text-gray-800">Katalog</p>
+						<input v-model="search" @keyup="searchData" type="search" class="w-1/4 py-2 pl-8 pr-4 text-sm font-medium text-gray-800 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-green-100 focus:ring-2 focus:ring-green-300" placeholder="Search..." />
+					</div>
 					<div v-if="products.length > 0">
 						<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-							<!-- bg-gray-100 rounded-lg shadow-lg group shadow-gray-200 -->
 							<a href="#" class="px-3 py-2 space-y-2" v-for="product in products">
 								<div class="overflow-hidden bg-gray-200 border-2 border-green-400 rounded-lg aspect-square">
 									<img :src="'http://localhost:8000/storage/image_produk/' + product.id_produk + '/' + JSON.parse(product.image_produk)[0].filename" alt="" class="object-cover w-full h-full rounded-md" />
-									<!-- <img :src="product.image" class="object-cover object-center w-full h-full group-hover:opacity-75" /> -->
 								</div>
 								<div>
 									<p class="mt-1 font-semibold tracking-tight text-gray-900">{{ product.nama_produk }}</p>
 									<p class="text-[11px] font-medium text-gray-900" v-if="product.stok[0]">
 										<span v-text="harga(product.stok)"></span>
-										<!-- Rp. {{ Intl.NumberFormat().format(product.stok[0].harga[0].harga_produk) }} -->
 										<span class="mt-4 text-xs text-gray-600"> / {{ product.satuan_produk }}</span>
 									</p>
 								</div>
 								<div class="flex justify-end">
-									<button class="flex items-center gap-2 px-3 py-2 text-green-700 border border-green-700 rounded-full btn-sm hover:text-white hover:bg-green-700">
+									<button class="flex items-center gap-2 px-3 py-2 text-green-700 border border-green-700 rounded-full btn-sm hover:text-white hover:bg-green-700" @click="showModal(product)">
 										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
 											<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
 										</svg>
-										<p class="text-xs font-semibold" @click.prevent="showModal(product)">Add to Cart</p>
+										<p class="text-xs font-semibold">Add to Cart</p>
 									</button>
 								</div>
 							</a>
@@ -133,6 +127,40 @@
 								<p class="mt-2 text-xs text-red-500" v-if="validation.finishing">{{ validation.finishing[0] }}</p>
 							</div>
 						</div>
+						<div class="col-span-12">
+							<div>
+								<label class="label">Upload File</label>
+								<div class="flex flex-col justify-center px-6 py-4 mt-1 border-2 border-green-500 border-dashed rounded-md">
+									<div class="space-y-2">
+										<div class="flex items-center gap-4 mx-auto">
+											<svg xmlns="http://www.w3.org/2000/svg" v-if="cart.file_upload.length == 0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-400">
+												<path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
+											</svg>
+											<label for="file-upload" class="relative font-medium text-green-500 bg-white rounded-md cursor-pointer hover:text-green-700 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-green-500">
+												<span class="font-semibold">{{ cart.file_upload.length ? cart.file_upload.length + " File terpilih (Add More)" : "Pilih File" }}</span>
+												<input id="file-upload" type="file" ref="fileUpload" multiple name="file-upload" @change="handleSelectedFile" class="sr-only" />
+												<p class="mt-2 text-xs text-gray-500">File Max 20MB, PDF, JPEG, JPG or PNG</p>
+											</label>
+										</div>
+										<ul class="px-2 py-1 mt-2 bg-green-200 border-2 border-green-500 divide-y divide-green-500 rounded-md" v-if="cart.file_upload.length > 0">
+											<li v-for="(file, key) in cart.file_upload" class="p-2 text-xs">
+												<div class="flex items-center justify-between">
+													<p>{{ file.name }}</p>
+													<p class="font-semibold">{{ formatBytes(file.size) }}</p>
+													<button class="btn btn-sm btn-red" @click="removeImage(key)">
+														<svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor">
+															<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+														</svg>
+													</button>
+												</div>
+												<!-- <span class="text-xs text-red-500" v-if="validation[`image_produk.` + key]">Image must not be greater than 5000 kilobytes.</span> -->
+											</li>
+										</ul>
+									</div>
+								</div>
+								<p class="mt-2 text-xs text-red-500" v-if="validation.file_upload">{{ validation.file_upload[0] }}</p>
+							</div>
+						</div>
 						<div class="flex justify-end col-span-12" v-if="cart.bahan_baku.price">
 							<div>
 								<label class="text-xs font-semibold text-gray-700">Subtotal</label>
@@ -165,12 +193,15 @@ export default {
 
 			modalData: null,
 
+			search: "",
+
 			cart: {
 				bahan_baku: "",
 				qty_cart: 0,
 				finishing: "",
 				panjang: "",
 				lebar: "",
+				file_upload: [],
 			},
 			validation: [],
 			modal: false,
@@ -191,15 +222,14 @@ export default {
 	computed: {},
 	methods: {
 		async getProducts() {
-			const products = await this.$axios.$get("/api/katalog?kategori=" + this.id_kategori);
+			const products = await this.$axios.$get("/api/katalog?search=" + this.search);
 			this.products = products;
 		},
 		async getCategories() {
 			const categories = await this.$axios.$get("/api/kategori");
 			this.categories = categories;
 		},
-		getKatalog(id) {
-			this.id_kategori = id;
+		searchData() {
 			this.getProducts();
 		},
 		clear() {
@@ -237,6 +267,7 @@ export default {
 				finishing: "",
 				panjang: "",
 				lebar: "",
+				file_upload: [],
 			};
 			this.validation = [];
 			this.modal = !this.modal;
@@ -261,16 +292,43 @@ export default {
 		subtotal(data) {
 			return data.satuan_produk == "m2" ? this.cart.bahan_baku.price * (this.cart.panjang * this.cart.lebar) * this.cart.qty_cart : this.cart.bahan_baku.price * this.cart.qty_cart;
 		},
+		formatBytes(bytes, decimals = 2) {
+			if (!+bytes) return "0 Bytes";
+
+			const k = 1024;
+			const dm = decimals < 0 ? 0 : decimals;
+			const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+
+			const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+			return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+		},
+		handleSelectedFile() {
+			let selectedFile = this.$refs.fileUpload.files;
+
+			for (let i = 0; i < selectedFile.length; i++) {
+				let isFileExists = this.cart.file_upload.find((file) => file.type === selectedFile[i].type && file.name === selectedFile[i].name && file.size === selectedFile[i].size && file.lastModified === selectedFile[i].lastModified);
+
+				if (!isFileExists) this.cart.file_upload.push(selectedFile[i]);
+			}
+		},
+		removeImage(key) {
+			this.cart.file_upload.splice(key, 1);
+		},
 
 		addToCart() {
+			let data = new FormData();
+			let file = this.cart.file_upload;
+
+			file.forEach((item, index) => data.append("file_upload[" + index + "]", file[index]));
+			data.append("id_user", this.$auth.user.id_user);
+			data.append("id_sku", this.cart.bahan_baku.id);
+			data.append("finishing", this.cart.finishing);
+			data.append("ukuran", (this.cart.panjang || this.cart.lebar) == 0 ? null : JSON.stringify({panjang: parseInt(this.cart.panjang), lebar: parseInt(this.cart.lebar)}));
+			data.append("qty_cart", this.cart.qty_cart);
+
 			this.$axios
-				.post("/api/cart", {
-					id_user: this.$auth.user.id_user,
-					id_sku: this.cart.bahan_baku.id,
-					finishing: this.cart.finishing,
-					ukuran: (this.cart.panjang || this.cart.lebar) == 0 ? null : JSON.stringify({panjang: parseInt(this.cart.panjang), lebar: parseInt(this.cart.lebar)}),
-					qty_cart: this.cart.qty_cart,
-				})
+				.post("/api/cart", data)
 				.then(() => {
 					this.closeModal();
 					this.getProducts();

@@ -87,7 +87,10 @@
 				<div class="space-y-4 card">
 					<p class="text-lg font-semibold">Hasil Analisis HPP dan Harga Jual</p>
 					<div>
-						<p class="text-xs font-semibold" v-if="data_harga.hpp">Harga Sebelumnya</p>
+						<div v-if="data_harga.hpp">
+							<p class="text-xs font-semibold">Harga Sebelumnya</p>
+							Rp. {{ Intl.NumberFormat().format(data_harga.harga[data_harga.harga.length - 1].harga_produk) }}
+						</div>
 						<!-- <div v-for="data in data_harga.hpp" class="flex justify-between px-4 py-2 bg-white border rounded-md">
 							<p class="text-xs font-semibold">{{ $moment(data.tgl_analisa).format("DD MMMM YYYY") }}</p>
 							<p class="text-xs">Rp. {{ Intl.NumberFormat().format(data.nilai_hpp) }}</p>
@@ -112,6 +115,7 @@ export default {
 	name: "KelolaHargaJual",
 	layout: "auth",
 	components: {number},
+	middleware: "role/manager-penjualan",
 	data() {
 		return {
 			modal: false,

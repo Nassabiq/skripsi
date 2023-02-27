@@ -224,7 +224,7 @@ export default {
 		number,
 	},
 	layout: "auth",
-	middleware: "role/pelanggan",
+	middleware: "role/admin",
 	data() {
 		return {
 			products: [],

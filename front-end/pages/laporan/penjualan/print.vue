@@ -68,6 +68,7 @@
 <script>
 export default {
 	name: "printLaporan",
+	middleware: "role/multiple-manager",
 	data() {
 		return {
 			// content: false,

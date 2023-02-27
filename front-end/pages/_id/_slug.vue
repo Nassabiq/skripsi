@@ -79,6 +79,7 @@
 					</div>
 					<div class="grid grid-cols-2 gap-4">
 						<div class="col-span-2 md:col-span-1">
+							<p class="pb-2 text-lg font-bold text-gray-600 capitalize">QTY</p>
 							<div class="flex gap-2">
 								<button class="mt-1 btn btn-sm btn-green" @click.prevent="cart.qty_cart--" :disabled="cart.qty_cart <= 0">
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">

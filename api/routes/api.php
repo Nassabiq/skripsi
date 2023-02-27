@@ -45,7 +45,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::post('/produk', [ProdukController::class, 'addProduk']);
     Route::patch('/produk/{id_produk}', [ProdukController::class, 'updateProduk']);
-    Route::patch('/produk/image/{id_produk}', [ProdukController::class, 'updateImage']);
+    Route::post('/produk/image/{id_produk}', [ProdukController::class, 'updateImage']);
     Route::delete('/produk/{id_produk}', [ProdukController::class, 'deleteProduk']);
 
     // BAHAN BAKU

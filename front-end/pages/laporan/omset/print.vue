@@ -80,6 +80,7 @@
 
 <script>
 export default {
+	middleware: "role/multiple-manager",
 	data() {
 		return {
 			dateStart: this.$route.query.dateStart,

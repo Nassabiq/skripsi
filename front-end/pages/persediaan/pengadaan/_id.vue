@@ -63,6 +63,7 @@
 
 <script>
 export default {
+	middleware: "role/operator-inventory",
 	data() {
 		return {
 			pengadaan: [],

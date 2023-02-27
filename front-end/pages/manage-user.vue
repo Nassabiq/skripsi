@@ -138,6 +138,8 @@
 export default {
 	name: "manage-user",
 	layout: "auth",
+	middleware: "role/admin",
+
 	data() {
 		return {
 			search: "",

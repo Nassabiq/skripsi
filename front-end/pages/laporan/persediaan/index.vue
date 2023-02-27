@@ -83,14 +83,14 @@
 													</div>
 													<div class="px-3 py-4 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4">
 														<dt class="text-xs font-semibold">Harga</dt>
-														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(item.harga_beli) }}</dd>
+														<dd class="mt-1 text-xs sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(item.harga_beli / item.qty_stok) }}</dd>
 													</div>
 												</dl>
 											</div>
 										</div>
 										<div class="flex flex-col justify-between col-span-2 px-5 py-6 bg-sky-100 md:flex-row">
 											<dt class="text-sm font-semibold">Subtotal</dt>
-											<dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(item.qty_stok * item.harga_beli) }}</dd>
+											<dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">Rp. {{ Intl.NumberFormat().format(item.harga_beli) }}</dd>
 										</div>
 									</div>
 								</td>
@@ -147,6 +147,7 @@
 export default {
 	name: "LaporanPersediaan",
 	layout: "auth",
+	middleware: "role/multiple-manager",
 	data() {
 		return {
 			content: false,

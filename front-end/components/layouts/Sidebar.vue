@@ -22,27 +22,29 @@
 				<li>
 					<span class="px-4 py-1 mt-2 text-xs font-medium text-white">Menu</span>
 				</li>
-				<li>
-					<NuxtLink to="/bahan-baku">
-						<a href="#" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-size">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
-							</svg>
-							<span class="font-font-light">Data Bahan Baku</span>
-						</a>
-					</NuxtLink>
-				</li>
-				<li>
-					<NuxtLink to="/produk">
-						<a href="#" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-size">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
-							</svg>
-							<span class="font-font-light">Data Produk</span>
-						</a>
-					</NuxtLink>
-				</li>
-				<li>
+				<template v-if="role == 'Admin'">
+					<li>
+						<NuxtLink to="/bahan-baku">
+							<a href="#" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-size">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+								</svg>
+								<span class="font-font-light">Data Bahan Baku</span>
+							</a>
+						</NuxtLink>
+					</li>
+					<li>
+						<NuxtLink to="/produk">
+							<a href="#" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-size">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+								</svg>
+								<span class="font-font-light">Data Produk</span>
+							</a>
+						</NuxtLink>
+					</li>
+				</template>
+				<li v-if="['Admin', 'Manager Inventory', 'Operator Inventory'].includes(role)">
 					<div class="relative">
 						<DropdownMenu title="Persediaan" class="cursor-pointer">
 							<template #icon>
@@ -55,14 +57,14 @@
 								<NuxtLink to="/persediaan/pengadaan">
 									<li class="dropdown-item">Pengadaan Persediaan</li>
 								</NuxtLink>
-								<NuxtLink to="/persediaan/kelola-stok-masuk">
+								<NuxtLink to="/persediaan/kelola-stok-masuk" v-if="role != 'Manager Inventory'">
 									<li class="dropdown-item">Kelola Stok Masuk</li>
 								</NuxtLink>
 							</template>
 						</DropdownMenu>
 					</div>
 				</li>
-				<li>
+				<li v-if="['Admin', 'Manager Penjualan'].includes(role)">
 					<DropdownMenu title="Penjualan" class="cursor-pointer">
 						<template #icon>
 							<svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -79,7 +81,7 @@
 						</template>
 					</DropdownMenu>
 				</li>
-				<li>
+				<li v-if="['Admin', 'Operator Produksi', 'Operator Finishing', 'Marketing'].includes(role)">
 					<NuxtLink to="/pemesanan">
 						<a href="#" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
 							<svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -89,7 +91,7 @@
 						</a>
 					</NuxtLink>
 				</li>
-				<li>
+				<li v-if="['Admin', 'Manager Inventory', 'Manager Penjualan'].includes(role)">
 					<DropdownMenu title="Laporan" class="cursor-pointer">
 						<template #icon>
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-size">
@@ -109,7 +111,7 @@
 						</template>
 					</DropdownMenu>
 				</li>
-				<li>
+				<li v-if="role == 'Admin'">
 					<NuxtLink to="/manage-user">
 						<a href="#" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
 							<svg xmlns="http://www.w3.org/2000/svg" class="icon-size" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -134,6 +136,15 @@
 						</a>
 					</NuxtLink>
 				</li>
+				<li>
+					<a @click.prevent="logout" class="relative flex flex-row items-center px-4 py-1 my-1 text-sm transition duration-200 rounded-md hover:bg-green-300 hover:text-black">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-size">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" />
+						</svg>
+
+						<span class="font-font-light">Logout</span>
+					</a>
+				</li>
 			</ul>
 		</nav>
 	</div>
@@ -148,7 +159,24 @@ export default {
 			// path: this.$nuxt.$route.path,
 		};
 	},
-	computed: {},
+	computed: {
+		role() {
+			return this.$auth.user.role.nama_role;
+		},
+	},
+	methods: {
+		async logout() {
+			await this.$auth.logout();
+			this.$router.push("/login");
+			this.$swal.fire({
+				icon: "success",
+				showConfirmButton: false,
+				text: "Anda Berhasil Logout!",
+				timer: 2000,
+				timerProgressBar: true,
+			});
+		},
+	},
 };
 </script>
 

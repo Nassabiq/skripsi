@@ -17,8 +17,6 @@ class CreateProdukTable extends Migration
             $table->string('id_produk')->unique();
             $table->primary('id_produk');
 
-            $table->string('id_kategori_produk')->references('id_kategori_produk')->on('kategori_produk');
-
             $table->string('nama_produk');
             $table->string('slug_produk');
             $table->longText('image_produk');

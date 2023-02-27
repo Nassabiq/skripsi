@@ -20,7 +20,6 @@
 					<div class="flex flex-col col-span-6">
 						<span class="mb-2 text-xs font-semibold md:text-right"> Items Per Page : </span>
 						<select @change="onChangeRecordsPerPage" v-model="size" class="px-2 py-2 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-blue-100 focus:ring-2 focus:ring-blue-300">
-							<option :value="5">5</option>
 							<option :value="10">10</option>
 							<option :value="25">25</option>
 							<option :value="50">50</option>
@@ -116,6 +115,7 @@ export default {
 	layout: "auth",
 	name: "bahan-baku",
 	components: {Modal, Pagination},
+	middleware: "role/admin",
 	data() {
 		return {
 			modalBahanBaku: false,
@@ -132,7 +132,7 @@ export default {
 			updateMode: false,
 
 			search: "",
-			size: 5,
+			size: 10,
 			page: 1,
 		};
 	},

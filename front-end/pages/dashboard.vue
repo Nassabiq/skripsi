@@ -52,7 +52,7 @@
 export default {
 	name: "Dashboard",
 	layout: "auth",
-	auth: false,
+	middleware: "role/isNotPelanggan",
 	data() {
 		return {
 			user: this.$auth.user,

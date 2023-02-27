@@ -76,6 +76,7 @@
 export default {
 	name: "LaporanOmset",
 	layout: "auth",
+	middleware: "role/multiple-manager",
 	data() {
 		return {
 			dateStart: null,

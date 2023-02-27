@@ -23,6 +23,7 @@ class CreateCartsTable extends Migration
 
             $table->integer('qty_cart');
             $table->json('ukuran')->nullable();
+            $table->json('file_upload');
         });
     }
 

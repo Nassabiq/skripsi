@@ -231,7 +231,9 @@
 					<ul class="px-2 py-1 mt-2 bg-green-200 border-2 border-green-500 divide-y divide-green-500 rounded-md">
 						<li v-for="(img, key) in uploadedImage.allImages" class="p-2 text-xs">
 							<div class="flex items-center justify-between">
-								<button @click.prevent="selectImage" class="font-semibold tracking-wider text-blue-500 hover:text-blue-700">{{ img.filename || img.name }}</button>
+								<button @click.prevent="selectImage" class="font-semibold tracking-wider text-blue-500 hover:text-blue-700">
+									{{ img.filename || img.name }}
+								</button>
 								<button class="btn btn-sm btn-red" @click.prevent="removeImage(key)">
 									<svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor">
 										<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -274,6 +276,7 @@ import {number} from "@coders-tm/vue-number-format";
 export default {
 	layout: "auth",
 	components: {Spinner, Skeleton, number},
+	middleware: "role/admin",
 	data() {
 		return {
 			firstLoad: false,
@@ -445,7 +448,7 @@ export default {
 		},
 
 		removeImage(key) {
-			if (this.product.image_produk[key]) this.uploadedImage.deletedImage.push(this.product.image[key]);
+			if (this.product.image_produk[key]) this.uploadedImage.deletedImage.push(this.product.image_produk[key]);
 			else {
 				let index = this.uploadedImage.addImage.findIndex((image) => image == this.uploadedImage.allImages[key]);
 				this.uploadedImage.addImage.splice(index, 1);
@@ -467,6 +470,7 @@ export default {
 				.post("/api/produk/image/" + this.product.id_produk, imageData)
 				.then(() => {
 					this.modalImage = !this.modalImage;
+
 					this.getData();
 				})
 				.then(() => {

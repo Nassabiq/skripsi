@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Xendit\Xendit;
 
@@ -140,6 +141,19 @@ class TransaksiController extends Controller
                 $result = $totalPrice * $data->qty_cart;
 
                 $id_detail = IdGenerator::generate(['table' => 'detail_transaksi', 'field' => 'id_detail_transaksi', 'length' => 17, 'prefix' => 'DtlOrder-']);
+
+                $i = 1;
+                $files = [];
+                foreach (json_decode($data->file_upload) as $item) {
+                    $fileExt = $item->fileExt;
+                    $filename = "image-" . $id_detail . "-" . $i++ . "." . $item->fileExt;
+                    $fileUrl = "item-transaksi/" . $id_detail . '/' . $filename;
+
+                    Storage::move($item->fileUrl, $fileUrl);
+
+                    $files[] = compact('filename', 'fileUrl', 'fileExt');
+                }
+
                 DetailTransaksi::create([
                     'id_detail_transaksi' => $id_detail,
                     'id_transaksi' => $transaksi->id_transaksi,
@@ -147,11 +161,15 @@ class TransaksiController extends Controller
                     'qty_produk' => $data->qty_cart,
                     'ukuran' => $data->ukuran,
                     'id_finishing' => $data->id_finishing,
+                    'file_upload' => json_encode($files),
 
                     'subtotal' => $result,
                 ]);
 
-                Cart::where('id_cart', $data->id_cart)->delete();
+                $cart = Cart::where('id_cart', $data->id_cart)->first();
+                Storage::deleteDirectory('image_cart/' . $data->id_cart);
+
+                $cart->delete();
             }
             $params = [
                 'external_id' => $id_transaksi,

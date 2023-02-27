@@ -1,16 +1,16 @@
 <template>
-	<div class="margin-auth space-y-4">
-		<div class="max-w-7xl bg-green-100 border-2 border-green-500 h-60 mb-4 rounded-lg">
-			<div class="flex justify-center items-center h-full">
+	<div class="space-y-4 margin-auth">
+		<div class="w-full mb-4 bg-green-100 border-2 border-green-500 rounded-lg h-60">
+			<div class="flex items-center justify-center h-full">
 				<p class="text-2xl font-semibold text-center text-green-700">UQI Media Digital Printing</p>
 			</div>
 		</div>
 		<!-- MAIN DATA PRODUK -->
-		<div class="flex sm:flex-row gap-4 flex-col justify-between items-center">
-			<p class="text-xl md:basis-1/2 lg:basis-3/4 font-semibold text-gray-600">Koleksi Produk</p>
+		<div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+			<p class="text-xl font-semibold text-gray-600 md:basis-1/2 lg:basis-3/4">Koleksi Produk</p>
 			<div class="relative md:basis-1/2 lg:basis-1/4">
-				<!-- v-model="search" @keyup="searchData" -->
-				<input type="search" class="w-full py-2 pl-8 pr-4 text-sm font-medium text-gray-800 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-green-100 focus:ring-2 focus:ring-green-300" placeholder="Search..." />
+				<!--  -->
+				<input v-model="search" @keyup="searchData" type="search" class="w-full py-2 pl-8 pr-4 text-sm font-medium text-gray-800 border border-gray-200 rounded-lg shadow focus:outline-2 focus:outline-green-100 focus:ring-2 focus:ring-green-300" placeholder="Search..." />
 				<div class="absolute top-0 left-0 inline-flex items-center px-2 py-3">
 					<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
 						<rect x="0" y="0" width="24" height="24" stroke="none"></rect>
@@ -66,6 +66,8 @@ export default {
 		return {
 			user: this.$auth.user,
 			products: [],
+
+			search: "",
 		};
 	},
 	mounted() {
@@ -73,8 +75,11 @@ export default {
 	},
 	methods: {
 		async getProducts() {
-			const products = await this.$axios.$get("/api/katalog");
+			const products = await this.$axios.$get("/api/katalog?search=" + this.search);
 			this.products = products;
+		},
+		searchData() {
+			this.getProducts();
 		},
 		harga(data) {
 			let result = [];

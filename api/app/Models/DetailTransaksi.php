@@ -16,7 +16,7 @@ class DetailTransaksi extends Model
 
     protected $table = 'detail_transaksi';
 
-    protected $fillable = ['id_detail_transaksi', 'id_transaksi', 'id_sku', 'qty_produk', 'subtotal', 'ukuran', 'id_finishing'];
+    protected $fillable = ['id_detail_transaksi', 'id_transaksi', 'file_upload', 'id_sku', 'qty_produk', 'subtotal', 'ukuran', 'id_finishing'];
 
     public function transaksi()
     {

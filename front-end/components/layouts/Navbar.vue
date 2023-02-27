@@ -4,12 +4,16 @@
 		<div class="p-3">
 			<div>
 				<button @click="showDropdown">
-					<div class="w-8 h-8 ml-2 bg-blue-200 rounded-full">1</div>
+					<div class="flex items-center justify-center w-8 h-8 ml-2 bg-blue-200 rounded-full">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-blue-400">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+						</svg>
+					</div>
 				</button>
 			</div>
 			<div class="absolute w-48 p-4 mt-2 ml-2 text-black origin-top-left bg-white rounded-md shadow-lg xl:mr-2 xl:right-0 xl:object-top-right hover:text-gray-500 ring-1 ring-black ring-opacity-5 focus:outline-none" tabindex="-1" v-if="navDropdown" v-on-clickaway="awayDropdown">
 				<ul>
-					<li>
+					<!-- <li>
 						<a href="#" class="block px-4 py-2 mt-2 text-sm font-semibold text-indigo-800 bg-transparent rounded-lg md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">Profile</a>
 					</li>
 					<li>
@@ -23,7 +27,7 @@
 					</li>
 					<li>
 						<hr class="my-2" />
-					</li>
+					</li> -->
 					<li>
 						<a @click.prevent="logout" href="#" class="flex flex-row items-center justify-between px-4 py-2 mt-2 text-sm font-semibold text-indigo-800 bg-transparent rounded-lg xl:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
 							Logout
