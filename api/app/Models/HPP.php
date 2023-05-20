@@ -14,6 +14,6 @@ class HPP extends Model
     protected $keyType = 'string';
     public $timestamps = false;
 
-    protected $fillable = ['id_hpp', 'id_sku', 'biaya_overhead', 'nilai_hpp', 'tgl_analisa'];
+    protected $fillable = ['id_hpp', 'id_sku', 'biaya_overhead', 'nilai_hpp', 'tgl_analisa', 'jml_penjualan'];
     protected $table = 'hpp';
 }

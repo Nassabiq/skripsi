@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Validator;
 
 class AnalisisHPPController extends Controller
 {
-
     public function analisis(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -31,17 +30,6 @@ class AnalisisHPPController extends Controller
         $month = (int) date('m', strtotime($request->month));
         $year = (int) date('Y', strtotime($request->month));
 
-        $last_month = 0;
-        $last_year = 0;
-        if ($month == 1) {
-            $last_month = 12;
-            $last_year = $year - 1;
-            # code...
-        } else {
-            $last_month = $month - 1;
-            $last_year = $year;
-        }
-
         $last_month_stock_data_empty = (object) array(
             "p0" => (object) array(
                 "qty" => 0,
@@ -50,37 +38,88 @@ class AnalisisHPPController extends Controller
             )
         );
 
+        $is_last_stock = true;
+        $is_wip = false;
+
         // LAST MONTH STOCK
-        $stock = $this->generateHPPData($request, $last_month, $last_year, $last_month_stock_data_empty);
-        $stock_result = count($stock[0]) > 0 ? $this->main($stock[0], $stock[1])[1]->persediaan : $stock[1];
+        $stock = $this->generateHPPData($request, $month, $year, $last_month_stock_data_empty, $is_last_stock, $is_wip);
+        $last_month_stock_data = count($stock[0]) > 0 ? $this->main($stock[0], $stock[1])[1]->persediaan : $stock[1];
+
+        // WORK IN PROCESS STOCK DATA
+        $work_in_process_data = $this->generateHPPData($request, $month, $year, $last_month_stock_data_empty, $is_last_stock, $is_wip = true);
+        $work_in_process_result = count($work_in_process_data[0]) > 0
+            ? $this->main($work_in_process_data[0], $work_in_process_data[1])
+            : $work_in_process_data[1];
 
         // GENERATE HPP DATA
-        $hpp = $this->generateHPPData($request, $month, $year, $stock_result);
+        $hpp = $this->generateHPPData($request, $month, $year, $last_month_stock_data, $is_last_stock = false, $is_wip = false);
         return count($hpp[0]) > 0
-            ? response()->json($this->main($hpp[0], $hpp[1]), 200)
+            ? response()->json([
+                'hpp' => $this->main($hpp[0], $hpp[1]),
+                'wip' => $work_in_process_result
+            ], 200)
             : response()->json(['error' => 'Tidak Ada Data'], 400);
     }
 
-    public function generateHPPData($request, $month, $year, $last_month_stock_data)
+    public function generateHPPData($request, $month, $year, $last_month_stock_data, $is_last_stock, $is_wip)
     {
-        // var_dump($month, $year);
+
         $sku = SKU::where('id_produk', $request->id_produk)->where('id_bahan_baku', $request->id_bahan_baku)->first();
-        $produksi = DetailTransaksi::with('transaksi')->whereHas('transaksi', function ($q) use ($month, $year) {
-            $q->where('status_pesanan', 6);
-            $q->orderBy('tgl_transaksi', 'asc');
-            $q->whereMonth('tgl_transaksi', $month);
-            $q->whereYear('tgl_transaksi', $year);
-        })->where('id_sku', $sku->id_sku)->get();
+        $date =  $year . '-' . '0' . $month . '-' . '01';
 
-        $pembelian = DetailStokMasuk::with('stokMasuk')->whereHas('stokMasuk', function ($q) use ($month, $year) {
-            $q->orderBy('tgl_stok_masuk', 'asc');
-            $q->whereMonth('tgl_stok_masuk', $month);
-            $q->whereYear('tgl_stok_masuk', $year);
-        })->where('id_bahan_baku', $request->id_bahan_baku)->get();
+        if ($is_wip == true) {
+            # code...
+            $produksi = DetailTransaksi::with('transaksi')->whereHas('transaksi', function ($q) use ($date) {
+                $q->where('status_pesanan', '<', 7);
+                $q->orderBy('tgl_transaksi', 'asc');
+            })->where('id_sku', $sku->id_sku)->get();
 
+            // var_dump($produksi);
 
+            $pembelian = DetailStokMasuk::with('stokMasuk')->whereHas('stokMasuk', function ($q) use ($date) {
+                $q->orderBy('tgl_stok_masuk', 'asc');
+            })->where('id_bahan_baku', $request->id_bahan_baku)->get();
+        } else {
+            $produksi = DetailTransaksi::with('transaksi')->whereHas(
+                'transaksi',
+                function ($q) use ($date, $month, $year, $is_last_stock) {
+                    $q->where('status_pesanan', 7);
+                    $q->orderBy('tgl_transaksi', 'asc');
+                    $q->when(
+                        $is_last_stock == true,
+                        function ($q) use ($date) {
+                            return $q->whereDate('tgl_transaksi', '<', $date);
+                        },
+                        function ($q) use ($month, $year) {
+                            $q->whereMonth('tgl_transaksi', $month);
+                            $q->whereYear('tgl_transaksi', $year);
+                        },
+                    );
+                }
+            )->where('id_sku', $sku->id_sku)->get();
+
+            $pembelian = DetailStokMasuk::with('stokMasuk')->whereHas(
+                'stokMasuk',
+                function ($q) use ($date, $month, $year, $is_last_stock) {
+                    $q->orderBy('tgl_stok_masuk', 'asc');
+                    $q->when(
+                        $is_last_stock == true,
+                        function ($q) use ($date) {
+                            $q->whereDate('tgl_stok_masuk', '<', $date);
+                        },
+                        function ($q) use ($month, $year) {
+                            $q->whereMonth('tgl_stok_masuk', $month);
+                            $q->whereYear('tgl_stok_masuk', $year);
+                        }
+                    );
+                }
+            )->where('id_bahan_baku', $request->id_bahan_baku)->get();
+        }
+
+        // GENERATING HPP DATA
         $data_produksi = [];
         $data_pembelian = [];
+
         foreach ($produksi as $data) {
             $ukuran = is_null($data->ukuran) ? null : json_decode($data->ukuran);
             array_push(
@@ -140,6 +179,7 @@ class AnalisisHPPController extends Controller
             'biaya_overhead' => json_encode($request->overhead),
             'tgl_analisa' => Carbon::now(),
             'nilai_hpp' => $request->hpp,
+            'jml_penjualan' => $request->jml_penjualan,
         ]);
 
         return response()->json($data, 200);
@@ -198,6 +238,7 @@ class AnalisisHPPController extends Controller
      * @param string $current_stock_key  The current of stock key.
      * @param int $remaining_stock_needed The variable to save the remaining_stock to be reduced.
      * */
+
     public function find_remaining_stock($row_stock, $index_row_stock, $object_iterator, $transaction_item, $current_stock_key, $remaining_stock_needed, $hpp_item, $total_data)
     {
         $remaining_stock_needed = ($row_stock[$index_row_stock]->$current_stock_key->qty - $remaining_stock_needed);

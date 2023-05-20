@@ -28,10 +28,11 @@
 							<option value="">Status Pesanan</option>
 							<option :value="1">Belum Bayar</option>
 							<option :value="2">Sudah Bayar</option>
-							<option :value="3">Dalam Pengerjaan</option>
-							<option :value="4">Proses Pengecekan</option>
-							<option :value="5">Siap Diambil / Dikirim</option>
-							<option :value="6">Selesai</option>
+							<option :value="3">Pembayaran Sudah divalidasi</option>
+							<option :value="4">Dalam Pengerjaan</option>
+							<option :value="5">Proses Pengecekan</option>
+							<option :value="6">Siap Diambil / Dikirim</option>
+							<option :value="7">Selesai</option>
 						</select>
 					</div>
 				</div>
@@ -62,18 +63,21 @@
 								<div class="flex flex-col gap-4">
 									<div>
 										<div v-if="data.status_pesanan == 2" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-blue-500 capitalize border border-blue-500 rounded-full">
-											<span class="flex justify-center">Sudah Bayar dan Siap Dikerjakan</span>
+											<span class="flex justify-center">Sudah Melakukan Pembayaran</span>
 										</div>
 										<div v-if="data.status_pesanan == 3" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-blue-500 capitalize border border-blue-500 rounded-full">
-											<span class="flex justify-center">Dalam Pengerjaan</span>
+											<span class="flex justify-center">Pembayaran Sudah divalidasi dan Siap Dikerjakan</span>
 										</div>
 										<div v-if="data.status_pesanan == 4" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-blue-500 capitalize border border-blue-500 rounded-full">
+											<span class="flex justify-center">Dalam Pengerjaan</span>
+										</div>
+										<div v-if="data.status_pesanan == 5" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-blue-500 capitalize border border-blue-500 rounded-full">
 											<span class="flex justify-center">Proses Pengecekan</span>
 										</div>
-										<div v-if="data.status_pesanan == 5" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-yellow-500 capitalize border border-yellow-500 rounded-full">
+										<div v-if="data.status_pesanan == 6" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-yellow-500 capitalize border border-yellow-500 rounded-full">
 											<span class="flex justify-center">Siap Diambil / Dikirim</span>
 										</div>
-										<div v-if="data.status_pesanan == 6" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-green-500 capitalize border border-green-500 rounded-full">
+										<div v-if="data.status_pesanan == 7" class="justify-center flex-none w-full px-4 py-1 text-xs font-semibold text-green-500 capitalize border border-green-500 rounded-full">
 											<span class="flex justify-center">Selesai</span>
 										</div>
 									</div>
@@ -96,20 +100,12 @@
 											<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
 												<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
 											</svg>
-											<span v-if="data.status_pesanan == 2">Proses Pesanan</span>
-											<span v-if="data.status_pesanan == 3">Selesaikan Produksi</span>
-											<span v-if="data.status_pesanan == 4">Selesaikan Pengecekan</span>
-											<span v-if="data.status_pesanan == 5">Selesaikan Pesanan</span>
-											<!-- <span>{{ data.status_pesanan == 2 ? "Proses" : data.status_pesanan == 3 ? "Ubah Status" : "Selesaikan" }}</span> -->
+											<span v-if="data.status_pesanan == 2">Validasi Pembayaran</span>
+											<span v-if="data.status_pesanan == 3">Proses Pesanan</span>
+											<span v-if="data.status_pesanan == 4">Selesaikan Produksi</span>
+											<span v-if="data.status_pesanan == 5">Selesaikan Pengecekan</span>
+											<span v-if="data.status_pesanan == 6">Selesaikan Pesanan</span>
 										</button>
-										<!-- <NuxtLink target="_blank" :to="{name: 'pemesanan-id', params: {id: data.id_transaksi}}">
-											<button class="btn btn-sm btn-with-icon btn-teal">
-												<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-													<path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
-												</svg>
-												<span>Print</span>
-											</button>
-										</NuxtLink> -->
 										<NuxtLink target="_blank" :to="{name: 'pemesanan-id', params: {id: data.id_transaksi}}">
 											<button class="flex items-center justify-center gap-2 px-2 py-1 border-2 rounded-md border-slate-300 hover:bg-slate-100">
 												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -138,11 +134,6 @@
 										<p class="text-xs text-gray-600 whitespace-nowrap">{{ detail.sku.bahan_baku.nama_bahan_baku }}</p>
 										<p class="my-2 text-xs tracking-widest text-gray-600 whitespace-nowrap"><span class="font-semibold tracking-normal">Finishing: </span>{{ detail.finishing.nama_finishing }}</p>
 										<p class="my-2 text-xs text-gray-600" v-html="detail.sku.produk.deskripsi_produk.slice(0, 200) + ' ...'"></p>
-									</div>
-									<div>
-										<!-- <p class="px-2 py-1 text-xs font-semibold text-gray-700 whitespace-nowrap" v-if>
-										{{ "Rp. " + Intl.NumberFormat().format(detail.sku.harga[detail.sku.harga.length - 1].harga_produk) }}
-									</p> -->
 									</div>
 								</div>
 							</div>

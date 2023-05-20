@@ -150,48 +150,56 @@
 					<p class="font-semibold">Rp. {{ Intl.NumberFormat().format(hpp[1].penjualan.jumlah) }}</p>
 				</div>
 				<div class="flex justify-end col-span-12 py-2 mx-2 md:mt-4 md:px-4 md:justify-start md:col-span-2">
-					<button @click="openModal(hpp[1])" class="btn btn-sm btn-indigo" v-if="hpp[0]">Buat Analisis</button>
+					<button @click="openModal(hpp[1], wip)" class="btn btn-sm btn-indigo" v-if="hpp[0]">Buat Analisis</button>
 				</div>
 			</div>
 
 			<Modal size="max-w-xl" title="Input Biaya Overhead Produksi" :data="modalData" @close-modal="closeModal" v-show="modal">
 				<template #content>
 					<div class="col-span-12 space-y-4" v-if="hpp[0]">
+						<!-- {{ modalData.wip[1].penjualan.jumlah }} -->
+						<!-- {{ wip[0][0].penjualan.jumlah }} -->
 						<div class="flex flex-col items-center justify-between col-span-12 p-4 mt-4 bg-green-200 border-2 rounded-lg shadow sm:flex-row border-slate-100 md:col-span-10">
 							<p class="font-semibold">Total Bahan Baku Digunakan</p>
-							<!-- <p class="font-semibold">Rp. {{ Intl.NumberFormat().format(modalData.penjualan.jumlah) }}</p> -->
 							<p class="font-semibold" v-text="modalData ? 'Rp. ' + Intl.NumberFormat().format(modalData.penjualan.jumlah) : ''"></p>
 						</div>
-						<!-- {{  }} -->
+						<div class="flex flex-col items-center justify-between col-span-12 px-2 sm:flex-row border-slate-100 md:col-span-10">
+							<p class="font-semibold">Nilai Awal Barang Dalam Proses</p>
+							<!-- <ul v-if="modalData">
+								<li v-for="data in totalResult(modalData.wip[0][0].persediaan)">{{ "Rp. " + Intl.NumberFormat().format(data) }}</li>
+							</ul>
+							<span v-else>{{ "Rp. " + Intl.NumberFormat().format(totalResult(modalData.wip[0][0].persediaan)) }}</span> -->
+							<p class="font-semibold" v-text="modalData.wip ? 'Rp. ' + Intl.NumberFormat().format(nilaiWIP(modalData.wip[0][0].persediaan)) : ''"></p>
+						</div>
 						<div class="my-2">
 							<label class="label">Biaya Tenaga Kerja</label>
-							<!-- <input type="text" class="form-input form-input-lg" placeholder="No Resi ... " v-model="overhead.tenaga_kerja" /> -->
 							<div><number class="form-input form-input-lg" v-model="overhead.tenaga_kerja" v-bind="number"></number></div>
-							<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.resi">{{ validation.resi[0] }}</p> -->
 						</div>
 						<div class="my-2">
 							<label class="label">Biaya Produksi Tambahan (Jika Ada)</label>
 							<div><number class="form-input form-input-lg" v-model="overhead.produksi_tambahan" v-bind="number"></number></div>
-							<!-- <input type="text" class="form-input form-input-lg" placeholder="No Resi ... " v-model="overhead.produksi_tambahan" /> -->
-							<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.resi">{{ validation.resi[0] }}</p> -->
 						</div>
 						<div class="my-2">
 							<label class="label">Biaya Mesin</label>
 							<div><number class="form-input form-input-lg" v-model="overhead.mesin" v-bind="number"></number></div>
-							<!-- <input type="text" class="form-input form-input-lg" placeholder="No Resi ... " v-model="overhead.mesin" /> -->
-							<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.resi">{{ validation.resi[0] }}</p> -->
 						</div>
 						<div class="my-2">
 							<label class="label">Biaya Maintenance(Air, Listrik dll)</label>
 							<div><number class="form-input form-input-lg" v-model="overhead.maintenance" v-bind="number"></number></div>
+						</div>
 
-							<!-- <input type="text" class="form-input form-input-lg" placeholder="No Resi ... " v-model="overhead.maintenance" /> -->
-							<!-- <p class="mt-2 text-xs text-red-500" v-if="validation.resi">{{ validation.resi[0] }}</p> -->
+						<div class="flex flex-col items-center justify-between col-span-12 px-2 sm:flex-row border-slate-100 md:col-span-10">
+							<p class="font-semibold">Biaya Bahan Baku</p>
+							<p class="font-semibold" v-text="modalData.wip ? 'Rp. ' + Intl.NumberFormat().format(biayaBahanBaku(modalData, overhead)) : ''"></p>
+						</div>
+
+						<div class="flex flex-col items-center justify-between col-span-12 px-2 sm:flex-row border-slate-100 md:col-span-10">
+							<p class="font-semibold">Nilai Akhir Barang dalam Proses</p>
+							<p class="font-semibold" v-text="modalData.wip ? 'Rp. ' + Intl.NumberFormat().format(modalData.wip[1].penjualan.jumlah) : ''"></p>
 						</div>
 						<div class="flex flex-col items-center justify-between col-span-12 p-4 mt-4 bg-green-200 border-2 rounded-lg shadow sm:flex-row border-slate-100 md:col-span-10">
 							<p class="font-semibold">Harga Pokok Produksi</p>
-							<!-- <p class="font-semibold">Rp. {{ Intl.NumberFormat().format(modalData.penjualan.jumlah) }}</p> -->
-							<p class="font-semibold" v-text="modalData ? 'Rp. ' + Intl.NumberFormat().format(hargaPokokProduksi(modalData, overhead)) : ''"></p>
+							<p class="font-semibold" v-text="modalData ? 'Rp. ' + Intl.NumberFormat().format(hargaPokokProduksi(modalData, overhead, nilaiWIP(modalData.wip[0][0].persediaan), modalData.wip[1].penjualan.jumlah)) : ''"></p>
 						</div>
 					</div>
 				</template>
@@ -228,9 +236,7 @@ export default {
 			bahan_baku: [],
 
 			hpp: [],
-
-			// produksi: [],
-			// pembelian: [],
+			wip: [],
 
 			overhead: {
 				produksi_tambahan: 0,
@@ -272,7 +278,8 @@ export default {
 				.get("/api/analisis-hpp?id_produk=" + this.id_produk + "&id_bahan_baku=" + this.id_bahan_baku + "&month=" + this.month)
 				.then((response) => {
 					this.validation = [];
-					this.hpp = response.data;
+					this.hpp = response.data.hpp;
+					this.wip = response.data.wip;
 				})
 				.catch((error) => {
 					this.validation = error.response.data;
@@ -280,7 +287,7 @@ export default {
 				});
 		},
 
-		hargaPokokProduksi(modalData, overhead) {
+		biayaBahanBaku(modalData, overhead) {
 			if (this.hpp && this.hpp.length > 0) {
 				const biaya_produksi = parseInt(modalData.penjualan.jumlah);
 
@@ -290,7 +297,22 @@ export default {
 				const maintenance = parseInt(overhead.maintenance);
 
 				return biaya_produksi + (produksi_tambahan + tenaga_kerja + mesin + maintenance);
-				// return biaya_produksi + produksi_tambahan;
+			}
+		},
+
+		hargaPokokProduksi(modalData, overhead, first_wip, last_wip) {
+			if (this.hpp && this.hpp.length > 0) {
+				const first = parseInt(first_wip);
+				const last = parseInt(last_wip);
+
+				const biaya_produksi = parseInt(modalData.penjualan.jumlah);
+
+				const produksi_tambahan = parseInt(overhead.produksi_tambahan);
+				const tenaga_kerja = parseInt(overhead.tenaga_kerja);
+				const mesin = parseInt(overhead.mesin);
+				const maintenance = parseInt(overhead.maintenance);
+
+				return first + (biaya_produksi + (produksi_tambahan + tenaga_kerja + mesin + maintenance)) - last;
 			}
 		},
 
@@ -301,7 +323,8 @@ export default {
 					overhead: this.overhead,
 					id_bahan_baku: this.id_bahan_baku,
 					id_produk: this.id_produk,
-					hpp: this.hargaPokokProduksi(modalData, this.overhead),
+					hpp: this.hargaPokokProduksi(modalData, this.overhead, this.nilaiWIP(modalData.wip[0][0].persediaan), modalData.wip[1].penjualan.jumlah),
+					jml_penjualan: parseInt(modalData.penjualan.qty),
 				})
 				.then(() => this.closeModal())
 				.then(() => {
@@ -343,9 +366,19 @@ export default {
 
 			return result;
 		},
-		openModal(hpp) {
+
+		nilaiWIP(data) {
+			const result = [];
+			Object.keys(data).forEach((k) => result.push(data[k].jumlah));
+
+			const last = result.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+			return last;
+		},
+		openModal(hpp, wip) {
 			this.modal = !this.modal;
 			this.modalData = hpp;
+			this.modalData.wip = wip;
+			// console.log(wip)
 		},
 		closeModal() {
 			this.modal = false;

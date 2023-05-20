@@ -19,6 +19,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call([RoleSeeder::class, UserSeeder::class, BahanBakuSeeder::class]);
         // Produk::factory(50)->create();
-        KategoriProduk::factory(10)->create();
+        // KategoriProduk::factory(10)->create();
     }
 }
